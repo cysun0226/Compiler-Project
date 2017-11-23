@@ -1,0 +1,1094 @@
+
+---- scan test00     ----
+
+  0-th token  type: [begin] 	 on line 1 : begin
+  1-th token  type: [real] 	 on line 2 : real
+  2-th token  type: [id] 	 on line 2 : a3aa
+  3-th token  type: [ ; ] 	 on line 2 : ;
+  4-th token  type: [integer] 	 on line 3 : integer
+  5-th token  type: [id] 	 on line 3 : bb9b
+  6-th token  type: [ , ] 	 on line 3 : ,
+  7-th token  type: [id] 	 on line 3 : ddd
+  8-th token  type: [ ; ] 	 on line 3 : ;
+  9-th token  type: [id] 	 on line 4 : a3aa
+ 10-th token  type: [assign] 	 on line 4 : :=
+ 11-th token  type: [id] 	 on line 4 : bb9b
+ 12-th token  type: [plus] 	 on line 4 : +
+ 13-th token  type: [id] 	 on line 4 : c9d
+ 14-th token  type: [plus] 	 on line 4 : +
+ 15-th token  type: [num] 	 on line 4 : 123
+ 16-th token  type: [plus] 	 on line 5 : +
+ 17-th token  type: [num] 	 on line 5 : 543
+ 18-th token  type: [plus] 	 on line 6 : +
+ 19-th token  type: [id] 	 on line 6 : ddd
+ 20-th token  type: [ ; ] 	 on line 6 : ;
+ 21-th token  type: [end] 	 on line 6 : end
+
+---- scan test01     ----
+
+  0-th token  type: [program] 	 on line 1 : PROGRAM
+  1-th token  type: [id] 	 on line 1 : mytest
+  2-th token  type: [ ( ] 	 on line 1 : (
+  3-th token  type: [id] 	 on line 1 : input
+  4-th token  type: [ , ] 	 on line 1 : ,
+  5-th token  type: [id] 	 on line 1 : output
+  6-th token  type: [ , ] 	 on line 1 : ,
+  7-th token  type: [id] 	 on line 1 : error
+  8-th token  type: [ ) ] 	 on line 1 : )
+  9-th token  type: [ ; ] 	 on line 1 : ;
+ 10-th token on line 3 is a comment
+ 11-th token  type: [var] 	 on line 3 : var
+ 12-th token  type: [id] 	 on line 3 : a
+ 13-th token  type: [ , ] 	 on line 3 : ,
+ 14-th token  type: [num] 	 on line 3 : 0
+ 15-th token  type: [id] 	 on line 3 : aa
+ 16-th token  type: [ , ] 	 on line 3 : ,
+ 17-th token  type: [id] 	 on line 3 : bb
+ 18-th token  type: [ : ] 	 on line 3 : :
+ 19-th token  type: [integer] 	 on line 3 : integer
+ 20-th token  type: [ ; ] 	 on line 3 : ;
+ 21-th token  type: [var] 	 on line 4 : var
+ 22-th token  type: [id] 	 on line 4 : gg
+ 23-th token  type: [ , ] 	 on line 4 : ,
+ 24-th token  type: [id] 	 on line 4 : hh
+ 25-th token  type: [ , ] 	 on line 4 : ,
+ 26-th token  type: [id] 	 on line 4 : mm
+ 27-th token  type: [ , ] 	 on line 4 : ,
+ 28-th token  type: [id] 	 on line 4 : pp
+ 29-th token  type: [ , ] 	 on line 4 : ,
+ 30-th token  type: [id] 	 on line 4 : pp
+ Lexical analyzer error at line 4 : @
+ Lexical analyzer error at line 4 : $
+ 31-th token  type: [num] 	 on line 4 : 5
+ 32-th token  type: [ : ] 	 on line 4 : :
+ 33-th token  type: [real] 	 on line 4 : real
+ 34-th token  type: [ ; ] 	 on line 4 : ;
+ 35-th token  type: [var] 	 on line 7 : var
+ 36-th token  type: [id] 	 on line 7 : di
+ 37-th token  type: [ , ] 	 on line 7 : ,
+ 38-th token  type: [id] 	 on line 7 : ei
+ 39-th token  type: [ , ] 	 on line 7 : ,
+ 40-th token  type: [id] 	 on line 7 : ei00
+ 41-th token  type: [ , ] 	 on line 7 : ,
+ 42-th token  type: [id] 	 on line 7 : ei
+ 43-th token  type: [ ; ] 	 on line 7 : ;
+ 44-th token  type: [ , ] 	 on line 7 : ,
+ 45-th token  type: [minus] 	 on line 7 : -
+ 46-th token  type: [ : ] 	 on line 7 : :
+ 47-th token  type: [array] 	 on line 7 : array
+ 48-th token  type: [lbrac] 	 on line 7 : [
+ 49-th token  type: [num] 	 on line 7 : 1
+ 50-th token  type: [ .. ] 	 on line 7 : ..
+ 51-th token  type: [num] 	 on line 7 : 10
+ 52-th token  type: [rbrac] 	 on line 7 : ]
+ 53-th token  type: [of] 	 on line 7 : of
+ 54-th token  type: [integer] 	 on line 7 : integer
+ 55-th token  type: [ ; ] 	 on line 7 : ;
+ 56-th token  type: [var] 	 on line 8 : var
+ 57-th token  type: [id] 	 on line 8 : dr
+ 58-th token  type: [ , ] 	 on line 8 : ,
+ 59-th token  type: [id] 	 on line 8 : er
+ 60-th token  type: [ , ] 	 on line 8 : ,
+ 61-th token  type: [id] 	 on line 8 : er00
+ 62-th token  type: [ , ] 	 on line 8 : ,
+ 63-th token  type: [id] 	 on line 8 : er
+ 64-th token  type: [ ; ] 	 on line 8 : ;
+ 65-th token  type: [ , ] 	 on line 8 : ,
+ 66-th token  type: [minus] 	 on line 8 : -
+ 67-th token  type: [ : ] 	 on line 8 : :
+ 68-th token  type: [array] 	 on line 8 : array
+ 69-th token  type: [lbrac] 	 on line 8 : [
+ 70-th token  type: [num] 	 on line 8 : 1
+ 71-th token  type: [ .. ] 	 on line 8 : ..
+ 72-th token  type: [num] 	 on line 8 : 10
+ 73-th token  type: [rbrac] 	 on line 8 : ]
+ 74-th token  type: [of] 	 on line 8 : of
+ 75-th token  type: [real] 	 on line 8 : real
+ 76-th token  type: [ ; ] 	 on line 8 : ;
+ 77-th token  type: [var] 	 on line 10 : var
+ 78-th token  type: [id] 	 on line 10 : kki
+ 79-th token  type: [ , ] 	 on line 10 : ,
+ 80-th token  type: [id] 	 on line 10 : iii
+ 81-th token  type: [ : ] 	 on line 10 : :
+ 82-th token  type: [array] 	 on line 10 : array
+ 83-th token  type: [lbrac] 	 on line 10 : [
+ 84-th token  type: [num] 	 on line 10 : 23
+ 85-th token  type: [ .. ] 	 on line 10 : ..
+ 86-th token  type: [num] 	 on line 10 : 57
+ 87-th token  type: [rbrac] 	 on line 10 : ]
+ 88-th token  type: [of] 	 on line 10 : of
+ 89-th token  type: [array] 	 on line 10 : array
+ 90-th token  type: [lbrac] 	 on line 10 : [
+ 91-th token  type: [num] 	 on line 10 : 23
+ 92-th token  type: [ .. ] 	 on line 10 : ..
+ 93-th token  type: [num] 	 on line 10 : 57
+ 94-th token  type: [rbrac] 	 on line 10 : ]
+ 95-th token  type: [of] 	 on line 10 : of
+ 96-th token  type: [integer] 	 on line 10 : integer
+ 97-th token  type: [ ; ] 	 on line 10 : ;
+ 98-th token  type: [var] 	 on line 11 : var
+ 99-th token  type: [id] 	 on line 11 : kkr
+100-th token  type: [ , ] 	 on line 11 : ,
+101-th token  type: [id] 	 on line 11 : iir
+102-th token  type: [ : ] 	 on line 11 : :
+103-th token  type: [array] 	 on line 11 : array
+104-th token  type: [lbrac] 	 on line 11 : [
+105-th token  type: [num] 	 on line 11 : 23
+106-th token  type: [ .. ] 	 on line 11 : ..
+107-th token  type: [num] 	 on line 11 : 57
+108-th token  type: [rbrac] 	 on line 11 : ]
+109-th token  type: [of] 	 on line 11 : of
+110-th token  type: [array] 	 on line 11 : array
+111-th token  type: [lbrac] 	 on line 11 : [
+112-th token  type: [num] 	 on line 11 : 23
+113-th token  type: [ .. ] 	 on line 11 : ..
+114-th token  type: [num] 	 on line 11 : 57
+115-th token  type: [rbrac] 	 on line 11 : ]
+116-th token  type: [of] 	 on line 11 : of
+117-th token  type: [real] 	 on line 11 : real
+118-th token  type: [ ; ] 	 on line 11 : ;
+119-th token  type: [var] 	 on line 13 : var
+120-th token  type: [id] 	 on line 13 : aVeryLongIdentifierGASDFDFGHJERYUKDVBNFBNDFGHwertyuioplkjhgfdsazxcvbnm
+121-th token  type: [ : ] 	 on line 13 : :
+122-th token  type: [integer] 	 on line 13 : integer
+123-th token  type: [ ; ] 	 on line 13 : ;
+124-th token  type: [var] 	 on line 14 : var
+125-th token  type: [id] 	 on line 14 : a_wrong_identifier_aadgnm
+126-th token  type: [ : ] 	 on line 14 : :
+127-th token  type: [integer] 	 on line 14 : integer
+128-th token  type: [ ; ] 	 on line 14 : ;
+129-th token on line 16 is a comment
+130-th token  type: [begin] 	 on line 17 : begin
+131-th token  type: [id] 	 on line 18 : a
+132-th token  type: [assign] 	 on line 18 : :=
+133-th token  type: [num] 	 on line 18 : 1
+134-th token  type: [ ; ] 	 on line 18 : ;
+135-th token  type: [id] 	 on line 19 : bb
+136-th token  type: [assign] 	 on line 19 : :=
+137-th token  type: [num] 	 on line 19 : 354
+138-th token  type: [plus] 	 on line 19 : +
+139-th token  type: [num] 	 on line 19 : 126
+140-th token  type: [mul] 	 on line 19 : *
+141-th token  type: [ ( ] 	 on line 19 : (
+142-th token  type: [num] 	 on line 19 : 920
+143-th token  type: [minus] 	 on line 19 : -
+144-th token  type: [num] 	 on line 19 : 27
+145-th token  type: [divide] 	 on line 19 : /
+146-th token  type: [num] 	 on line 19 : 190
+147-th token  type: [ ) ] 	 on line 19 : )
+148-th token  type: [ ; ] 	 on line 19 : ;
+149-th token  type: [id] 	 on line 20 : cc
+150-th token  type: [assign] 	 on line 20 : :=
+151-th token  type: [num] 	 on line 20 : 10
+152-th token  type: [ .. ] 	 on line 20 : ..
+153-th token  type: [num] 	 on line 20 : 20
+154-th token  type: [ ; ] 	 on line 20 : ;
+155-th token  type: [id] 	 on line 21 : gg
+156-th token  type: [assign] 	 on line 21 : :=
+157-th token  type: [num] 	 on line 21 : 10.3E+5
+158-th token  type: [ ; ] 	 on line 21 : ;
+159-th token  type: [id] 	 on line 22 : hh
+160-th token  type: [assign] 	 on line 22 : :=
+161-th token  type: [num] 	 on line 22 : 10.3
+162-th token  type: [id] 	 on line 22 : E
+163-th token  type: [plus] 	 on line 22 : +
+164-th token  type: [id] 	 on line 22 : BC
+165-th token  type: [ ; ] 	 on line 22 : ;
+166-th token  type: [id] 	 on line 23 : mm
+167-th token  type: [assign] 	 on line 23 : :=
+168-th token  type: [num] 	 on line 23 : 10.3E+2.34
+169-th token  type: [ ; ] 	 on line 23 : ;
+170-th token  type: [id] 	 on line 24 : pp
+171-th token  type: [assign] 	 on line 24 : :=
+172-th token  type: [num] 	 on line 24 : 10.3
+173-th token  type: [id] 	 on line 24 : EBC
+174-th token  type: [ ; ] 	 on line 24 : ;
+175-th token  type: [id] 	 on line 25 : rr
+176-th token  type: [assign] 	 on line 25 : :=
+177-th token  type: [num] 	 on line 25 : 10.3E+5
+178-th token  type: [plus] 	 on line 25 : +
+179-th token  type: [num] 	 on line 25 : 123
+180-th token  type: [ ; ] 	 on line 25 : ;
+181-th token  type: [id] 	 on line 26 : str
+182-th token  type: [assign] 	 on line 26 : :=
+183-th token  type: [char_str] 	 on line 26 : 'This is a srting!!'
+184-th token  type: [ ; ] 	 on line 26 : ;
+185-th token  type: [id] 	 on line 27 : str2
+186-th token  type: [assign] 	 on line 27 : :=
+187-th token  type: [char_str] 	 on line 27 : "  This is a srting,too!!  "
+188-th token  type: [ ; ] 	 on line 27 : ;
+189-th token  type: [id] 	 on line 28 : str3
+190-th token  type: [assign] 	 on line 28 : :=
+191-th token  type: [char_str] 	 on line 28 : ""
+192-th token  type: [ ; ] 	 on line 28 : ;
+193-th token  type: [id] 	 on line 29 : str4
+194-th token  type: [assign] 	 on line 29 : :=
+195-th token  type: [char_str] 	 on line 29 : "adc"
+196-th token  type: [char_str] 	 on line 29 : "def"
+197-th token  type: [ ; ] 	 on line 29 : ;
+198-th token  type: [id] 	 on line 30 : str4
+199-th token  type: [assign] 	 on line 30 : :=
+200-th token  type: [run_str] 	 on line 30 : "cross 
+         line string"
+201-th token  type: [ ; ] 	 on line 30 : ;
+202-th token  type: [id] 	 on line 31 : incorrect_symbols
+203-th token  type: [assign] 	 on line 31 : :=
+ Lexical analyzer error at line 31 : ~
+ Lexical analyzer error at line 31 : !
+ Lexical analyzer error at line 31 : @
+ Lexical analyzer error at line 31 : #
+ Lexical analyzer error at line 31 : $
+ Lexical analyzer error at line 31 : %
+ Lexical analyzer error at line 31 : ^
+ Lexical analyzer error at line 31 : &
+204-th token  type: [mul] 	 on line 31 : *
+205-th token  type: [ ( ] 	 on line 31 : (
+206-th token  type: [ ) ] 	 on line 31 : )
+207-th token  type: [id] 	 on line 31 : _
+208-th token  type: [plus] 	 on line 31 : +
+ Lexical analyzer error at line 31 : |
+ Lexical analyzer error at line 31 : `
+209-th token  type: [minus] 	 on line 31 : -
+210-th token  type: [equal] 	 on line 31 : =
+ Lexical analyzer error at line 31 : \
+211-th token  type: [ , ] 	 on line 31 : ,
+212-th token  type: [dot] 	 on line 31 : .
+213-th token  type: [divide] 	 on line 31 : /
+214-th token  type: [ ; ] 	 on line 31 : ;
+215-th token  type: [lbrac] 	 on line 31 : [
+216-th token  type: [rbrac] 	 on line 31 : ]
+ Lexical analyzer error at line 31 : '
+217-th token  type: [ < ] 	 on line 31 : <
+218-th token  type: [ > ] 	 on line 31 : >
+ Lexical analyzer error at line 31 : ?
+219-th token  type: [ : ] 	 on line 31 : :
+220-th token  type: [end] 	 on line 32 : end
+221-th token  type: [dot] 	 on line 32 : .
+222-th token on line 32 is a comment
+
+---- scan test02     ----
+
+  0-th token on line 1 is a comment
+  1-th token on line 1 is a comment
+  2-th token on line 1 is a comment
+  3-th token  type: [program] 	 on line 2 : PROGRAM
+  4-th token  type: [id] 	 on line 2 : foo
+  5-th token  type: [ ( ] 	 on line 2 : (
+  6-th token  type: [id] 	 on line 2 : input
+  7-th token  type: [ , ] 	 on line 2 : ,
+  8-th token  type: [id] 	 on line 2 : output
+  9-th token  type: [ , ] 	 on line 2 : ,
+ 10-th token  type: [id] 	 on line 2 : error
+ 11-th token  type: [ ) ] 	 on line 2 : )
+ 12-th token  type: [ ; ] 	 on line 2 : ;
+ 13-th token on line 3 is a comment
+ 14-th token  type: [var] 	 on line 3 : var
+ 15-th token  type: [id] 	 on line 3 : a
+ 16-th token  type: [ , ] 	 on line 3 : ,
+ 17-th token  type: [id] 	 on line 3 : b
+ 18-th token  type: [ , ] 	 on line 3 : ,
+ 19-th token  type: [id] 	 on line 3 : c
+ 20-th token  type: [ : ] 	 on line 3 : :
+ 21-th token  type: [integer] 	 on line 3 : integer
+ 22-th token  type: [ ; ] 	 on line 3 : ;
+ 23-th token  type: [var] 	 on line 4 : var
+ 24-th token  type: [id] 	 on line 4 : d
+ 25-th token  type: [ , ] 	 on line 4 : ,
+ 26-th token  type: [id] 	 on line 4 : e
+ 27-th token  type: [ : ] 	 on line 4 : :
+ 28-th token  type: [array] 	 on line 4 : array
+ 29-th token  type: [lbrac] 	 on line 4 : [
+ 30-th token  type: [num] 	 on line 4 : 1
+ 31-th token  type: [ .. ] 	 on line 4 : ..
+ 32-th token  type: [num] 	 on line 4 : 10
+ 33-th token  type: [rbrac] 	 on line 4 : ]
+ 34-th token  type: [of] 	 on line 4 : of
+ 35-th token  type: [integer] 	 on line 4 : integer
+ 36-th token  type: [ ; ] 	 on line 4 : ;
+ 37-th token  type: [var] 	 on line 5 : var
+ 38-th token  type: [id] 	 on line 5 : g
+ 39-th token  type: [ , ] 	 on line 5 : ,
+ 40-th token  type: [id] 	 on line 5 : h
+ 41-th token  type: [ : ] 	 on line 5 : :
+ 42-th token  type: [real] 	 on line 5 : real
+ 43-th token  type: [ ; ] 	 on line 5 : ;
+ 44-th token  type: [var] 	 on line 6 : var
+ 45-th token  type: [id] 	 on line 6 : k
+ 46-th token  type: [ : ] 	 on line 6 : :
+ 47-th token  type: [array] 	 on line 6 : array
+ 48-th token  type: [lbrac] 	 on line 6 : [
+ 49-th token  type: [num] 	 on line 6 : 23
+ 50-th token  type: [ .. ] 	 on line 6 : ..
+ 51-th token  type: [num] 	 on line 6 : 57
+ 52-th token  type: [rbrac] 	 on line 6 : ]
+ 53-th token  type: [of] 	 on line 6 : of
+ 54-th token  type: [array] 	 on line 6 : array
+ 55-th token  type: [lbrac] 	 on line 6 : [
+ 56-th token  type: [num] 	 on line 6 : 23
+ 57-th token  type: [ .. ] 	 on line 6 : ..
+ 58-th token  type: [num] 	 on line 6 : 57
+ 59-th token  type: [rbrac] 	 on line 6 : ]
+ 60-th token  type: [of] 	 on line 6 : of
+ 61-th token  type: [real] 	 on line 6 : real
+ 62-th token  type: [ ; ] 	 on line 6 : ;
+ 63-th token  type: [var] 	 on line 7 : var
+ 64-th token  type: [id] 	 on line 7 : a
+ 65-th token  type: [ : ] 	 on line 7 : :
+ 66-th token  type: [array] 	 on line 7 : array
+ 67-th token  type: [lbrac] 	 on line 7 : [
+ 68-th token  type: [num] 	 on line 7 : 23
+ 69-th token  type: [ .. ] 	 on line 7 : ..
+ 70-th token  type: [num] 	 on line 7 : 57
+ 71-th token  type: [rbrac] 	 on line 7 : ]
+ 72-th token  type: [of] 	 on line 7 : of
+ 73-th token  type: [array] 	 on line 7 : array
+ 74-th token  type: [lbrac] 	 on line 7 : [
+ 75-th token  type: [num] 	 on line 7 : 23
+ 76-th token  type: [ .. ] 	 on line 7 : ..
+ 77-th token  type: [num] 	 on line 7 : 57
+ 78-th token  type: [rbrac] 	 on line 7 : ]
+ 79-th token  type: [of] 	 on line 7 : of
+ 80-th token  type: [real] 	 on line 7 : real
+ 81-th token  type: [ ; ] 	 on line 7 : ;
+ 82-th token on line 7 is a comment
+ 83-th token on line 9 is a comment
+ 84-th token  type: [proc] 	 on line 9 : procedure
+ 85-th token  type: [id] 	 on line 9 : sort
+ 86-th token  type: [ ( ] 	 on line 9 : (
+ 87-th token  type: [id] 	 on line 9 : a
+ 88-th token  type: [ : ] 	 on line 9 : :
+ 89-th token  type: [array] 	 on line 9 : array
+ 90-th token  type: [lbrac] 	 on line 9 : [
+ 91-th token  type: [num] 	 on line 9 : 1
+ 92-th token  type: [ .. ] 	 on line 9 : ..
+ 93-th token  type: [num] 	 on line 9 : 10
+ 94-th token  type: [rbrac] 	 on line 9 : ]
+ 95-th token  type: [of] 	 on line 9 : of
+ 96-th token  type: [integer] 	 on line 9 : integer
+ 97-th token  type: [ ) ] 	 on line 9 : )
+ 98-th token  type: [ ; ] 	 on line 9 : ;
+ 99-th token  type: [var] 	 on line 10 : var
+100-th token  type: [id] 	 on line 10 : a
+101-th token  type: [ , ] 	 on line 10 : ,
+102-th token  type: [id] 	 on line 10 : b
+103-th token  type: [ , ] 	 on line 10 : ,
+104-th token  type: [id] 	 on line 10 : c
+105-th token  type: [ : ] 	 on line 10 : :
+106-th token  type: [integer] 	 on line 10 : integer
+107-th token  type: [ ; ] 	 on line 10 : ;
+108-th token on line 10 is a comment
+109-th token  type: [begin] 	 on line 10 : begin
+110-th token  type: [id] 	 on line 11 : e
+111-th token  type: [assign] 	 on line 11 : :=
+112-th token  type: [id] 	 on line 11 : a
+113-th token  type: [plus] 	 on line 11 : +
+114-th token  type: [id] 	 on line 11 : d
+115-th token on line 11 is a comment
+116-th token  type: [id] 	 on line 11 : a
+117-th token  type: [assign] 	 on line 11 : :=
+118-th token  type: [id] 	 on line 11 : qqq
+119-th token  type: [minus] 	 on line 11 : -
+120-th token  type: [id] 	 on line 11 : rrr
+121-th token  type: [ ; ] 	 on line 11 : ;
+122-th token on line 11 is a comment
+123-th token  type: [id] 	 on line 11 : d
+124-th token  type: [assign] 	 on line 11 : :=
+125-th token  type: [id] 	 on line 11 : f
+126-th token  type: [ ( ] 	 on line 11 : (
+127-th token  type: [id] 	 on line 11 : k
+128-th token  type: [ , ] 	 on line 11 : ,
+129-th token  type: [id] 	 on line 11 : e
+130-th token  type: [ ) ] 	 on line 11 : )
+131-th token  type: [ ; ] 	 on line 11 : ;
+132-th token on line 11 is a comment
+133-th token  type: [end] 	 on line 11 : end
+134-th token  type: [ ; ] 	 on line 11 : ;
+135-th token  type: [funct] 	 on line 14 : function
+136-th token  type: [id] 	 on line 14 : addition
+137-th token  type: [ ( ] 	 on line 14 : (
+138-th token  type: [id] 	 on line 14 : a
+139-th token  type: [ , ] 	 on line 14 : ,
+140-th token  type: [id] 	 on line 14 : b
+141-th token  type: [ : ] 	 on line 14 : :
+142-th token  type: [integer] 	 on line 14 : integer
+143-th token  type: [ ) ] 	 on line 14 : )
+144-th token  type: [ : ] 	 on line 14 : :
+145-th token  type: [integer] 	 on line 14 : integer
+146-th token  type: [ ; ] 	 on line 14 : ;
+147-th token  type: [var] 	 on line 15 : var
+148-th token  type: [id] 	 on line 15 : c
+149-th token  type: [ : ] 	 on line 15 : :
+150-th token  type: [integer] 	 on line 15 : integer
+151-th token  type: [ ; ] 	 on line 15 : ;
+152-th token on line 15 is a comment
+153-th token  type: [begin] 	 on line 15 : begin
+154-th token  type: [id] 	 on line 16 : addition
+155-th token  type: [assign] 	 on line 16 : :=
+156-th token  type: [id] 	 on line 16 : a
+157-th token  type: [plus] 	 on line 16 : +
+158-th token  type: [id] 	 on line 16 : b
+159-th token on line 16 is a comment
+160-th token  type: [end] 	 on line 16 : end
+161-th token  type: [ ; ] 	 on line 16 : ;
+162-th token  type: [funct] 	 on line 19 : function
+163-th token  type: [id] 	 on line 19 : addition
+164-th token  type: [ ( ] 	 on line 19 : (
+165-th token  type: [id] 	 on line 19 : c
+166-th token  type: [ , ] 	 on line 19 : ,
+167-th token  type: [id] 	 on line 19 : d
+168-th token  type: [ : ] 	 on line 19 : :
+169-th token  type: [integer] 	 on line 19 : integer
+170-th token  type: [ ) ] 	 on line 19 : )
+171-th token  type: [ : ] 	 on line 19 : :
+172-th token  type: [integer] 	 on line 19 : integer
+173-th token  type: [ ; ] 	 on line 19 : ;
+174-th token on line 20 is a comment
+175-th token  type: [var] 	 on line 20 : var
+176-th token  type: [id] 	 on line 20 : e
+177-th token  type: [ : ] 	 on line 20 : :
+178-th token  type: [integer] 	 on line 20 : integer
+179-th token  type: [ ; ] 	 on line 20 : ;
+180-th token on line 20 is a comment
+181-th token  type: [begin] 	 on line 20 : begin
+182-th token  type: [id] 	 on line 21 : addition
+183-th token  type: [assign] 	 on line 21 : :=
+184-th token  type: [id] 	 on line 21 : c
+185-th token  type: [plus] 	 on line 21 : +
+186-th token  type: [id] 	 on line 21 : d
+187-th token on line 21 is a comment
+188-th token  type: [end] 	 on line 21 : end
+189-th token  type: [ ; ] 	 on line 21 : ;
+190-th token  type: [funct] 	 on line 24 : function
+191-th token  type: [id] 	 on line 24 : addition
+192-th token  type: [ ( ] 	 on line 24 : (
+193-th token  type: [id] 	 on line 24 : a
+194-th token  type: [ , ] 	 on line 24 : ,
+195-th token  type: [id] 	 on line 24 : b
+196-th token  type: [ : ] 	 on line 24 : :
+197-th token  type: [real] 	 on line 24 : real
+198-th token  type: [ ) ] 	 on line 24 : )
+199-th token  type: [ : ] 	 on line 24 : :
+200-th token  type: [real] 	 on line 24 : real
+201-th token  type: [ ; ] 	 on line 24 : ;
+202-th token on line 25 is a comment
+203-th token  type: [var] 	 on line 25 : var
+204-th token  type: [id] 	 on line 25 : c
+205-th token  type: [ : ] 	 on line 25 : :
+206-th token  type: [integer] 	 on line 25 : integer
+207-th token  type: [ ; ] 	 on line 25 : ;
+208-th token on line 25 is a comment
+209-th token  type: [begin] 	 on line 25 : begin
+210-th token  type: [id] 	 on line 26 : addition
+211-th token  type: [assign] 	 on line 26 : :=
+212-th token  type: [id] 	 on line 26 : a
+213-th token  type: [plus] 	 on line 26 : +
+214-th token  type: [id] 	 on line 26 : b
+215-th token on line 26 is a comment
+216-th token  type: [end] 	 on line 26 : end
+217-th token  type: [ ; ] 	 on line 26 : ;
+218-th token  type: [begin] 	 on line 29 : begin
+219-th token  type: [id] 	 on line 30 : a
+220-th token  type: [assign] 	 on line 30 : :=
+221-th token  type: [num] 	 on line 30 : 1
+222-th token  type: [ ; ] 	 on line 30 : ;
+223-th token  type: [while] 	 on line 31 : while
+224-th token  type: [id] 	 on line 31 : a
+225-th token  type: [ < ] 	 on line 31 : <
+226-th token  type: [num] 	 on line 31 : 10
+227-th token  type: [do] 	 on line 31 : do
+228-th token  type: [begin] 	 on line 32 : begin
+229-th token  type: [id] 	 on line 33 : sum
+230-th token  type: [assign] 	 on line 33 : :=
+231-th token  type: [id] 	 on line 33 : sum
+232-th token  type: [plus] 	 on line 33 : +
+233-th token  type: [id] 	 on line 33 : a
+234-th token  type: [ ; ] 	 on line 33 : ;
+235-th token  type: [id] 	 on line 34 : a
+236-th token  type: [assign] 	 on line 34 : :=
+237-th token  type: [id] 	 on line 34 : a
+238-th token  type: [plus] 	 on line 34 : +
+239-th token  type: [num] 	 on line 34 : 1
+240-th token  type: [end] 	 on line 35 : end
+241-th token  type: [ ; ] 	 on line 35 : ;
+242-th token  type: [begin] 	 on line 36 : begin
+243-th token on line 36 is a comment
+244-th token  type: [id] 	 on line 36 : b
+245-th token  type: [assign] 	 on line 36 : :=
+246-th token  type: [num] 	 on line 36 : 1
+247-th token  type: [ ; ] 	 on line 36 : ;
+248-th token  type: [while] 	 on line 37 : while
+249-th token  type: [id] 	 on line 37 : b
+250-th token  type: [ < ] 	 on line 37 : <
+251-th token  type: [num] 	 on line 37 : 11
+252-th token  type: [do] 	 on line 37 : do
+253-th token  type: [begin] 	 on line 38 : begin
+254-th token on line 38 is a comment
+255-th token  type: [id] 	 on line 38 : d
+256-th token  type: [lbrac] 	 on line 38 : [
+257-th token  type: [id] 	 on line 38 : b
+258-th token  type: [rbrac] 	 on line 38 : ]
+259-th token  type: [assign] 	 on line 38 : :=
+260-th token  type: [id] 	 on line 38 : b
+261-th token  type: [plus] 	 on line 38 : +
+262-th token  type: [id] 	 on line 38 : b
+263-th token  type: [mul] 	 on line 38 : *
+264-th token  type: [ ( ] 	 on line 38 : (
+265-th token  type: [id] 	 on line 38 : b
+266-th token  type: [minus] 	 on line 38 : -
+267-th token  type: [num] 	 on line 38 : 1
+268-th token  type: [ ) ] 	 on line 38 : )
+269-th token  type: [ ; ] 	 on line 38 : ;
+270-th token  type: [id] 	 on line 39 : b
+271-th token  type: [assign] 	 on line 39 : :=
+272-th token  type: [id] 	 on line 39 : b
+273-th token  type: [plus] 	 on line 39 : +
+274-th token  type: [num] 	 on line 39 : 1
+275-th token  type: [end] 	 on line 40 : end
+276-th token  type: [ ; ] 	 on line 40 : ;
+277-th token  type: [id] 	 on line 41 : sort
+278-th token  type: [ ( ] 	 on line 41 : (
+279-th token  type: [id] 	 on line 41 : d
+280-th token  type: [ ) ] 	 on line 41 : )
+281-th token on line 41 is a comment
+282-th token  type: [end] 	 on line 41 : end
+283-th token  type: [ ; ] 	 on line 41 : ;
+284-th token  type: [id] 	 on line 42 : k
+285-th token  type: [lbrac] 	 on line 42 : [
+286-th token  type: [num] 	 on line 42 : 25
+287-th token  type: [rbrac] 	 on line 42 : ]
+288-th token  type: [lbrac] 	 on line 42 : [
+289-th token  type: [num] 	 on line 42 : 26
+290-th token  type: [rbrac] 	 on line 42 : ]
+291-th token  type: [assign] 	 on line 42 : :=
+292-th token  type: [num] 	 on line 42 : 3
+293-th token  type: [ ; ] 	 on line 42 : ;
+294-th token on line 42 is a comment
+295-th token  type: [id] 	 on line 42 : k
+296-th token  type: [lbrac] 	 on line 42 : [
+297-th token  type: [num] 	 on line 42 : 25
+298-th token  type: [rbrac] 	 on line 42 : ]
+299-th token  type: [lbrac] 	 on line 42 : [
+300-th token  type: [num] 	 on line 42 : 26
+301-th token  type: [rbrac] 	 on line 42 : ]
+302-th token  type: [assign] 	 on line 42 : :=
+303-th token  type: [num] 	 on line 42 : 3.14
+304-th token  type: [ ; ] 	 on line 42 : ;
+305-th token on line 42 is a comment
+306-th token  type: [id] 	 on line 42 : k
+307-th token  type: [lbrac] 	 on line 42 : [
+308-th token  type: [num] 	 on line 42 : 25
+309-th token  type: [rbrac] 	 on line 42 : ]
+310-th token  type: [lbrac] 	 on line 42 : [
+311-th token  type: [num] 	 on line 42 : 26
+312-th token  type: [rbrac] 	 on line 42 : ]
+313-th token  type: [assign] 	 on line 42 : :=
+314-th token  type: [id] 	 on line 42 : k
+315-th token  type: [lbrac] 	 on line 42 : [
+316-th token  type: [num] 	 on line 42 : 25
+317-th token  type: [rbrac] 	 on line 42 : ]
+318-th token  type: [lbrac] 	 on line 42 : [
+319-th token  type: [num] 	 on line 42 : 26
+320-th token  type: [rbrac] 	 on line 42 : ]
+321-th token  type: [plus] 	 on line 42 : +
+322-th token  type: [num] 	 on line 42 : 3
+323-th token  type: [ ; ] 	 on line 42 : ;
+324-th token on line 42 is a comment
+325-th token  type: [id] 	 on line 42 : k
+326-th token  type: [lbrac] 	 on line 42 : [
+327-th token  type: [num] 	 on line 42 : 25
+328-th token  type: [rbrac] 	 on line 42 : ]
+329-th token  type: [lbrac] 	 on line 42 : [
+330-th token  type: [num] 	 on line 42 : 126
+331-th token  type: [rbrac] 	 on line 42 : ]
+332-th token  type: [assign] 	 on line 42 : :=
+333-th token  type: [num] 	 on line 42 : 3.14
+334-th token  type: [ ; ] 	 on line 42 : ;
+335-th token on line 42 is a comment
+336-th token  type: [id] 	 on line 42 : k
+337-th token  type: [lbrac] 	 on line 42 : [
+338-th token  type: [num] 	 on line 42 : 125
+339-th token  type: [rbrac] 	 on line 42 : ]
+340-th token  type: [lbrac] 	 on line 42 : [
+341-th token  type: [num] 	 on line 42 : 26
+342-th token  type: [rbrac] 	 on line 42 : ]
+343-th token  type: [assign] 	 on line 42 : :=
+344-th token  type: [num] 	 on line 42 : 3.14
+345-th token  type: [ ; ] 	 on line 42 : ;
+346-th token on line 42 is a comment
+347-th token  type: [id] 	 on line 42 : k
+348-th token  type: [lbrac] 	 on line 42 : [
+349-th token  type: [num] 	 on line 42 : 125
+350-th token  type: [rbrac] 	 on line 42 : ]
+351-th token  type: [lbrac] 	 on line 42 : [
+352-th token  type: [num] 	 on line 42 : 126
+353-th token  type: [rbrac] 	 on line 42 : ]
+354-th token  type: [assign] 	 on line 42 : :=
+355-th token  type: [num] 	 on line 42 : 3.14
+356-th token on line 42 is a comment
+357-th token  type: [id] 	 on line 42 : a
+358-th token  type: [assign] 	 on line 42 : :=
+359-th token  type: [id] 	 on line 42 : extf
+360-th token  type: [ ( ] 	 on line 42 : (
+361-th token  type: [num] 	 on line 42 : 20
+362-th token  type: [ , ] 	 on line 42 : ,
+363-th token  type: [id] 	 on line 42 : sum
+364-th token  type: [ ) ] 	 on line 42 : )
+365-th token  type: [ ; ] 	 on line 42 : ;
+366-th token on line 42 is a comment
+367-th token on line 45 is a comment
+ Lexical analyzer error at line 45 : #
+368-th token  type: [id] 	 on line 45 : include
+369-th token  type: [ < ] 	 on line 45 : <
+370-th token  type: [id] 	 on line 45 : abc
+371-th token  type: [dot] 	 on line 45 : .
+372-th token  type: [id] 	 on line 45 : h
+373-th token  type: [ > ] 	 on line 45 : >
+374-th token on line 45 is a comment
+375-th token  type: [id] 	 on line 45 : a
+376-th token  type: [equal] 	 on line 45 : =
+377-th token  type: [id] 	 on line 45 : bbb
+378-th token  type: [ ( ] 	 on line 45 : (
+379-th token  type: [num] 	 on line 45 : 20
+380-th token  type: [ , ] 	 on line 45 : ,
+381-th token  type: [id] 	 on line 45 : sum
+382-th token  type: [ ) ] 	 on line 45 : )
+383-th token  type: [ ; ] 	 on line 45 : ;
+384-th token on line 49 is a comment
+ Lexical analyzer error at line 50 : #
+385-th token  type: [if] 	 on line 50 : if
+ Lexical analyzer error at line 50 : !
+386-th token  type: [id] 	 on line 50 : defined
+387-th token  type: [ ( ] 	 on line 50 : (
+388-th token  type: [id] 	 on line 50 : __unix__
+389-th token  type: [ ) ] 	 on line 50 : )
+ Lexical analyzer error at line 51 : #
+390-th token  type: [id] 	 on line 51 : include
+391-th token  type: [id] 	 on line 51 : Long40
+392-th token  type: [dot] 	 on line 51 : .
+393-th token  type: [id] 	 on line 51 : h
+ Lexical analyzer error at line 51 : ¡
+ Lexical analyzer error at line 51 : ¨
+394-th token  type: [id] 	 on line 52 : k
+395-th token  type: [lbrac] 	 on line 52 : [
+396-th token  type: [num] 	 on line 52 : 25
+397-th token  type: [rbrac] 	 on line 52 : ]
+398-th token  type: [lbrac] 	 on line 52 : [
+399-th token  type: [num] 	 on line 52 : 26
+400-th token  type: [rbrac] 	 on line 52 : ]
+401-th token  type: [assign] 	 on line 52 : :=
+402-th token  type: [id] 	 on line 52 : k
+403-th token  type: [lbrac] 	 on line 52 : [
+404-th token  type: [num] 	 on line 52 : 25
+405-th token  type: [rbrac] 	 on line 52 : ]
+406-th token  type: [lbrac] 	 on line 52 : [
+407-th token  type: [num] 	 on line 52 : 26
+408-th token  type: [rbrac] 	 on line 52 : ]
+409-th token  type: [plus] 	 on line 52 : +
+410-th token  type: [num] 	 on line 52 : 5
+411-th token  type: [ ; ] 	 on line 52 : ;
+412-th token on line 52 is a comment
+ Lexical analyzer error at line 52 : #
+413-th token  type: [id] 	 on line 52 : elif
+414-th token  type: [id] 	 on line 52 : defined
+415-th token  type: [ ( ] 	 on line 52 : (
+416-th token  type: [id] 	 on line 52 : _TMS320C6200
+417-th token  type: [ ) ] 	 on line 52 : )
+ Lexical analyzer error at line 53 : #
+418-th token  type: [id] 	 on line 53 : define
+419-th token  type: [id] 	 on line 53 : assert
+420-th token  type: [ ( ] 	 on line 53 : (
+421-th token  type: [id] 	 on line 53 : a
+422-th token  type: [ ) ] 	 on line 53 : )
+423-th token  type: [id] 	 on line 54 : k
+424-th token  type: [lbrac] 	 on line 54 : [
+425-th token  type: [num] 	 on line 54 : 25
+426-th token  type: [rbrac] 	 on line 54 : ]
+427-th token  type: [lbrac] 	 on line 54 : [
+428-th token  type: [num] 	 on line 54 : 26
+429-th token  type: [rbrac] 	 on line 54 : ]
+430-th token  type: [assign] 	 on line 54 : :=
+431-th token  type: [id] 	 on line 54 : k
+432-th token  type: [lbrac] 	 on line 54 : [
+433-th token  type: [num] 	 on line 54 : 25
+434-th token  type: [rbrac] 	 on line 54 : ]
+435-th token  type: [lbrac] 	 on line 54 : [
+436-th token  type: [num] 	 on line 54 : 26
+437-th token  type: [rbrac] 	 on line 54 : ]
+438-th token  type: [plus] 	 on line 54 : +
+439-th token  type: [num] 	 on line 54 : 333
+440-th token  type: [ ; ] 	 on line 54 : ;
+441-th token on line 54 is a comment
+ Lexical analyzer error at line 54 : #
+442-th token  type: [else] 	 on line 54 : else
+ Lexical analyzer error at line 55 : #
+443-th token  type: [id] 	 on line 55 : include
+ Lexical analyzer error at line 55 : ¡
+ Lexical analyzer error at line 55 : ¨
+444-th token  type: [id] 	 on line 55 : Long40
+445-th token  type: [dot] 	 on line 55 : .
+446-th token  type: [id] 	 on line 55 : h
+ Lexical analyzer error at line 55 : ¡
+ Lexical analyzer error at line 55 : ¨
+447-th token  type: [id] 	 on line 56 : k
+448-th token  type: [lbrac] 	 on line 56 : [
+449-th token  type: [num] 	 on line 56 : 25
+450-th token  type: [rbrac] 	 on line 56 : ]
+451-th token  type: [lbrac] 	 on line 56 : [
+452-th token  type: [num] 	 on line 56 : 26
+453-th token  type: [rbrac] 	 on line 56 : ]
+454-th token  type: [assign] 	 on line 56 : :=
+455-th token  type: [id] 	 on line 56 : k
+456-th token  type: [lbrac] 	 on line 56 : [
+457-th token  type: [num] 	 on line 56 : 25
+458-th token  type: [rbrac] 	 on line 56 : ]
+459-th token  type: [lbrac] 	 on line 56 : [
+460-th token  type: [num] 	 on line 56 : 26
+461-th token  type: [rbrac] 	 on line 56 : ]
+462-th token  type: [plus] 	 on line 56 : +
+463-th token  type: [num] 	 on line 56 : 6666
+464-th token  type: [ ; ] 	 on line 56 : ;
+465-th token on line 56 is a comment
+ Lexical analyzer error at line 56 : #
+466-th token  type: [id] 	 on line 56 : include
+467-th token  type: [ < ] 	 on line 56 : <
+468-th token  type: [id] 	 on line 56 : assert
+469-th token  type: [dot] 	 on line 56 : .
+470-th token  type: [id] 	 on line 56 : h
+471-th token  type: [ > ] 	 on line 56 : >
+ Lexical analyzer error at line 57 : #
+472-th token  type: [id] 	 on line 57 : endif
+473-th token on line 62 is a comment
+ Lexical analyzer error at line 62 : #
+474-th token  type: [id] 	 on line 62 : pragma
+475-th token  type: [id] 	 on line 62 : __promise
+476-th token  type: [ ( ] 	 on line 62 : (
+477-th token  type: [ ( ] 	 on line 62 : (
+478-th token  type: [id] 	 on line 62 : k
+ Lexical analyzer error at line 62 : %
+479-th token  type: [num] 	 on line 62 : 16
+480-th token  type: [ ) ] 	 on line 62 : )
+481-th token  type: [equal] 	 on line 62 : =
+482-th token  type: [equal] 	 on line 62 : =
+483-th token  type: [num] 	 on line 62 : 0
+484-th token  type: [ ) ] 	 on line 62 : )
+485-th token  type: [ ; ] 	 on line 62 : ;
+486-th token  type: [id] 	 on line 63 : b
+487-th token  type: [assign] 	 on line 63 : :=
+488-th token  type: [num] 	 on line 63 : 1
+489-th token  type: [ ; ] 	 on line 63 : ;
+490-th token  type: [while] 	 on line 64 : while
+491-th token  type: [id] 	 on line 64 : b
+492-th token  type: [ <= ] 	 on line 64 : <=
+493-th token  type: [id] 	 on line 64 : k
+494-th token  type: [do] 	 on line 64 : do
+495-th token  type: [begin] 	 on line 65 : begin
+496-th token  type: [id] 	 on line 66 : sum
+497-th token  type: [assign] 	 on line 66 : :=
+498-th token  type: [id] 	 on line 66 : sum
+499-th token  type: [plus] 	 on line 66 : +
+500-th token  type: [id] 	 on line 66 : a
+501-th token  type: [lbrac] 	 on line 66 : [
+502-th token  type: [id] 	 on line 66 : b
+503-th token  type: [rbrac] 	 on line 66 : ]
+504-th token  type: [ ; ] 	 on line 66 : ;
+505-th token  type: [id] 	 on line 67 : b
+506-th token  type: [assign] 	 on line 67 : :=
+507-th token  type: [id] 	 on line 67 : b
+508-th token  type: [plus] 	 on line 67 : +
+509-th token  type: [num] 	 on line 67 : 1
+510-th token  type: [end] 	 on line 68 : end
+511-th token  type: [ ; ] 	 on line 68 : ;
+512-th token  type: [end] 	 on line 71 : end
+513-th token  type: [dot] 	 on line 71 : .
+514-th token on line 71 is a comment
+
+---- scan test03-nest----
+
+  0-th token  type: [program] 	 on line 1 : PROGRAM
+  1-th token  type: [id] 	 on line 1 : mytest
+  2-th token  type: [ ( ] 	 on line 1 : (
+  3-th token  type: [id] 	 on line 1 : input
+  4-th token  type: [ , ] 	 on line 1 : ,
+  5-th token  type: [id] 	 on line 1 : output
+  6-th token  type: [ , ] 	 on line 1 : ,
+  7-th token  type: [id] 	 on line 1 : error
+  8-th token  type: [ ) ] 	 on line 1 : )
+  9-th token  type: [ ; ] 	 on line 1 : ;
+ 10-th token on line 3 is a comment
+ 11-th token  type: [var] 	 on line 3 : var
+ 12-th token  type: [id] 	 on line 3 : a
+ 13-th token  type: [ , ] 	 on line 3 : ,
+ 14-th token  type: [num] 	 on line 3 : 0
+ 15-th token  type: [id] 	 on line 3 : aa
+ 16-th token  type: [ , ] 	 on line 3 : ,
+ 17-th token  type: [id] 	 on line 3 : bb
+ 18-th token  type: [ : ] 	 on line 3 : :
+ 19-th token  type: [integer] 	 on line 3 : integer
+ 20-th token  type: [ ; ] 	 on line 3 : ;
+ 21-th token  type: [var] 	 on line 4 : var
+ 22-th token  type: [id] 	 on line 4 : gg
+ 23-th token  type: [ , ] 	 on line 4 : ,
+ 24-th token  type: [id] 	 on line 4 : hh
+ 25-th token  type: [ , ] 	 on line 4 : ,
+ 26-th token  type: [id] 	 on line 4 : mm
+ 27-th token  type: [ , ] 	 on line 4 : ,
+ 28-th token  type: [id] 	 on line 4 : pp
+ 29-th token  type: [ , ] 	 on line 4 : ,
+ 30-th token  type: [id] 	 on line 4 : pp
+ Lexical analyzer error at line 4 : @
+ Lexical analyzer error at line 4 : $
+ 31-th token  type: [num] 	 on line 4 : 5
+ 32-th token  type: [ : ] 	 on line 4 : :
+ 33-th token  type: [real] 	 on line 4 : real
+ 34-th token  type: [ ; ] 	 on line 4 : ;
+ 35-th token  type: [divide] 	 on line 6 : /
+ 36-th token  type: [mul] 	 on line 6 : *
+ 37-th token  type: [id] 	 on line 6 : this
+ 38-th token  type: [id] 	 on line 6 : is
+ 39-th token  type: [id] 	 on line 6 : a
+ 40-th token  type: [id] 	 on line 6 : very
+ 41-th token  type: [id] 	 on line 6 : long
+ 42-th token  type: [id] 	 on line 6 : comment
+ 43-th token  type: [1] 	 on line 6 : and
+ 44-th token  type: [id] 	 on line 6 : includes
+ 45-th token  type: [id] 	 on line 6 : letter
+ 46-th token  type: [divide] 	 on line 7 : /
+ 47-th token  type: [mul] 	 on line 7 : *
+ 48-th token  type: [1] 	 on line 7 : and
+ 49-th token  type: [id] 	 on line 7 : symbol
+ 50-th token  type: [id] 	 on line 7 : qwertyui
+ Lexical analyzer error at line 7 : ~
+ Lexical analyzer error at line 7 : @
+ Lexical analyzer error at line 7 : %
+ 51-th token  type: [id] 	 on line 7 : hopasdfghjkl
+ 52-th token  type: [ ; ] 	 on line 7 : ;
+ 53-th token  type: [dot] 	 on line 7 : .
+ 54-th token  type: [ , ] 	 on line 7 : ,
+ 55-th token  type: [id] 	 on line 7 : mnbvcxz
+ Lexical analyzer error at line 7 : `
+ 56-th token  type: [num] 	 on line 7 : 12345
+ 57-th token  type: [mul] 	 on line 7 : *
+ 58-th token  type: [divide] 	 on line 7 : /
+ 59-th token  type: [num] 	 on line 8 : 67890
+ 60-th token  type: [id] 	 on line 8 : p
+ 61-th token  type: [ ; ] 	 on line 8 : ;
+ 62-th token  type: [id] 	 on line 8 : mdsf4577846799tj
+ 63-th token  type: [ , ] 	 on line 8 : ,
+ 64-th token  type: [id] 	 on line 8 : vsffdfger
+ Lexical analyzer error at line 8 : ~
+ Lexical analyzer error at line 8 : !
+ Lexical analyzer error at line 8 : @
+ Lexical analyzer error at line 8 : #
+ Lexical analyzer error at line 8 : $
+ Lexical analyzer error at line 8 : %
+ Lexical analyzer error at line 8 : ^
+ Lexical analyzer error at line 8 : &
+ 65-th token  type: [mul] 	 on line 8 : *
+ 66-th token  type: [ ( ] 	 on line 8 : (
+ 67-th token  type: [ ) ] 	 on line 8 : )
+ 68-th token  type: [id] 	 on line 8 : POIUYEP
+ 69-th token  type: [id] 	 on line 8 : _
+ 70-th token  type: [plus] 	 on line 8 : +
+ Lexical analyzer error at line 8 : |
+ 71-th token  type: [id] 	 on line 8 : _
+
+---- scan test03-run-comment ----
+
+  0-th token  type: [program] 	 on line 1 : PROGRAM
+  1-th token  type: [id] 	 on line 1 : mytest
+  2-th token  type: [ ( ] 	 on line 1 : (
+  3-th token  type: [id] 	 on line 1 : input
+  4-th token  type: [ , ] 	 on line 1 : ,
+  5-th token  type: [id] 	 on line 1 : output
+  6-th token  type: [ , ] 	 on line 1 : ,
+  7-th token  type: [id] 	 on line 1 : error
+  8-th token  type: [ ) ] 	 on line 1 : )
+  9-th token  type: [ ; ] 	 on line 1 : ;
+ 10-th token on line 3 is a comment
+ 11-th token  type: [var] 	 on line 3 : var
+ 12-th token  type: [id] 	 on line 3 : a
+ 13-th token  type: [ , ] 	 on line 3 : ,
+ 14-th token  type: [num] 	 on line 3 : 0
+ 15-th token  type: [id] 	 on line 3 : aa
+ 16-th token  type: [ , ] 	 on line 3 : ,
+ 17-th token  type: [id] 	 on line 3 : bb
+ 18-th token  type: [ : ] 	 on line 3 : :
+ 19-th token  type: [integer] 	 on line 3 : integer
+ 20-th token  type: [ ; ] 	 on line 3 : ;
+ 21-th token  type: [var] 	 on line 4 : var
+ 22-th token  type: [id] 	 on line 4 : gg
+ 23-th token  type: [ , ] 	 on line 4 : ,
+ 24-th token  type: [id] 	 on line 4 : hh
+ 25-th token  type: [ , ] 	 on line 4 : ,
+ 26-th token  type: [id] 	 on line 4 : mm
+ 27-th token  type: [ , ] 	 on line 4 : ,
+ 28-th token  type: [id] 	 on line 4 : pp
+ 29-th token  type: [ , ] 	 on line 4 : ,
+ 30-th token  type: [id] 	 on line 4 : pp
+ Lexical analyzer error at line 4 : @
+ Lexical analyzer error at line 4 : $
+ 31-th token  type: [num] 	 on line 4 : 5
+ 32-th token  type: [ : ] 	 on line 4 : :
+ 33-th token  type: [real] 	 on line 4 : real
+ 34-th token  type: [ ; ] 	 on line 4 : ;
+ 35-th token  type: [divide] 	 on line 6 : /
+ 36-th token  type: [mul] 	 on line 6 : *
+ 37-th token  type: [id] 	 on line 6 : this
+ 38-th token  type: [id] 	 on line 6 : is
+ 39-th token  type: [id] 	 on line 6 : a
+ 40-th token  type: [id] 	 on line 6 : very
+ 41-th token  type: [id] 	 on line 6 : long
+ 42-th token  type: [id] 	 on line 6 : comment
+ 43-th token  type: [1] 	 on line 6 : and
+ 44-th token  type: [id] 	 on line 6 : includes
+ 45-th token  type: [id] 	 on line 6 : letter
+ 46-th token  type: [1] 	 on line 6 : and
+ 47-th token  type: [id] 	 on line 6 : symbol
+ 48-th token  type: [id] 	 on line 6 : qwertyui
+ Lexical analyzer error at line 6 : ~
+ Lexical analyzer error at line 6 : @
+ Lexical analyzer error at line 6 : %
+ 49-th token  type: [id] 	 on line 6 : hopasdfghjkl
+ 50-th token  type: [ ; ] 	 on line 6 : ;
+ 51-th token  type: [dot] 	 on line 6 : .
+ 52-th token  type: [ , ] 	 on line 6 : ,
+ 53-th token  type: [id] 	 on line 6 : mnbvcxz
+ Lexical analyzer error at line 6 : `
+ 54-th token  type: [num] 	 on line 6 : 1234567890
+ 55-th token  type: [id] 	 on line 6 : p
+ 56-th token  type: [ ; ] 	 on line 6 : ;
+ 57-th token  type: [id] 	 on line 6 : mdsf4577846799tj
+ 58-th token  type: [ , ] 	 on line 6 : ,
+ 59-th token  type: [id] 	 on line 6 : vsffdfger
+ Lexical analyzer error at line 6 : ~
+ Lexical analyzer error at line 6 : !
+ Lexical analyzer error at line 6 : @
+ Lexical analyzer error at line 6 : #
+ Lexical analyzer error at line 6 : $
+ Lexical analyzer error at line 6 : %
+ Lexical analyzer error at line 6 : ^
+ Lexical analyzer error at line 6 : &
+ 60-th token  type: [mul] 	 on line 6 : *
+ 61-th token  type: [ ( ] 	 on line 6 : (
+ 62-th token  type: [ ) ] 	 on line 6 : )
+ 63-th token  type: [id] 	 on line 6 : POIUYEP
+ 64-th token  type: [id] 	 on line 6 : _
+ 65-th token  type: [plus] 	 on line 6 : +
+ Lexical analyzer error at line 6 : |
+ 66-th token  type: [id] 	 on line 6 : _
+
+---- scan test03-run-string ----
+
+  0-th token  type: [program] 	 on line 1 : PROGRAM
+  1-th token  type: [id] 	 on line 1 : mytest
+  2-th token  type: [ ( ] 	 on line 1 : (
+  3-th token  type: [id] 	 on line 1 : input
+  4-th token  type: [ , ] 	 on line 1 : ,
+  5-th token  type: [id] 	 on line 1 : output
+  6-th token  type: [ , ] 	 on line 1 : ,
+  7-th token  type: [id] 	 on line 1 : error
+  8-th token  type: [ ) ] 	 on line 1 : )
+  9-th token  type: [ ; ] 	 on line 1 : ;
+ 10-th token on line 3 is a comment
+ 11-th token  type: [var] 	 on line 3 : var
+ 12-th token  type: [id] 	 on line 3 : a
+ 13-th token  type: [ , ] 	 on line 3 : ,
+ 14-th token  type: [num] 	 on line 3 : 0
+ 15-th token  type: [id] 	 on line 3 : aa
+ 16-th token  type: [ , ] 	 on line 3 : ,
+ 17-th token  type: [id] 	 on line 3 : bb
+ 18-th token  type: [ : ] 	 on line 3 : :
+ 19-th token  type: [integer] 	 on line 3 : integer
+ 20-th token  type: [ ; ] 	 on line 3 : ;
+ 21-th token  type: [var] 	 on line 4 : var
+ 22-th token  type: [id] 	 on line 4 : gg
+ 23-th token  type: [ , ] 	 on line 4 : ,
+ 24-th token  type: [id] 	 on line 4 : hh
+ 25-th token  type: [ , ] 	 on line 4 : ,
+ 26-th token  type: [id] 	 on line 4 : mm
+ 27-th token  type: [ , ] 	 on line 4 : ,
+ 28-th token  type: [id] 	 on line 4 : pp
+ 29-th token  type: [ , ] 	 on line 4 : ,
+ 30-th token  type: [id] 	 on line 4 : pp
+ Lexical analyzer error at line 4 : @
+ Lexical analyzer error at line 4 : $
+ 31-th token  type: [num] 	 on line 4 : 5
+ 32-th token  type: [ : ] 	 on line 4 : :
+ 33-th token  type: [real] 	 on line 4 : real
+ 34-th token  type: [ ; ] 	 on line 4 : ;
+ 35-th token on line 6 is a comment
+ 36-th token  type: [begin] 	 on line 7 : begin
+ 37-th token  type: [id] 	 on line 8 : str
+ 38-th token  type: [assign] 	 on line 8 : :=
+ 39-th token  type: [char_str] 	 on line 8 : 'This is a srting!!'
+ 40-th token  type: [ ; ] 	 on line 8 : ;
+ 41-th token  type: [id] 	 on line 9 : str2
+ 42-th token  type: [assign] 	 on line 9 : :=
+ 43-th token  type: [char_str] 	 on line 9 : "  This is a srting,too!!  "
+ 44-th token  type: [ ; ] 	 on line 9 : ;
+ 45-th token  type: [id] 	 on line 10 : str3
+ 46-th token  type: [assign] 	 on line 10 : :=
+ 47-th token  type: [char_str] 	 on line 10 : ""
+ 48-th token  type: [ ; ] 	 on line 10 : ;
+ 49-th token  type: [id] 	 on line 11 : str4
+ 50-th token  type: [assign] 	 on line 11 : :=
+ 51-th token  type: [char_str] 	 on line 11 : "adc"
+ 52-th token  type: [char_str] 	 on line 11 : "def"
+ 53-th token  type: [ ; ] 	 on line 11 : ;
+ 54-th token  type: [id] 	 on line 12 : str4
+ 55-th token  type: [assign] 	 on line 12 : :=
+ 56-th token  type: [run_str] 	 on line 12 : "cross 
+         line string"
+ 57-th token  type: [ ; ] 	 on line 12 : ;
+ 58-th token  type: [id] 	 on line 13 : str5
+ 59-th token  type: [assign] 	 on line 13 : :=
+ Lexical analyzer error at line 13 : "
+ 60-th token  type: [id] 	 on line 13 : cross
+ 61-th token  type: [id] 	 on line 14 : line
+ 62-th token  type: [id] 	 on line 14 : string
+ 63-th token  type: [ ; ] 	 on line 14 : ;
+ 64-th token  type: [id] 	 on line 15 : a
+ 65-th token  type: [assign] 	 on line 15 : :=
+ 66-th token  type: [num] 	 on line 15 : 5
+ 67-th token  type: [plus] 	 on line 15 : +
+ 68-th token  type: [id] 	 on line 15 : bb
+ 69-th token  type: [ ; ] 	 on line 15 : ;
+ 70-th token  type: [end] 	 on line 16 : end
+ 71-th token  type: [dot] 	 on line 16 : .
+ 72-th token on line 16 is a comment
+
+---- scan test-longname     ----
+
+  0-th token  type: [program] 	 on line 1 : PROGRAM
+  1-th token  type: [id] 	 on line 1 : foo
+  2-th token  type: [ ( ] 	 on line 1 : (
+  3-th token  type: [id] 	 on line 1 : input
+  4-th token  type: [ , ] 	 on line 1 : ,
+  5-th token  type: [id] 	 on line 1 : output
+  6-th token  type: [ , ] 	 on line 1 : ,
+  7-th token  type: [id] 	 on line 1 : error
+  8-th token  type: [ ) ] 	 on line 1 : )
+  9-th token  type: [ ; ] 	 on line 1 : ;
+ 10-th token on line 2 is a comment
+ 11-th token on line 2 is a comment
+ 12-th token  type: [var] 	 on line 2 : var
+ 13-th token  type: [id] 	 on line 2 : d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789
+ 14-th token  type: [ : ] 	 on line 2 : :
+ 15-th token  type: [integer] 	 on line 2 : integer
+ 16-th token  type: [ ; ] 	 on line 2 : ;
+ 17-th token  type: [begin] 	 on line 4 : begin
+ 18-th token on line 5 is a comment
+ 19-th token  type: [id] 	 on line 5 : d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789
+ 20-th token  type: [assign] 	 on line 6 : :=
+ 21-th token  type: [num] 	 on line 6 : 3
+ 22-th token  type: [plus] 	 on line 6 : +
+ 23-th token  type: [num] 	 on line 6 : 9
+ 24-th token  type: [ ; ] 	 on line 6 : ;
+ 25-th token  type: [id] 	 on line 8 : d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789
+ 26-th token  type: [assign] 	 on line 9 : :=
+ 27-th token  type: [id] 	 on line 10 : d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789d123456789
+ 28-th token  type: [plus] 	 on line 11 : +
+ 29-th token  type: [num] 	 on line 11 : 9
+ 30-th token  type: [end] 	 on line 13 : end
+ 31-th token  type: [dot] 	 on line 13 : .
+ 32-th token on line 13 is a comment
