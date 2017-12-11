@@ -183,7 +183,7 @@ real    ({i}\.{i}|{i}?\.{i}){exp}?
 
 {R}{E}{A}{L}	               {printf("Shift REAL\n"); return(REAL);}
 
-{id_e}                         {printf("Shift [id] %s\n", yytext); yylval.string = yytext; return(id);}
+{id_e}                       {printf("Shift [ID] %s\n", yytext); yylval.string = yytext; return(ID);}
 ":="                         {printf("Shift := \n"); return(ASSIGNMENT);}
 
 \"(\\.|[^\^\n\"])*\"			   {printf("Shift CHARACTER_STRING\n"); return(CHARACTER_STRING);}

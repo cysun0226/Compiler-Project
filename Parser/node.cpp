@@ -60,8 +60,11 @@ void printTree(struct Node *node, int ident) {
             ident += 3;
             break;
     		case NODE_ID:
-    			printf("%s|-[ID] \n", blank);
+    			printf("%s|-[ID] ", blank);
+          cout << node->strValue << endl;
     			ident += 3;
+    			break;
+        case ID_TOK:
     			break;
     		case NODE_DECL:
     			printf("%s|-DECL\n", blank);

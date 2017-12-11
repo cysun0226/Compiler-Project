@@ -82,14 +82,15 @@ enum ntype {
 		RE_CONST,
 		RE_TYPE,
 		TY_REAL,
-		TY_STR
+		TY_STR,
+		ID_TOK
 };
 
 // #include "symtab.h"
 typedef struct Node {
     int nodeType;
     struct Node *parent;
-	vector<Node*> childs;
+		vector<Node*> childs;
 
     /* Attribute for NODE_TOKEN */
     int tokenType;
@@ -105,6 +106,7 @@ typedef struct Node {
     double rValue;
     char valueValid;
     char* string;
+		std::string strValue;
 
     /* Indicates which OP */
     char op;
