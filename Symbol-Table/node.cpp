@@ -17,6 +17,13 @@ struct Node* newNode(int type) {
     return node;
 }
 
+void copyNode(Node* new_node, Node* old) {
+  new_node->strValue = old->strValue;
+  new_node->nodeType = old->nodeType;
+  new_node->parent = old->parent;
+  new_node->number = old->number;
+}
+
 void addChild(Node* node, Node *child) {
     child->parent = node;
 	  node->childs.push_back(child);
@@ -132,8 +139,40 @@ void printTree(struct Node *node, int ident) {
 	}
 }
 
-Node* copyTree(Node* node)
+Node* convertTree(Node* node)
 {
+  switch (node->nodeType)
+  {
+    case NODE_ID_LT: {
+      std::vector<Node> id_list;
+      Node* new_il = newNode(NODE_ID_LT);
+      Node* il; il = node;
+      while (il->childs[0]->nodeType == NODE_ID_LT) {
+        Node* new_id = new Node;
+        copyNode(new_id, il->childs[2]);
+        addChild(new_il, new_id);
+        // id_list.push_back(new_id);
+        il = il->childs[0];
+      }
+      Node* new_id = new Node;
+      copyNode(new_id, il->childs[0]);
+      // id_list.push_back(new_id);
+      addChild(new_il, new_id);
+      //
+      // for (int i = 0; i < id_list.size(); i++) {
+      //   addChild(new_il, id_list[i]);
+      // }
+      return new_il;
+      break;
+    }
+
+
+    default:
+      // printf("default:%d\n", node->nodeType);
+    break;
+
+  }
+
   Node* root = new Node;
   root->nodeType = node->nodeType;
   if(node->nodeType == NODE_ID) root->strValue = node->strValue;
@@ -143,7 +182,14 @@ Node* copyTree(Node* node)
 	{
 		for (size_t i = 0; i < node->childs.size(); i++)
 		{
-			addChild(root, copyTree(node->childs[i]));
+      Node* new_child = convertTree(node->childs[i]);
+      if(new_child->nodeType == NODE_ID_LT){
+        for (int i = 0; i < new_child->childs.size(); i++) {
+          addChild(root, new_child->childs[i]);
+        }
+      }
+      else
+        addChild(root, new_child);
 		}
 	}
   return root;
@@ -152,6 +198,8 @@ Node* copyTree(Node* node)
 Node* buildAstTree(Node* node)
 {
   Node* ast_root = new Node;
-  ast_root = copyTree(node);
+  ast_root = convertTree(node);
+  // convertTree(ast_root);
+
   return ast_root;
 }
