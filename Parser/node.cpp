@@ -127,11 +127,14 @@ void printTree(struct Node *node, int ident) {
             ident += 3;
             break;
         case NODE_NUM:
-            printf("%s|-NUM\n", blank);
+            printf("%s|-[NUM] ", blank);
+            cout << node->number << endl;
             ident += 3;
             break;
+        case NUM_TOK:
+            break;
         case NODE_LAMDBA:
-            printf("%s|- \n", blank);
+            printf("%s|- (LAMDBA)\n", blank);
             ident += 3;
             break;
         case NODE_STRING      : printf("%s|-STRING\n", blank);ident += 3; break;

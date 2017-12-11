@@ -83,7 +83,8 @@ enum ntype {
 		RE_TYPE,
 		TY_REAL,
 		TY_STR,
-		ID_TOK
+		ID_TOK,
+		NUM_TOK
 };
 
 // #include "symtab.h"
@@ -106,6 +107,7 @@ typedef struct Node {
     double rValue;
     char valueValid;
     char* string;
+		double number;
 		std::string strValue;
 
     /* Indicates which OP */

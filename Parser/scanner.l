@@ -210,7 +210,7 @@ real    ({i}\.{i}|{i}?\.{i}){exp}?
 "*"                          {printf("Shift * \n"); return(STAR);}
 "**"               		 	     {printf("Shift ** \n"); return(STARSTAR);}
 "!="                         {printf("Shift != \n"); return(notEQUAL);}
-{real}	           					 {printf("Shift real \n"); yylval.string = yytext; return(NUM);}
+{real}	           					 {printf("Shift [real] %s \n", yytext); yylval.number = atof(yytext); return(NUM);}
 "//"						             { comment(); }
 
 

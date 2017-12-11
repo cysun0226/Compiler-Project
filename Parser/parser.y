@@ -36,7 +36,7 @@
 %union
 {
     struct Node* node;
-    int number;
+    double number;
     char* string;
 }
 
@@ -115,14 +115,14 @@
 %token <node> STAR
 %token <node> STARSTAR
 %token <node> notEQUAL
-%token <node> NUM
+%token <number> NUM
 %token <node> REAL_NUM
 
 %type <node> prog identifier_list declarations type standard_type
 %type <node> subprogram_declarations subprogram_declaration
 %type <node> subprogram_head arguments parameter_list if_stmt
 %type <node> optional_var compound_statement optional_statements
-%type <node> statement_list statement variable tail term
+%type <node> statement_list statement variable tail term num_tok
 %type <node> procedure_statement expression_list expression
 %type <node> simple_expression factor addop mulop relop id_tok
 
@@ -186,9 +186,16 @@ id_tok :
     // printf("Reduction ( id_tok -> ID )\n");
     $$ = newNode(ID_TOK);
     Node* id_node = newNode(NODE_ID);
-    // printf("ID $1 = %s \n", $1);
-    // cout << "ID $1 = " << $1 << endl;
     id_node->strValue = $1;
+    addChild($$, id_node);
+  }
+  ;
+
+num_tok :
+  NUM {
+    $$ = newNode(NUM_TOK);
+    Node* id_node = newNode(NODE_NUM);
+    id_node->number = $1;
     addChild($$, id_node);
   }
   ;
@@ -214,14 +221,14 @@ declarations :
       addChild($$, $5);
       addChild($$, newNode(PUC_SEMI));
     }
-  | declarations CONST identifier_list EQUAL NUM SEMICOLON {
+  | declarations CONST identifier_list EQUAL num_tok SEMICOLON {
     printf("Reduction ( declarations -> declarations CONST identifier_list = NUM ; )\n");
     $$ = newNode(NODE_DECL); // $$ = declarations
     addChild($$, $1);
     addChild($$, newNode(RE_CONST));
     addChild($$, $3);
     addChild($$, newNode(OP_EQUAL));
-    addChild($$, newNode(NODE_NUM));
+    addChild($$, $5);
     addChild($$, newNode(PUC_SEMI));
     }
   | declarations TYPE identifier_list EQUAL type SEMICOLON  {
@@ -257,20 +264,20 @@ type :
       $$ = newNode(NODE_TYPE);
       addChild($$, $1);
     }
-  | ARRAY LBRAC NUM DOTDOT NUM RBRAC OF type {
+  | ARRAY LBRAC num_tok DOTDOT num_tok RBRAC OF type {
       printf("Reduction ( type -> ARRAY [NUM .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, newNode(PUC_LBRAC));
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $5);
       addChild($$, newNode(PUC_RBRAC));
       addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
-  | ARRAY LBRAC id_tok DOTDOT NUM RBRAC OF type {
+  | ARRAY LBRAC id_tok DOTDOT num_tok RBRAC OF type {
       printf("Reduction ( type -> ARRAY [ID .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
@@ -278,18 +285,18 @@ type :
       addChild($$, newNode(PUC_LBRAC));
       addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $5);
       addChild($$, newNode(PUC_RBRAC));
       addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
-  | ARRAY LBRAC NUM DOTDOT id_tok RBRAC OF type {
+  | ARRAY LBRAC num_tok DOTDOT id_tok RBRAC OF type {
       printf("Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, newNode(PUC_LBRAC));
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
       addChild($$, newNode(PUC_RBRAC));
@@ -668,22 +675,21 @@ factor :
       addChild($$, $3);
       addChild($$, newNode(PUC_RPAREN));
     }
-  | NUM {
+  | num_tok {
       printf("Reduction ( factor -> NUM )\n");
-
       $$ = newNode(NODE_FACTOR);
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $1);
     }
   | CHARACTER_STRING {
       printf("Reduction ( factor -> CHARACTER_STRING )\n");
       $$ = newNode(NODE_FACTOR);
       addChild($$, newNode(NODE_STRING));
     }
-  | addop NUM {
+  | addop num_tok {
       printf("Reduction ( factor -> addop NUM )\n");
       $$ = newNode(NODE_FACTOR);
       addChild($$, $1);
-      addChild($$, newNode(NODE_NUM));
+      addChild($$, $2);
     }
   | LPAREN expression RPAREN {
       printf("Reduction ( factor -> ( expression ) )\n");
