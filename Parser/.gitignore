@@ -6,3 +6,4 @@ parser.hh
 parser.tab.c
 parser.tab.h
 *.txt
+result.txt
