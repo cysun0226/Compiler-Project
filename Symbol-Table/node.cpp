@@ -22,6 +22,9 @@ void copyNode(Node* new_node, Node* old) {
   new_node->nodeType = old->nodeType;
   new_node->parent = old->parent;
   new_node->number = old->number;
+  for (int i = 0; i < old->childs.size(); i++) {
+    new_node->childs.push_back(old->childs[i]);
+  }
 }
 
 void addChild(Node* node, Node *child) {
