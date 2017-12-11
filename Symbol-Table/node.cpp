@@ -19,8 +19,11 @@ struct Node* newNode(int type) {
 
 void addChild(Node* node, Node *child) {
     child->parent = node;
-
 	  node->childs.push_back(child);
+}
+
+void deleteChild(Node* node) {
+	  node->childs.clear();
 }
 
 void deleteNode(struct Node *node) {
@@ -37,106 +40,32 @@ void printTree(struct Node *node, int ident) {
     blank[ident] = 0;
 
     switch(node->nodeType) {
-        case OP_ADD:
-            printf("%s|-ADD\n", blank);
-            break;
-        case OP_SUB:
-            printf("%s|-SUB\n", blank);
-            break;
-        case NODE_INT:
-            printf("%s|-%d\n", blank, node->iValue);
-            ident += 3;
-            break;
-        case NODE_STMT:
-            printf("%s|-STMT\n", blank);
-            ident += 3;
-            break;
-        case NODE_TERM:
-            printf("%s|-TERM\n", blank);
-            ident += 3;
-            break;
-        case NODE_PROGRAM:
-            printf("%s|-PROGRAM\n", blank);
-            ident += 3;
-            break;
-    		case NODE_ID:
-    			printf("%s|-[ID] ", blank);
-          cout << node->strValue << endl;
-    			ident += 3;
-    			break;
-        case ID_TOK:
-    			break;
-    		case NODE_DECL:
-    			printf("%s|-DECL\n", blank);
-    			ident += 3;
-    			break;
-        case NODE_EXPR:
-            printf("%s|-EXPR\n", blank);
-            ident += 3;
-            break;
-        case NODE_VAR:
-            printf("%s|-VAR\n", blank);
-            ident += 3;
-            break;
-        case NODE_ID_LT:
-            printf("%s|-ID_LIST\n", blank);
-            ident += 3;
-            break;
-        case PUC_COMMA:
-            printf("%s|- ,\n", blank);
-            ident += 3;
-            break;
-        case PUC_LBRAC:
-            printf("%s|- [ \n", blank);
-            ident += 3;
-            break;
-        case PUC_RBRAC:
-            printf("%s|- ]\n", blank);
-            ident += 3;
-            break;
-        case PUC_DOTDOT:
-            printf("%s|- ..\n", blank);
-            ident += 3;
-            break;
-        case PUC_COLON:
-            printf("%s|- :\n", blank);
-            ident += 3;
-            break;
-        case PUC_SEMI:
-            printf("%s|- ;\n", blank);
-            ident += 3;
-            break;
-        case TY_INT:
-            printf("%s|-INTEGER(type)\n", blank);
-            ident += 3;
-            break;
-        case NODE_STDTYPE:
-            printf("%s|-STDTYPE\n", blank);
-            ident += 3;
-            break;
-        case NODE_TYPE:
-            printf("%s|-TYPE\n", blank);
-            ident += 3;
-            break;
-        case RE_ARR:
-            printf("%s|-ARRAY\n", blank);
-            ident += 3;
-            break;
-        case RE_OF:
-            printf("%s|-OF\n", blank);
-            ident += 3;
-            break;
-        case NODE_NUM:
-            printf("%s|-[NUM] ", blank);
-            cout << node->number << endl;
-            ident += 3;
-            break;
-        case NUM_TOK:
-            break;
-        case NODE_LAMDBA:
-            printf("%s|- (LAMDBA)\n", blank);
-            ident += 3;
-            break;
+        case OP_ADD           : printf("%s|-ADD\n", blank); break;
+        case OP_SUB           : printf("%s|-SUB\n", blank); break;
+        case NODE_INT         : printf("%s|-%d\n", blank, node->iValue); ident += 3; break;
+        case NODE_STMT        : printf("%s|-STMT\n", blank); ident += 3; break;
+        case NODE_TERM        : printf("%s|-TERM\n", blank); ident += 3; break;
+        case NODE_PROGRAM     : printf("%s|-PROGRAM\n", blank); ident += 3; break;
+    		case NODE_ID          : printf("%s|-[ID] ", blank); cout << node->strValue << endl; ident += 3; break;
+        case ID_TOK           : break;
+    		case NODE_DECL        : printf("%s|-DECL\n", blank); ident += 3; break;
+        case NODE_EXPR        : printf("%s|-EXPR\n", blank); ident += 3; break;
+        case NODE_VAR         : printf("%s|-VAR\n", blank); ident += 3; break;
+        case NODE_ID_LT       : printf("%s|-ID_LIST\n", blank); ident += 3; break;
+        case PUC_COMMA        : printf("%s|- ,\n", blank); ident += 3; break;
+        case PUC_LBRAC        : printf("%s|- [ \n", blank); ident += 3; break;
+        case PUC_RBRAC        : printf("%s|- ]\n", blank); ident += 3; break;
+        case PUC_DOTDOT       : printf("%s|- ..\n", blank); ident += 3; break;
+        case PUC_COLON        : printf("%s|- :\n", blank); ident += 3; break;
+        case PUC_SEMI         : printf("%s|- ;\n", blank); ident += 3; break;
+        case TY_INT           : printf("%s|-INTEGER(type)\n", blank);ident += 3;break;
+        case NODE_STDTYPE     : printf("%s|-STDTYPE\n", blank);ident += 3;break;
+        case NODE_TYPE        : printf("%s|-TYPE\n", blank);ident += 3;break;
+        case RE_ARR           : printf("%s|-ARRAY\n", blank);ident += 3;break;
+        case RE_OF            : printf("%s|-OF\n", blank);ident += 3;break;
+        case NODE_NUM         : printf("%s|-[NUM] ", blank); cout << node->number << endl; ident += 3; break;
+        case NUM_TOK          : break;
+        case NODE_LAMDBA      : printf("%s|- (LAMDBA)\n", blank); ident += 3;break;
         case NODE_STRING      : printf("%s|-STRING\n", blank);ident += 3; break;
         case NODE_IF_STMT     : printf("%s|-IF_STMT\n", blank);ident += 3; break;
         case NODE_OPTVAR      : printf("%s|-OPTVAR\n", blank);ident += 3; break;
@@ -201,4 +130,28 @@ void printTree(struct Node *node, int ident) {
 			printTree(node->childs[i], ident);
 		}
 	}
+}
+
+Node* copyTree(Node* node)
+{
+  Node* root = new Node;
+  root->nodeType = node->nodeType;
+  if(node->nodeType == NODE_ID) root->strValue = node->strValue;
+  if(node->nodeType == NODE_NUM) root->number = node->number;
+
+  if (!node->childs.empty())
+	{
+		for (size_t i = 0; i < node->childs.size(); i++)
+		{
+			addChild(root, copyTree(node->childs[i]));
+		}
+	}
+  return root;
+}
+
+Node* buildAstTree(Node* node)
+{
+  Node* ast_root = new Node;
+  ast_root = copyTree(node);
+  return ast_root;
 }

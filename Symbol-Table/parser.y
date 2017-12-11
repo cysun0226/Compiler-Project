@@ -789,8 +789,12 @@ int main()
     pFile = fopen( "result.txt", "a" );
 
     yyparse();
-    printf("-----------------------------------------------\n");
+    printf("------------------ parse tree --------------------\n");
     printTree(PARSE_ROOT, 0);
+    printf("------------------- ast tree ---------------------\n");
+    Node* ast_root = new Node;
+    ast_root = buildAstTree(PARSE_ROOT);
+    printTree(ast_root, 0);
 
     fclose(pFile);
 

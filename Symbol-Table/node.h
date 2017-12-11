@@ -84,7 +84,8 @@ enum ntype {
 		TY_REAL,
 		TY_STR,
 		ID_TOK,
-		NUM_TOK
+		NUM_TOK,
+		NULL_NODE
 };
 
 // #include "symtab.h"
@@ -119,5 +120,6 @@ struct Node* newNode(int type);
 void deleteNode(struct Node* node);
 void addChild(struct Node *node, struct Node *child);
 void printTree(struct Node *node, int ident);
+Node* buildAstTree(struct Node *node);
 
 #endif
