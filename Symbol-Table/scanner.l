@@ -135,87 +135,87 @@ real    ({i}\.{i}|{i}?\.{i}){exp}?
 
 %%
 
-{A}{N}{D}                    {printf("Shift AND\n"); return(AND);}
-{A}{R}{R}{A}{Y}              {printf("Shift ARRAY\n"); return(ARRAY);}
-{C}{A}{S}{E}                 {printf("Shift CASE\n"); return(CASE);}
-{C}{O}{N}{S}{T}              {printf("Shift CONST\n"); return(CONST);}
-{D}{I}{V}                    {printf("Shift DIV\n"); return(DIV);}
-{D}{O}                       {printf("Shift DO\n"); return(DO);}
-{D}{O}{W}{N}{T}{O}           {printf("Shift DOWNTO\n"); return(DOWNTO);}
-{E}{L}{S}{E}                 {printf("Shift ELSE\n"); return(ELSE);}
-{E}{N}{D}                    {printf("Shift END\n"); return(END);}
+{A}{N}{D}                    { return(AND);}
+{A}{R}{R}{A}{Y}              { return(ARRAY);}
+{C}{A}{S}{E}                 { return(CASE);}
+{C}{O}{N}{S}{T}              { return(CONST);}
+{D}{I}{V}                    { return(DIV);}
+{D}{O}                       { return(DO);}
+{D}{O}{W}{N}{T}{O}           { return(DOWNTO);}
+{E}{L}{S}{E}                 { return(ELSE);}
+{E}{N}{D}                    { return(END);}
 {E}{X}{T}{E}{R}{N} |
-{E}{X}{T}{E}{R}{N}{A}{L}     {printf("Shift EXTERNAL\n"); return(EXTERNAL);}
+{E}{X}{T}{E}{R}{N}{A}{L}     { return(EXTERNAL);}
 
-{F}{O}{R}                    {printf("Shift FOR\n"); return(FOR);}
-{F}{O}{R}{W}{A}{R}{D}        {printf("Shift FORWARD\n"); return(FORWARD);}
-{F}{U}{N}{C}{T}{I}{O}{N}     {printf("Shift FUNCTION\n"); return(FUNCTION);}
-{G}{O}{T}{O}                 {printf("Shift GOTO\n"); return(GOTO);}
-{I}{F}                       {printf("Shift IF\n"); return(IF);}
-{I}{N}                       {printf("Shift IF\n"); return(IN);}
+{F}{O}{R}                    { return(FOR);}
+{F}{O}{R}{W}{A}{R}{D}        { return(FORWARD);}
+{F}{U}{N}{C}{T}{I}{O}{N}     { return(FUNCTION);}
+{G}{O}{T}{O}                 { return(GOTO);}
+{I}{F}                       { return(IF);}
+{I}{N}                       { return(IN);}
 
 
-{I}{N}{T}{E}{G}{E}{R}	    	 {printf("Shift INTEGER\n"); return(INTEGER);}
-{L}{A}{B}{E}{L}              {printf("Shift LABEL\n"); return(LABEL);}
-{M}{O}{D}                    {printf("Shift MOD\n"); return(MOD);}
-{N}{I}{L}                    {printf("Shift NIL\n"); return(NIL);}
-{N}{O}{T}                    {printf("Shift NOT\n"); return(NOT);}
+{I}{N}{T}{E}{G}{E}{R}	    	 { return(INTEGER);}
+{L}{A}{B}{E}{L}              { return(LABEL);}
+{M}{O}{D}                    { return(MOD);}
+{N}{I}{L}                    { return(NIL);}
+{N}{O}{T}                    { return(NOT);}
 
-{O}{F}                       {printf("Shift OF\n"); return(OF);}
-{O}{R}                       {printf("Shift OR\n"); return(OR);}
-{O}{T}{H}{E}{R}{W}{I}{S}{E}  {printf("Shift OTHERWISE\n"); return(OTHERWISE);}
-{P}{A}{C}{K}{E}{D}           {printf("Shift PACKED\n"); return(PACKED);}
-{B}{E}{G}{I}{N}              {printf("Shift begin\n"); return(PBEGIN);}
-{F}{I}{L}{E}                 {printf("Shift FILE\n"); return(PFILE);}
-{P}{R}{O}{C}{E}{D}{U}{R}{E}  {printf("Shift PROCEDURE\n"); return(PROCEDURE);}
-{P}{R}{O}{G}{R}{A}{M}        {printf("Shift PROGRAM\n"); return(PROGRAM);}
-{R}{E}{C}{O}{R}{D}           {printf("Shift RECORD\n"); return(RECORD);}
-{R}{E}{P}{E}{A}{T}           {printf("Shift REPEAT\n"); return(REPEAT);}
+{O}{F}                       { return(OF);}
+{O}{R}                       { return(OR);}
+{O}{T}{H}{E}{R}{W}{I}{S}{E}  { return(OTHERWISE);}
+{P}{A}{C}{K}{E}{D}           { return(PACKED);}
+{B}{E}{G}{I}{N}              { return(PBEGIN);}
+{F}{I}{L}{E}                 { return(PFILE);}
+{P}{R}{O}{C}{E}{D}{U}{R}{E}  { return(PROCEDURE);}
+{P}{R}{O}{G}{R}{A}{M}        { return(PROGRAM);}
+{R}{E}{C}{O}{R}{D}           { return(RECORD);}
+{R}{E}{P}{E}{A}{T}           { return(REPEAT);}
 
-{S}{E}{T}                    {printf("Shift SET\n"); return(SET);}
-{T}{H}{E}{N}                 {printf("Shift THEN\n"); return(THEN);}
-{T}{O}                       {printf("Shift TO\n"); return(TO);}
-{T}{Y}{P}{E}                 {printf("Shift TYPE\n"); return(TYPE);}
-{U}{N}{T}{I}{L}              {printf("Shift UNTIL\n"); return(UNTIL);}
-{V}{A}{R}                    {printf("Shift VAR\n"); return(VAR);}
-{W}{H}{I}{L}{E}              {printf("Shift WHILE\n"); return(WHILE);}
-{W}{I}{T}{H}                 {printf("Shift WITH\n"); return(WITH);}
+{S}{E}{T}                    { return(SET);}
+{T}{H}{E}{N}                 { return(THEN);}
+{T}{O}                       { return(TO);}
+{T}{Y}{P}{E}                 { return(TYPE);}
+{U}{N}{T}{I}{L}              { return(UNTIL);}
+{V}{A}{R}                    { return(VAR);}
+{W}{H}{I}{L}{E}              { return(WHILE);}
+{W}{I}{T}{H}                 { return(WITH);}
 
-{R}{E}{A}{L}	               {printf("Shift REAL\n"); return(REAL);}
+{R}{E}{A}{L}	               { return(REAL);}
 
-{id_e}                       {printf("Shift [ID] %s\n", yytext); yylval.string = yytext; return(ID);}
-":="                         {printf("Shift := \n"); return(ASSIGNMENT);}
+{id_e}                       { yylval.string = yytext; return(ID);}
+":="                         { return(ASSIGNMENT);}
 
-\"(\\.|[^\^\n\"])*\"			   {printf("Shift CHARACTER_STRING\n"); return(CHARACTER_STRING);}
-":"                          {printf("Shift : \n"); return(COLON);}
-","                          {printf("Shift , \n"); return(COMMA);}
-{integer}	                   {yylval.number = atoi(yytext); printf("Shift [NUM] %s \n", yytext);  return(NUM);}
-"."                          {printf("Shift . \n"); return(DOT);}
-".."                         {printf("Shift .. \n"); return(DOTDOT);}
-"="                          {printf("Shift = \n"); return(EQUAL);}
-">="                         {printf("Shift >= \n"); return(GE);}
-">"                          {printf("Shift > \n"); return(GT);}
-"["                          {printf("Shift [ \n"); return(LBRAC);}
+\"(\\.|[^\^\n\"])*\"			   { return(CHARACTER_STRING);}
+":"                          { return(COLON);}
+","                          { return(COMMA);}
+{integer}	                   {yylval.number = atoi(yytext); return(NUM);}
+"."                          { return(DOT);}
+".."                         { return(DOTDOT);}
+"="                          { return(EQUAL);}
+">="                         { return(GE);}
+">"                          { return(GT);}
+"["                          { return(LBRAC);}
 
-"<="                         {printf("Shift <= \n"); return(LE);}
-"("                          {printf("Shift ( \n"); return(LPAREN);}
-"<"                          {printf("Shift < \n"); return(LT);}
-"-"                          {printf("Shift - \n"); return(MINUS);}
-"+"                          {printf("Shift + \n"); return(PLUS);}
-"]"                          {printf("Shift ] \n"); return(RBRAC);}
-")"                          {printf("Shift ) \n"); return(RPAREN);}
-";"                          {printf("Shift ; \n"); return(SEMICOLON);}
+"<="                         { return(LE);}
+"("                          { return(LPAREN);}
+"<"                          { return(LT);}
+"-"                          { return(MINUS);}
+"+"                          { return(PLUS);}
+"]"                          { return(RBRAC);}
+")"                          { return(RPAREN);}
+";"                          { return(SEMICOLON);}
 
-"/"                          {printf("Shift \ \n"); return(SLASH);}
-"*"                          {printf("Shift * \n"); return(STAR);}
-"**"               		 	     {printf("Shift ** \n"); return(STARSTAR);}
-"!="                         {printf("Shift != \n"); return(notEQUAL);}
-{real}	           					 {printf("Shift [real] %s \n", yytext); yylval.number = atof(yytext); return(NUM);}
+"/"                          { return(SLASH);}
+"*"                          { return(STAR);}
+"**"               		 	     { return(STARSTAR);}
+"!="                         { return(notEQUAL);}
+{real}	           					 { yylval.number = atof(yytext); return(NUM);}
 "//"						             { comment(); }
 
 
 
-'({NQUOTE}|'')+'             {printf("Shift STRING \n"); yylval.string = yytext; return(CHARACTER_STRING);}
+'({NQUOTE}|'')+'             { yylval.string = yytext; return(CHARACTER_STRING);}
 
 
 
