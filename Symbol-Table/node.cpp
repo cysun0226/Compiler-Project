@@ -278,6 +278,18 @@ void reduceDECLlist(Node* node)
   if(cur_type == NODE_DECL) node->nodeType = NODE_DECLS;
   if(cur_type == NODE_SPROG_DECLS) node->nodeType = NODE_SPROG_DECLS_LI;
   copyChildinverse(node, list);
+
+  if(node->nodeType == NODE_SPROG_DECLS_LI)
+  {
+    for (int i = 0; i < node->childs.size(); i++)
+    {
+
+      if(node->childs[i]->nodeType == NODE_SPROG_DECLS) {
+          if (node->childs[i]->childs[0]->nodeType == NODE_SPROG_DECL)
+            node->childs[i] = node->childs[i]->childs[0];
+      }
+    }
+  }
 }
 
 void reduceDECL(Node* node)
@@ -328,18 +340,22 @@ void reduceDECL(Node* node)
 void reduceList(Node* node)
 {
   int node_type = node->nodeType;
-  if(node->nodeType == NODE_ID_LT || node->nodeType == NODE_STMT_LI || node->nodeType == NODE_EXPR_LI)
-  {
-    std::vector<Node*> list;
-    Node* new_il = newNode(node_type);
-    Node* il; il = node;
-    while (il->childs[0]->nodeType == node_type) {
-      list.push_back(il->childs[2]);
-      il = il->childs[0];
-    }
-    list.push_back(il->childs[0]);
-    copyChildinverse(node, list);
+  std::vector<Node*> list;
+  Node* new_il = newNode(node_type);
+  Node* il; il = node;
+  while (il->childs[0]->nodeType == node_type) {
+    list.push_back(il->childs[2]);
+    il = il->childs[0];
   }
+  list.push_back(il->childs[0]);
+  copyChildinverse(node, list);
+}
+
+void reduce(Node* node)
+{
+  int node_type = node->nodeType;
+  if(node->nodeType == NODE_ID_LT || node->nodeType == NODE_STMT_LI || node->nodeType == NODE_EXPR_LI)
+    reduceList(node);
 
   if(node_type == NODE_DECL)
     reduceDECL(node);
@@ -354,10 +370,12 @@ void reduceList(Node* node)
 	{
     for (size_t i = 0; i < node->childs.size(); i++)
 		{
-      reduceList(node->childs[i]);
+      reduce(node->childs[i]);
 		}
 	}
 }
+
+
 
 Node* buildAstTree(Node* node)
 {
@@ -365,7 +383,7 @@ Node* buildAstTree(Node* node)
   Node* cp;
   cp = copyTree(node);
   ast_root = cp;
-  reduceList(ast_root);
+  reduce(ast_root);
   // ast_root = convertTree(cp);
   // convertTree(ast_root);
 
