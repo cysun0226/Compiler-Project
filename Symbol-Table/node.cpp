@@ -215,9 +215,42 @@ Node* copyTree(Node* node)
   return cp;
 }
 
+void copyChild(Node* node, std::vector<Node*> ori)
+{
+  node->childs.clear();
+  for (int i = 0; i < ori.size(); i++) {
+    addChild(node, ori[i]);
+  }
+}
+
 void reduceList(Node* node)
 {
-  
+  switch (node->nodeType)
+  {
+    case NODE_ID_LT: {
+      std::vector<Node*> list;
+      Node* new_il = newNode(NODE_ID_LT);
+      Node* il; il = node;
+      while (il->childs[0]->nodeType == NODE_ID_LT) {
+        list.push_back(il->childs[2]);
+        il = il->childs[0];
+      }
+      list.push_back(il->childs[0]);
+      copyChild(node, list);
+      break;
+    }
+
+    default:
+    break;
+  }
+
+  if (!node->childs.empty())
+	{
+		for (size_t i = 0; i < node->childs.size(); i++)
+		{
+      reduceList(node->childs[i]);
+		}
+	}
 }
 
 Node* buildAstTree(Node* node)
@@ -225,7 +258,9 @@ Node* buildAstTree(Node* node)
   Node* ast_root;
   Node* cp;
   cp = copyTree(node);
-  ast_root = convertTree(cp);
+  ast_root = cp;
+  reduceList(ast_root);
+  // ast_root = convertTree(cp);
   // convertTree(ast_root);
 
   return ast_root;
