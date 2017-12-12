@@ -127,6 +127,7 @@ void printTree(struct Node *node, int ident) {
         case RE_TYPE          : printf("%s|-TYPE\n", blank); ident += 3;break;
         case TY_REAL          : printf("%s|-REAL\n", blank);ident += 3; break;
         case TY_STR           : printf("%s|-STRING\n", blank);ident += 3; break;
+        case NODE_DECLS       : printf("%s|-DECLS\n", blank);ident += 3; break;
 
         default:
             printf("%sdefault:%d\n", blank, node->nodeType);
@@ -223,30 +224,92 @@ void copyChild(Node* node, std::vector<Node*> ori)
   }
 }
 
+void reduceTYPE(Node* node)
+{
+  // standard_type
+  if (node->childs[0]->nodeType == NODE_STDTYPE){
+    node->nodeType = node->childs[0]->childs[0]->nodeType;
+    delete node->childs[0]->childs[0]; // STDTYPE
+    delete node->childs[0];
+    node->childs.clear();
+    return;
+  }
+
+}
+
+void reduceDECLlist(Node* node)
+{
+  if(node->childs[0]->nodeType != NODE_DECL)
+    return;
+
+  std::vector<Node*> list;
+  Node* dl; dl = node;
+  while (dl->childs[0]->nodeType == NODE_DECL) {
+    Node* newDECL = new Node;
+    copyNode(newDECL, dl);
+    newDECL->childs.erase(newDECL->childs.begin());
+    list.push_back(newDECL);
+    dl = dl->childs[0];
+  }
+  node->nodeType = NODE_DECLS;
+  copyChild(node, list);
+}
+
+void reduceDECL(Node* node)
+{
+  reduceDECLlist(node);
+  // declarations -> LAMDBA, remove node
+  if (node->childs[0]->nodeType == NODE_LAMDBA) {
+    node->parent->childs.erase(node->parent->childs.begin());
+    return;
+  }
+  // declarations VAR identifier_list COLON type SEMICOLON
+  // if (node->childs[1]->nodeType == NODE_VAR && node->childs[4]->nodeType == NODE_TYPE) {
+  //   std::vector<Node*> tmp(node->childs);
+  //   if (node->parent->nodeType == NODE_DECL)
+  //     node->parent->childs.insert(node->parent->childs.begin()+1, node->childs[0]);
+  //   else
+  //     return;
+  //     // node->parent->childs.insert(node->parent->childs.begin()+7, node->childs[0]);
+  //
+  //   node->childs.clear();
+  //   addChild(node, tmp[1]);
+  //   addChild(node, tmp[2]);
+  //   addChild(node, tmp[4]);
+  //   return;
+  // }
+  // declarations VAR identifier_list COLON identifier_list SEMICOLON
+
+  // declarations CONST identifier_list EQUAL num_tok SEMICOLON
+
+  // declarations TYPE identifier_list EQUAL type SEMICOLON
+}
+
 void reduceList(Node* node)
 {
-  switch (node->nodeType)
+  int node_type = node->nodeType;
+  if(node->nodeType == NODE_ID_LT || node->nodeType == NODE_STMT_LI || node->nodeType == NODE_EXPR_LI)
   {
-    case NODE_ID_LT: {
-      std::vector<Node*> list;
-      Node* new_il = newNode(NODE_ID_LT);
-      Node* il; il = node;
-      while (il->childs[0]->nodeType == NODE_ID_LT) {
-        list.push_back(il->childs[2]);
-        il = il->childs[0];
-      }
-      list.push_back(il->childs[0]);
-      copyChild(node, list);
-      break;
+    std::vector<Node*> list;
+    Node* new_il = newNode(node_type);
+    Node* il; il = node;
+    while (il->childs[0]->nodeType == node_type) {
+      list.push_back(il->childs[2]);
+      il = il->childs[0];
     }
-
-    default:
-    break;
+    list.push_back(il->childs[0]);
+    copyChild(node, list);
   }
+
+  if(node_type == NODE_DECL)
+    reduceDECL(node);
+
+  if(node_type == NODE_TYPE)
+    reduceTYPE(node);
 
   if (!node->childs.empty())
 	{
-		for (size_t i = 0; i < node->childs.size(); i++)
+    for (size_t i = 0; i < node->childs.size(); i++)
 		{
       reduceList(node->childs[i]);
 		}
