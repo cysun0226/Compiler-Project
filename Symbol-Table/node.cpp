@@ -254,12 +254,15 @@ void reduceTYPE(Node* node)
 
 }
 
+void removeLAMDBA(Node* node)
+{
+  if (node->childs[0]->nodeType == NODE_LAMDBA)
+    node->parent->childs.erase(node->parent->childs.begin());
+}
+
 void reduceDECLlist(Node* node)
 {
-  if (node->childs[0]->nodeType == NODE_LAMDBA) {
-    node->parent->childs.erase(node->parent->childs.begin());
-    return;
-  }
+  removeLAMDBA(node);
 
   int cur_type = node->nodeType;
 
@@ -351,20 +354,30 @@ void reduceList(Node* node)
   copyChildinverse(node, list);
 }
 
+void reduceOPTVAR(Node* node)
+{
+  if (node->childs[0]->nodeType == NODE_LAMDBA) {
+    node->parent->childs.erase(node->parent->childs.begin());
+    return;
+  }
+}
+
 void reduce(Node* node)
 {
   int node_type = node->nodeType;
-  if(node->nodeType == NODE_ID_LT || node->nodeType == NODE_STMT_LI || node->nodeType == NODE_EXPR_LI)
-    reduceList(node);
 
-  if(node_type == NODE_DECL)
-    reduceDECL(node);
+  switch (node_type)
+  {
+    case NODE_ID_LT       : reduceList(node); break;
+    case NODE_STMT_LI     : reduceList(node); break;
+    case NODE_EXPR_LI     : reduceList(node); break;
+    case NODE_DECL        : reduceDECL(node); break;
+    case NODE_TYPE        : reduceTYPE(node); break;
+    case NODE_SPROG_DECLS : reduceDECLlist(node); break;
+    case NODE_OPTVAR      : removeLAMDBA(node); break;
+  }
 
-  if(node_type == NODE_TYPE)
-    reduceTYPE(node);
 
-  if(node_type == NODE_SPROG_DECLS)
-    reduceDECLlist(node);
 
   if (!node->childs.empty())
 	{
