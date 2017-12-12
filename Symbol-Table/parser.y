@@ -9,6 +9,7 @@
 
     using namespace std;
     FILE *pFile;
+    FILE *spFile;
 
     extern "C"
     {
@@ -21,9 +22,9 @@
 
         void yyerror(const char *str)
         {
-            fprintf(pFile, "error! \n");
+            fprintf( pFile, "error! \n");
             fclose(pFile);
-            fprintf(stderr,"error: %s\n",str);
+            fprintf( stderr,"error: %s\n",str);
         }
 
     }
@@ -136,13 +137,13 @@ prog :
   subprogram_declarations
   compound_statement
   DOT {
-     printf("Reduction ( prog -> PROGRAM ID (identifier_list); \n");
-     printf("                    declarations \n");
-     printf("                    subprogram_declarations \n");
-     printf("                    compound_statement \n");
-     printf("                    .                             )\n");
+     fprintf( spFile, "Reduction ( prog -> PROGRAM ID (identifier_list); \n");
+     fprintf( spFile, "                    declarations \n");
+     fprintf( spFile, "                    subprogram_declarations \n");
+     fprintf( spFile, "                    compound_statement \n");
+     fprintf( spFile, "                    .                             )\n");
 
-     fprintf(pFile, "Parse finish. \n");
+     fprintf( pFile, "Parse finish. \n");
 
      $$ = newNode(NODE_START);
      addChild($$, newNode(RE_PROG));
@@ -162,16 +163,16 @@ prog :
 
 identifier_list :
     ID {
-      printf("Reduction ( identifier_list -> ID )\n");
+      fprintf( spFile, "Reduction ( identifier_list -> ID )\n");
       $$ = newNode(NODE_ID_LT);
       Node* id_node = newNode(NODE_ID);
-      // printf("ID $1 = %s \n", $1);
+      // fprintf( spFile, "ID $1 = %s \n", $1);
       // cout << "ID $1 = " << $1 << endl;
       id_node->strValue = $1;
       addChild($$, id_node);
     }
   | identifier_list COMMA ID {
-      printf("Reduction ( identifier_list -> identifier_list , ID )\n");
+      fprintf( spFile, "Reduction ( identifier_list -> identifier_list , ID )\n");
       $$ = newNode(NODE_ID_LT);
       addChild($$, $1);
       addChild($$, newNode(PUC_COMMA));
@@ -183,7 +184,7 @@ identifier_list :
 
 id_tok :
   ID {
-    // printf("Reduction ( id_tok -> ID )\n");
+    // fprintf( spFile, "Reduction ( id_tok -> ID )\n");
     $$ = newNode(ID_TOK);
     Node* id_node = newNode(NODE_ID);
     id_node->strValue = $1;
@@ -202,7 +203,7 @@ num_tok :
 
 declarations :
     declarations VAR identifier_list COLON type SEMICOLON {
-      printf("Reduction ( declarations -> declarations VAR identifier_list : type ; )\n");
+      fprintf( spFile, "Reduction ( declarations -> declarations VAR identifier_list : type ; )\n");
       $$ = newNode(NODE_DECL);
       addChild($$, $1);
       addChild($$, newNode(NODE_VAR));
@@ -212,7 +213,7 @@ declarations :
       addChild($$, newNode(PUC_SEMI));
     }
   | declarations VAR identifier_list COLON identifier_list SEMICOLON {
-      printf("Reduction ( declarations -> declarations VAR identifier_list : id ; )\n");
+      fprintf( spFile, "Reduction ( declarations -> declarations VAR identifier_list : id ; )\n");
       $$ = newNode(NODE_DECL);
       addChild($$, $1);
       addChild($$, newNode(NODE_VAR));
@@ -222,7 +223,7 @@ declarations :
       addChild($$, newNode(PUC_SEMI));
     }
   | declarations CONST identifier_list EQUAL num_tok SEMICOLON {
-    printf("Reduction ( declarations -> declarations CONST identifier_list = NUM ; )\n");
+    fprintf( spFile, "Reduction ( declarations -> declarations CONST identifier_list = NUM ; )\n");
     $$ = newNode(NODE_DECL); // $$ = declarations
     addChild($$, $1);
     addChild($$, newNode(RE_CONST));
@@ -232,7 +233,7 @@ declarations :
     addChild($$, newNode(PUC_SEMI));
     }
   | declarations TYPE identifier_list EQUAL type SEMICOLON  {
-    printf("Reduction ( declarations -> declarations TYPE identifier_list = type ; )\n");
+    fprintf( spFile, "Reduction ( declarations -> declarations TYPE identifier_list = type ; )\n");
     $$ = newNode(NODE_DECL); // $$ = declarations
     addChild($$, $1);
     addChild($$, newNode(RE_TYPE));
@@ -242,7 +243,7 @@ declarations :
     addChild($$, newNode(PUC_SEMI));
     }
   /*| PROCEDURE id arguments SEMICOLON {
-      printf("Reduction ( declarations -> PROCEDURE id arguments SEMICOLON )\n");
+      fprintf( spFile, "Reduction ( declarations -> PROCEDURE id arguments SEMICOLON )\n");
       $$ = newNode(NODE_DECL);
       addChild($$, newNode(RE_PROC));
       addChild($$, newNode(NODE_ID));
@@ -250,7 +251,7 @@ declarations :
       addChild($$, newNode(PUC_SEMI));
     }*/
   | {
-      printf("Reduction ( declarations -> LAMDBA )\n");
+      fprintf( spFile, "Reduction ( declarations -> LAMDBA )\n");
       $$ = newNode(NODE_DECL);
       addChild($$, newNode(NODE_LAMDBA));
     }
@@ -259,13 +260,13 @@ declarations :
 
 type :
     standard_type {
-      printf("Reduction ( type -> standard_type )\n");
+      fprintf( spFile, "Reduction ( type -> standard_type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, $1);
     }
   | ARRAY LBRAC num_tok DOTDOT num_tok RBRAC OF type {
-      printf("Reduction ( type -> ARRAY [NUM .. NUM] OF type )\n");
+      fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
@@ -278,7 +279,7 @@ type :
       addChild($$, $8);
     }
   | ARRAY LBRAC id_tok DOTDOT num_tok RBRAC OF type {
-      printf("Reduction ( type -> ARRAY [ID .. NUM] OF type )\n");
+      fprintf( spFile, "Reduction ( type -> ARRAY [ID .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
@@ -291,7 +292,7 @@ type :
       addChild($$, $8);
     }
   | ARRAY LBRAC num_tok DOTDOT id_tok RBRAC OF type {
-      printf("Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
+      fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
@@ -304,7 +305,7 @@ type :
       addChild($$, $8);
     }
   | ARRAY LBRAC id_tok DOTDOT id_tok RBRAC OF type {
-      printf("Reduction ( type -> ARRAY [id .. id] OF type )\n");
+      fprintf( spFile, "Reduction ( type -> ARRAY [id .. id] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
@@ -321,23 +322,23 @@ type :
 
 standard_type :
     INTEGER {
-      printf("Reduction ( standard_type -> INTEGER )\n");
+      fprintf( spFile, "Reduction ( standard_type -> INTEGER )\n");
       $$ = newNode(NODE_STDTYPE);
       addChild($$, newNode(TY_INT));
     }
   | REAL {
-      printf("Reduction ( standard_type -> REAL )\n");
+      fprintf( spFile, "Reduction ( standard_type -> REAL )\n");
       $$ = newNode(NODE_STDTYPE);
       addChild($$, newNode(TY_REAL));
     }
   | CHARACTER_STRING {
-      printf("Reduction ( standard_type -> CHARACTER_STRING )\n");
+      fprintf( spFile, "Reduction ( standard_type -> CHARACTER_STRING )\n");
       $$ = newNode(NODE_STDTYPE);
       addChild($$, newNode(TY_STR));
     }
   /*
   | identifier_list {
-      printf("Reduction ( standard_type -> identifier_list )\n");
+      fprintf( spFile, "Reduction ( standard_type -> identifier_list )\n");
       $$ = newNode(NODE_STDTYPE);
       addChild($$, $1);
     }
@@ -348,14 +349,14 @@ standard_type :
 
 subprogram_declarations :
   subprogram_declarations subprogram_declaration SEMICOLON {
-      printf("Reduction ( subprogram_declarations -> subprogram_declarations subprogram_declaration ; )\n");
+      fprintf( spFile, "Reduction ( subprogram_declarations -> subprogram_declarations subprogram_declaration ; )\n");
       $$ = newNode(NODE_SPROG_DECLS);
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, newNode(PUC_SEMI));
    }
  | {
-      printf("Reduction ( subprogram_declarations -> LAMDBA )\n");
+      fprintf( spFile, "Reduction ( subprogram_declarations -> LAMDBA )\n");
       $$ = newNode(NODE_SPROG_DECLS);
       addChild($$, newNode(NODE_LAMDBA));
    }
@@ -364,7 +365,7 @@ subprogram_declarations :
 
 subprogram_declaration :
   subprogram_head	declarations compound_statement {
-      printf("Reduction ( subprogram_declaration -> subprogram_head declarations compound_statement )\n");
+      fprintf( spFile, "Reduction ( subprogram_declaration -> subprogram_head declarations compound_statement )\n");
       $$ = newNode(NODE_SPROG_DECL);
       addChild($$, $1);
       addChild($$, $2);
@@ -375,7 +376,7 @@ subprogram_declaration :
 
 subprogram_head :
     FUNCTION id_tok arguments COLON standard_type SEMICOLON {
-      printf("Reduction ( subprogram_head -> FUNCTION id arguments : standard_type ; )\n");
+      fprintf( spFile, "Reduction ( subprogram_head -> FUNCTION id arguments : standard_type ; )\n");
       $$ = newNode(NODE_SPROG_H);
       addChild($$, newNode(RE_FUNC));
       addChild($$, $2);
@@ -385,7 +386,7 @@ subprogram_head :
       addChild($$, newNode(PUC_SEMI));
     }
   | PROCEDURE id_tok arguments SEMICOLON {
-      printf("Reduction ( subprogram_head -> PROCEDURE id arguments ; )\n");
+      fprintf( spFile, "Reduction ( subprogram_head -> PROCEDURE id arguments ; )\n");
       $$ = newNode(NODE_SPROG_H);
       addChild($$, newNode(RE_PROC));
       addChild($$, $2);
@@ -397,14 +398,14 @@ subprogram_head :
 
 arguments :
     LPAREN parameter_list RPAREN {
-      printf("Reduction ( arguments -> (parameter_list) )\n");
+      fprintf( spFile, "Reduction ( arguments -> (parameter_list) )\n");
       $$ = newNode(NODE_ARG);
       addChild($$, newNode(PUC_LPAREN));
       addChild($$, $2);
       addChild($$, newNode(PUC_RPAREN));
     }
   | {
-      printf("Reduction ( arguments -> LAMDBA )\n");
+      fprintf( spFile, "Reduction ( arguments -> LAMDBA )\n");
       $$ = newNode(NODE_ARG);
       addChild($$, newNode(NODE_LAMDBA));
     }
@@ -413,7 +414,7 @@ arguments :
 
 parameter_list :
     optional_var identifier_list COLON type {
-      printf("Reduction ( parameter_list -> optional_var identifier_list : type )\n");
+      fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : type )\n");
       $$ = newNode(NODE_PARAM_LI);
       addChild($$, $1);
       addChild($$, $2);
@@ -421,7 +422,7 @@ parameter_list :
       addChild($$, $4);
     }
   | optional_var identifier_list COLON identifier_list {
-    printf("Reduction ( parameter_list -> optional_var identifier_list : identifier_list )\n");
+    fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : identifier_list )\n");
     $$ = newNode(NODE_PARAM_LI);
     addChild($$, $1);
     addChild($$, $2);
@@ -429,7 +430,7 @@ parameter_list :
     addChild($$, $4);
     }
   | optional_var identifier_list COLON type SEMICOLON parameter_list {
-      printf("Reduction ( parameter_list -> optional_var identifier_list : type ; parameter_list )\n");
+      fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : type ; parameter_list )\n");
       $$ = newNode(NODE_PARAM_LI);
       addChild($$, $1);
       addChild($$, $2);
@@ -443,12 +444,12 @@ parameter_list :
 
 optional_var :
   VAR {
-      printf("Reduction ( optional_var -> VAR )\n");
+      fprintf( spFile, "Reduction ( optional_var -> VAR )\n");
       $$ = newNode(NODE_OPTVAR);
       addChild($$, newNode(RE_VAR));
     }
   | {
-      printf("Reduction ( optional_var -> LAMDBA )\n");
+      fprintf( spFile, "Reduction ( optional_var -> LAMDBA )\n");
       $$ = newNode(NODE_OPTVAR);
       addChild($$, newNode(NODE_LAMDBA));
     }
@@ -457,7 +458,7 @@ optional_var :
 
 compound_statement :
     PBEGIN optional_statements END {
-      printf("Reduction ( compound_statement -> begin optional_statements end )\n");
+      fprintf( spFile, "Reduction ( compound_statement -> begin optional_statements end )\n");
       $$ = newNode(NODE_COMP_STMT);
       addChild($$, newNode(RE_BEGIN));
       addChild($$, $2);
@@ -468,7 +469,7 @@ compound_statement :
 
 optional_statements :
     statement_list {
-      printf("Reduction ( optional_statements -> statement_list )\n");
+      fprintf( spFile, "Reduction ( optional_statements -> statement_list )\n");
       $$ = newNode(NODE_OPT_STMT);
       addChild($$, $1);
     }
@@ -477,12 +478,12 @@ optional_statements :
 
 statement_list :
     statement {
-      printf("Reduction ( statement_list -> statement )\n");
+      fprintf( spFile, "Reduction ( statement_list -> statement )\n");
       $$ = newNode(NODE_STMT_LI);
       addChild($$, $1);
     }
   | statement_list SEMICOLON statement {
-      printf("Reduction ( statement_list -> statement_list ; statement )\n");
+      fprintf( spFile, "Reduction ( statement_list -> statement_list ; statement )\n");
       $$ = newNode(NODE_STMT_LI);
       addChild($$, $1);
       addChild($$, newNode(PUC_SEMI));
@@ -493,24 +494,24 @@ statement_list :
 
 statement :
     variable ASSIGNMENT expression {
-      printf("Reduction ( statement -> variable := expression )\n");
+      fprintf( spFile, "Reduction ( statement -> variable := expression )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, $1);
       addChild($$, newNode(RE_ASGMNT));
       addChild($$, $3);
     }
   | procedure_statement {
-      printf("Reduction ( statement -> procedure_statement )\n");
+      fprintf( spFile, "Reduction ( statement -> procedure_statement )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, $1);
     }
   | compound_statement {
-      printf("Reduction ( statement -> compound_statement )\n");
+      fprintf( spFile, "Reduction ( statement -> compound_statement )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, $1);
     }
   | IF expression THEN if_stmt {
-      printf("Reduction ( statement -> IF expression THEN if_stmt )\n");
+      fprintf( spFile, "Reduction ( statement -> IF expression THEN if_stmt )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, newNode(RE_IF));
       addChild($$, $2);
@@ -518,7 +519,7 @@ statement :
       addChild($$, $4);
     }
   | WHILE expression DO statement {
-      printf("Reduction ( statement -> WHILE expression DO statement )\n");
+      fprintf( spFile, "Reduction ( statement -> WHILE expression DO statement )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, newNode(RE_WHILE));
       addChild($$, $2);
@@ -526,7 +527,7 @@ statement :
       addChild($$, $4);
     }
   | {
-      printf("Reduction ( statement -> lambda )\n");
+      fprintf( spFile, "Reduction ( statement -> lambda )\n");
       $$ = newNode(NODE_STMT);
       addChild($$, newNode(NODE_LAMDBA));
   }
@@ -535,14 +536,14 @@ statement :
 
 if_stmt :
     statement ELSE statement {
-        printf("Reduction ( if_stmt -> statement ELSE statement )\n");
+        fprintf( spFile, "Reduction ( if_stmt -> statement ELSE statement )\n");
         $$ = newNode(NODE_IF_STMT);
         addChild($$, $1);
         addChild($$, newNode(RE_ELSE));
         addChild($$, $3);
     }
   | statement {
-        printf("Reduction ( if_stmt -> statement )\n");
+        fprintf( spFile, "Reduction ( if_stmt -> statement )\n");
         $$ = newNode(NODE_IF_STMT);
         addChild($$, $1);
     }
@@ -550,7 +551,7 @@ if_stmt :
 
 variable :
   id_tok tail {
-      printf("Reduction ( variable -> id tail )\n");
+      fprintf( spFile, "Reduction ( variable -> id tail )\n");
       $$ = newNode(NODE_VAR);
       addChild($$, $1);
       addChild($$, $2);
@@ -560,7 +561,7 @@ variable :
 
 tail :
   LBRAC expression RBRAC tail {
-      printf("Reduction ( tail -> [expression] tail )\n");
+      fprintf( spFile, "Reduction ( tail -> [expression] tail )\n");
       $$ = newNode(NODE_TAIL);
       addChild($$, newNode(PUC_LBRAC));
       addChild($$, $2);
@@ -568,7 +569,7 @@ tail :
       addChild($$, $4);
     }
   | {
-      printf("Reduction ( tail -> lambda )\n");
+      fprintf( spFile, "Reduction ( tail -> lambda )\n");
       $$ = newNode(NODE_TAIL);
       addChild($$, newNode(NODE_LAMDBA));
   }
@@ -577,12 +578,12 @@ tail :
 
 procedure_statement :
   id_tok {
-      printf("Reduction ( procedure_statement -> ID )\n");
+      fprintf( spFile, "Reduction ( procedure_statement -> ID )\n");
       $$ = newNode(NODE_PROC_STMT);
       addChild($$, $1);
     }
   | id_tok LPAREN expression_list RPAREN {
-      printf("Reduction ( procedure_statement -> ID (expression_list) )\n");
+      fprintf( spFile, "Reduction ( procedure_statement -> ID (expression_list) )\n");
       $$ = newNode(NODE_PROC_STMT);
       addChild($$, $1);
       addChild($$, newNode(PUC_LPAREN));
@@ -594,13 +595,13 @@ procedure_statement :
 
 expression_list :
    expression {
-      printf("Reduction ( expression_list -> expression )\n");
+      fprintf( spFile, "Reduction ( expression_list -> expression )\n");
 
       $$ = newNode(NODE_EXPR_LI);
       addChild($$, $1);
     }
   | expression_list COMMA expression {
-      printf("Reduction ( expression_list -> expression_list, expression )\n");
+      fprintf( spFile, "Reduction ( expression_list -> expression_list, expression )\n");
 
       $$ = newNode(NODE_EXPR_LI);
       addChild($$, $1);
@@ -612,12 +613,12 @@ expression_list :
 
 expression :
     simple_expression {
-      printf("Reduction ( expression -> simple_expression )\n");
+      fprintf( spFile, "Reduction ( expression -> simple_expression )\n");
       $$ = newNode(NODE_EXPR);
       addChild($$, $1);
     }
   | simple_expression relop simple_expression {
-      printf("Reduction ( expression -> simple_expression relop simple_expression )\n");
+      fprintf( spFile, "Reduction ( expression -> simple_expression relop simple_expression )\n");
       $$ = newNode(NODE_EXPR);
       addChild($$, $1);
       addChild($$, $2);
@@ -628,12 +629,12 @@ expression :
 
 simple_expression :
   term {
-      printf("Reduction ( simple_expression -> term )\n");
+      fprintf( spFile, "Reduction ( simple_expression -> term )\n");
       $$ = newNode(NODE_SI_EXPR);
       addChild($$, $1);
     }
   | simple_expression addop term {
-      printf("Reduction ( simple_expression -> simple_expression addop term )\n");
+      fprintf( spFile, "Reduction ( simple_expression -> simple_expression addop term )\n");
       $$ = newNode(NODE_SI_EXPR);
       addChild($$, $1);
       addChild($$, $2);
@@ -644,12 +645,12 @@ simple_expression :
 
 term :
   factor {
-      printf("Reduction ( term -> factor )\n");
+      fprintf( spFile, "Reduction ( term -> factor )\n");
       $$ = newNode(NODE_TERM);
       addChild($$, $1);
     }
   | term mulop factor {
-      printf("Reduction ( term -> term mulop factor )\n");
+      fprintf( spFile, "Reduction ( term -> term mulop factor )\n");
       $$ = newNode(NODE_TERM);
       addChild($$, $1);
       addChild($$, $2);
@@ -660,14 +661,14 @@ term :
 
 factor :
     id_tok tail {
-      printf("Reduction ( factor -> id tail )\n");
+      fprintf( spFile, "Reduction ( factor -> id tail )\n");
 
       $$ = newNode(NODE_FACTOR);
       addChild($$, $1);
       addChild($$, $2);
     }
   | id_tok LPAREN expression_list RPAREN {
-      printf("Reduction ( factor -> id ( expression_list ) )\n");
+      fprintf( spFile, "Reduction ( factor -> id ( expression_list ) )\n");
 
       $$ = newNode(NODE_FACTOR);
       addChild($$, $1);
@@ -676,23 +677,23 @@ factor :
       addChild($$, newNode(PUC_RPAREN));
     }
   | num_tok {
-      printf("Reduction ( factor -> NUM )\n");
+      fprintf( spFile, "Reduction ( factor -> NUM )\n");
       $$ = newNode(NODE_FACTOR);
       addChild($$, $1);
     }
   | CHARACTER_STRING {
-      printf("Reduction ( factor -> CHARACTER_STRING )\n");
+      fprintf( spFile, "Reduction ( factor -> CHARACTER_STRING )\n");
       $$ = newNode(NODE_FACTOR);
       addChild($$, newNode(NODE_STRING));
     }
   | addop num_tok {
-      printf("Reduction ( factor -> addop NUM )\n");
+      fprintf( spFile, "Reduction ( factor -> addop NUM )\n");
       $$ = newNode(NODE_FACTOR);
       addChild($$, $1);
       addChild($$, $2);
     }
   | LPAREN expression RPAREN {
-      printf("Reduction ( factor -> ( expression ) )\n");
+      fprintf( spFile, "Reduction ( factor -> ( expression ) )\n");
 
       $$ = newNode(NODE_FACTOR);
       addChild($$, newNode(PUC_LPAREN));
@@ -700,7 +701,7 @@ factor :
       addChild($$, newNode(PUC_RPAREN));
     }
   | NOT factor {
-      printf("Reduction ( factor -> NOT factor )\n");
+      fprintf( spFile, "Reduction ( factor -> NOT factor )\n");
 
       $$ = newNode(NODE_FACTOR);
       addChild($$, newNode(RE_NOT));
@@ -711,13 +712,13 @@ factor :
 
 addop :
       PLUS {
-          printf("Reduction ( addop -> + )\n");
+          fprintf( spFile, "Reduction ( addop -> + )\n");
 
           $$ = newNode(NODE_ADDOP);
           addChild($$, newNode(OP_PLUS));
       }
    |  MINUS {
-           printf("Reduction ( addop -> - )\n");
+           fprintf( spFile, "Reduction ( addop -> - )\n");
 
            $$ = newNode(NODE_ADDOP);
            addChild($$, newNode(OP_MINUS));
@@ -727,13 +728,13 @@ addop :
 
 mulop :
       STAR {
-          printf("Reduction ( mulop -> * )\n");
+          fprintf( spFile, "Reduction ( mulop -> * )\n");
 
           $$ = newNode(NODE_MULOP);
           addChild($$, newNode(OP_MUL));
       }
   |   SLASH{
-          printf("Reduction ( mulop -> / )\n");
+          fprintf( spFile, "Reduction ( mulop -> / )\n");
 
           $$ = newNode(NODE_MULOP);
           addChild($$, newNode(OP_DIV));
@@ -742,37 +743,37 @@ mulop :
 
 relop :
     LT {
-       printf("Reduction ( relop -> < )\n");
+       fprintf( spFile, "Reduction ( relop -> < )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_LT));
     }
   | GT {
-       printf("Reduction ( relop -> > )\n");
+       fprintf( spFile, "Reduction ( relop -> > )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_GT));
     }
   | EQUAL {
-       printf("Reduction ( relop -> = )\n");
+       fprintf( spFile, "Reduction ( relop -> = )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_EQUAL));
     }
   | LE {
-       printf("Reduction ( relop -> <= )\n");
+       fprintf( spFile, "Reduction ( relop -> <= )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_LE));
     }
   | GE {
-       printf("Reduction ( relop -> >= )\n");
+       fprintf( spFile, "Reduction ( relop -> >= )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_GE));
     }
   | notEQUAL {
-       printf("Reduction ( relop -> != )\n");
+       fprintf( spFile, "Reduction ( relop -> != )\n");
 
        $$ = newNode(NODE_RELOP);
        addChild($$, newNode(OP_notEQUAL));
@@ -787,11 +788,12 @@ relop :
 int main()
 {
     pFile = fopen( "result.txt", "a" );
+    spFile = fopen( "parse_records.txt", "a" );
 
     yyparse();
-    // printf("------------------ parse tree --------------------\n");
+    // printf( spFile, "------------------ parse tree --------------------\n");
     // printTree(PARSE_ROOT, 0);
-    printf("------------------- ast tree ---------------------\n");
+    printf( "------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
     printTree(ast_root, 0);
