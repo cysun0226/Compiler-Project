@@ -224,6 +224,14 @@ void copyChild(Node* node, std::vector<Node*> ori)
   }
 }
 
+void copyChildinverse(Node* node, std::vector<Node*> ori)
+{
+  node->childs.clear();
+  for (int i = ori.size()-1; i >= 0; i--) {
+    addChild(node, ori[i]);
+  }
+}
+
 void reduceTYPE(Node* node)
 {
   // standard_type
@@ -239,6 +247,11 @@ void reduceTYPE(Node* node)
 
 void reduceDECLlist(Node* node)
 {
+  if (node->childs[0]->nodeType == NODE_LAMDBA) {
+    node->parent->childs.erase(node->parent->childs.begin());
+    return;
+  }
+
   if(node->childs[0]->nodeType != NODE_DECL)
     return;
 
@@ -252,32 +265,23 @@ void reduceDECLlist(Node* node)
     dl = dl->childs[0];
   }
   node->nodeType = NODE_DECLS;
-  copyChild(node, list);
+  copyChildinverse(node, list);
 }
 
 void reduceDECL(Node* node)
 {
   reduceDECLlist(node);
   // declarations -> LAMDBA, remove node
-  if (node->childs[0]->nodeType == NODE_LAMDBA) {
-    node->parent->childs.erase(node->parent->childs.begin());
+
+  // declarations -> VAR identifier_list COLON type SEMICOLON
+  if (node->childs[0]->nodeType == NODE_VAR && node->childs[3]->nodeType == NODE_TYPE) {
+    std::vector<Node*> tmp(node->childs);
+    node->childs.clear();
+    addChild(node, tmp[0]);
+    addChild(node, tmp[1]);
+    addChild(node, tmp[3]);
     return;
   }
-  // declarations VAR identifier_list COLON type SEMICOLON
-  // if (node->childs[1]->nodeType == NODE_VAR && node->childs[4]->nodeType == NODE_TYPE) {
-  //   std::vector<Node*> tmp(node->childs);
-  //   if (node->parent->nodeType == NODE_DECL)
-  //     node->parent->childs.insert(node->parent->childs.begin()+1, node->childs[0]);
-  //   else
-  //     return;
-  //     // node->parent->childs.insert(node->parent->childs.begin()+7, node->childs[0]);
-  //
-  //   node->childs.clear();
-  //   addChild(node, tmp[1]);
-  //   addChild(node, tmp[2]);
-  //   addChild(node, tmp[4]);
-  //   return;
-  // }
   // declarations VAR identifier_list COLON identifier_list SEMICOLON
 
   // declarations CONST identifier_list EQUAL num_tok SEMICOLON
@@ -298,7 +302,7 @@ void reduceList(Node* node)
       il = il->childs[0];
     }
     list.push_back(il->childs[0]);
-    copyChild(node, list);
+    copyChildinverse(node, list);
   }
 
   if(node_type == NODE_DECL)

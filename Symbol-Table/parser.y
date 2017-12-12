@@ -270,12 +270,9 @@ type :
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
-      addChild($$, newNode(PUC_LBRAC));
       addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
-      addChild($$, newNode(PUC_RBRAC));
-      addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
   | ARRAY LBRAC id_tok DOTDOT num_tok RBRAC OF type {
@@ -283,25 +280,18 @@ type :
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
-      addChild($$, newNode(PUC_LBRAC));
       addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
-      addChild($$, newNode(PUC_RBRAC));
-      addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
   | ARRAY LBRAC num_tok DOTDOT id_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
-
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
-      addChild($$, newNode(PUC_LBRAC));
       addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
-      addChild($$, newNode(PUC_RBRAC));
-      addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
   | ARRAY LBRAC id_tok DOTDOT id_tok RBRAC OF type {
@@ -309,12 +299,9 @@ type :
 
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
-      addChild($$, newNode(PUC_LBRAC));
       addChild($$, $3);
       addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
-      addChild($$, newNode(PUC_RBRAC));
-      addChild($$, newNode(RE_OF));
       addChild($$, $8);
     }
   ;
@@ -353,7 +340,6 @@ subprogram_declarations :
       $$ = newNode(NODE_SPROG_DECLS);
       addChild($$, $1);
       addChild($$, $2);
-      addChild($$, newNode(PUC_SEMI));
    }
  | {
       fprintf( spFile, "Reduction ( subprogram_declarations -> LAMDBA )\n");
@@ -381,9 +367,7 @@ subprogram_head :
       addChild($$, newNode(RE_FUNC));
       addChild($$, $2);
       addChild($$, $3);
-      addChild($$, newNode(PUC_COLON));
       addChild($$, $5);
-      addChild($$, newNode(PUC_SEMI));
     }
   | PROCEDURE id_tok arguments SEMICOLON {
       fprintf( spFile, "Reduction ( subprogram_head -> PROCEDURE id arguments ; )\n");
@@ -391,7 +375,6 @@ subprogram_head :
       addChild($$, newNode(RE_PROC));
       addChild($$, $2);
       addChild($$, $3);
-      addChild($$, newNode(PUC_SEMI));
     }
   ;
 
@@ -400,9 +383,7 @@ arguments :
     LPAREN parameter_list RPAREN {
       fprintf( spFile, "Reduction ( arguments -> (parameter_list) )\n");
       $$ = newNode(NODE_ARG);
-      addChild($$, newNode(PUC_LPAREN));
       addChild($$, $2);
-      addChild($$, newNode(PUC_RPAREN));
     }
   | {
       fprintf( spFile, "Reduction ( arguments -> LAMDBA )\n");
