@@ -198,10 +198,34 @@ Node* convertTree(Node* node)
   return root;
 }
 
+Node* copyTree(Node* node)
+{
+  Node* cp = new Node;
+  cp->nodeType = node->nodeType;
+  if(node->nodeType == NODE_ID) cp->strValue = node->strValue;
+  if(node->nodeType == NODE_NUM) cp->number = node->number;
+
+  if (!node->childs.empty())
+	{
+		for (size_t i = 0; i < node->childs.size(); i++)
+		{
+      addChild(cp, copyTree(node->childs[i]));
+		}
+	}
+  return cp;
+}
+
+void reduceList(Node* node)
+{
+  
+}
+
 Node* buildAstTree(Node* node)
 {
-  Node* ast_root = new Node;
-  ast_root = convertTree(node);
+  Node* ast_root;
+  Node* cp;
+  cp = copyTree(node);
+  ast_root = convertTree(cp);
   // convertTree(ast_root);
 
   return ast_root;
