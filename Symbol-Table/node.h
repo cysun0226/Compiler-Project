@@ -85,7 +85,8 @@ enum ntype {
 		TY_STR,
 		ID_TOK,
 		NUM_TOK,
-		NULL_NODE
+		NULL_NODE,
+		NODE_DECLS
 };
 
 // #include "symtab.h"
