@@ -151,7 +151,6 @@ prog :
      addChild($$, newNode(PUC_LPAREN));
      addChild($$, $4);
      addChild($$, newNode(PUC_RPAREN));
-     addChild($$, newNode(PUC_SEMI));
      addChild($$, $7);
      addChild($$, $8);
      addChild($$, $9);
@@ -271,7 +270,6 @@ type :
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, $3);
-      addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
       addChild($$, $8);
     }
@@ -281,7 +279,6 @@ type :
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, $3);
-      addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
       addChild($$, $8);
     }
@@ -290,7 +287,6 @@ type :
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, $3);
-      addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
       addChild($$, $8);
     }
@@ -300,7 +296,6 @@ type :
       $$ = newNode(NODE_TYPE);
       addChild($$, newNode(RE_ARR));
       addChild($$, $3);
-      addChild($$, newNode(PUC_DOTDOT));
       addChild($$, $5);
       addChild($$, $8);
     }
@@ -399,7 +394,6 @@ parameter_list :
       $$ = newNode(NODE_PARAM_LI);
       addChild($$, $1);
       addChild($$, $2);
-      addChild($$, newNode(PUC_COLON));
       addChild($$, $4);
     }
   | optional_var identifier_list COLON identifier_list {
@@ -407,7 +401,6 @@ parameter_list :
     $$ = newNode(NODE_PARAM_LI);
     addChild($$, $1);
     addChild($$, $2);
-    addChild($$, newNode(PUC_COLON));
     addChild($$, $4);
     }
   | optional_var identifier_list COLON type SEMICOLON parameter_list {
@@ -415,9 +408,7 @@ parameter_list :
       $$ = newNode(NODE_PARAM_LI);
       addChild($$, $1);
       addChild($$, $2);
-      addChild($$, newNode(PUC_COLON));
       addChild($$, $4);
-      addChild($$, newNode(PUC_SEMI));
       addChild($$, $6);
     }
   ;
@@ -544,9 +535,7 @@ tail :
   LBRAC expression RBRAC tail {
       fprintf( spFile, "Reduction ( tail -> [expression] tail )\n");
       $$ = newNode(NODE_TAIL);
-      addChild($$, newNode(PUC_LBRAC));
       addChild($$, $2);
-      addChild($$, newNode(PUC_RBRAC));
       addChild($$, $4);
     }
   | {

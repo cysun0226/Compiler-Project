@@ -128,6 +128,8 @@ void printTree(struct Node *node, int ident) {
         case TY_REAL          : printf("%s|-REAL\n", blank);ident += 3; break;
         case TY_STR           : printf("%s|-STRING\n", blank);ident += 3; break;
         case NODE_DECLS       : printf("%s|-DECLS\n", blank);ident += 3; break;
+        case NODE_SPROG_DECLS_LI : printf("%s|-SPROG_DECLS_LI\n", blank);ident += 3; break;
+
 
         default:
             printf("%sdefault:%d\n", blank, node->nodeType);
@@ -243,6 +245,13 @@ void reduceTYPE(Node* node)
     return;
   }
 
+  // ARRAY
+  if (node->childs[0]->nodeType == RE_ARR){
+    node->nodeType = RE_ARR;
+    node->childs.erase(node->childs.begin());
+    return;
+  }
+
 }
 
 void reduceDECLlist(Node* node)
@@ -252,19 +261,22 @@ void reduceDECLlist(Node* node)
     return;
   }
 
-  if(node->childs[0]->nodeType != NODE_DECL)
+  int cur_type = node->nodeType;
+
+  if(node->childs[0]->nodeType != cur_type)
     return;
 
   std::vector<Node*> list;
   Node* dl; dl = node;
-  while (dl->childs[0]->nodeType == NODE_DECL) {
+  while (dl->childs[0]->nodeType == cur_type) {
     Node* newDECL = new Node;
     copyNode(newDECL, dl);
     newDECL->childs.erase(newDECL->childs.begin());
     list.push_back(newDECL);
     dl = dl->childs[0];
   }
-  node->nodeType = NODE_DECLS;
+  if(cur_type == NODE_DECL) node->nodeType = NODE_DECLS;
+  if(cur_type == NODE_SPROG_DECLS) node->nodeType = NODE_SPROG_DECLS_LI;
   copyChildinverse(node, list);
 }
 
@@ -283,10 +295,34 @@ void reduceDECL(Node* node)
     return;
   }
   // declarations VAR identifier_list COLON identifier_list SEMICOLON
+  if (node->childs[0]->nodeType == NODE_VAR && node->childs[3]->nodeType == NODE_TYPE) {
+    std::vector<Node*> tmp(node->childs);
+    node->childs.clear();
+    addChild(node, tmp[0]);
+    addChild(node, tmp[1]);
+    addChild(node, tmp[3]);
+    return;
+  }
 
-  // declarations CONST identifier_list EQUAL num_tok SEMICOLON
+  // declarations -> CONST identifier_list EQUAL num_tok SEMICOLON
+  if (node->childs[0]->nodeType == RE_CONST) {
+    std::vector<Node*> tmp(node->childs);
+    node->childs.clear();
+    addChild(node, tmp[0]);
+    addChild(node, tmp[1]);
+    addChild(node, tmp[3]);
+    return;
+  }
 
-  // declarations TYPE identifier_list EQUAL type SEMICOLON
+  // declarations -> TYPE identifier_list EQUAL type SEMICOLON
+  if (node->childs[0]->nodeType == RE_TYPE) {
+    std::vector<Node*> tmp(node->childs);
+    node->childs.clear();
+    addChild(node, tmp[0]);
+    addChild(node, tmp[1]);
+    addChild(node, tmp[3]);
+    return;
+  }
 }
 
 void reduceList(Node* node)
@@ -310,6 +346,9 @@ void reduceList(Node* node)
 
   if(node_type == NODE_TYPE)
     reduceTYPE(node);
+
+  if(node_type == NODE_SPROG_DECLS)
+    reduceDECLlist(node);
 
   if (!node->childs.empty())
 	{
