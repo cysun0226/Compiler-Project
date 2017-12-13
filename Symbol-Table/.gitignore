@@ -6,3 +6,5 @@ parser.hh
 parser.tab.c
 parser.tab.h
 *.txt
+*.p
+./test/*.p
