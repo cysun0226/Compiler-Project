@@ -23,6 +23,7 @@ void copyNode(Node* new_node, Node* old) {
   new_node->nodeType = old->nodeType;
   new_node->parent = old->parent;
   new_node->number = old->number;
+  new_node->line_num = old->line_num;
   for (int i = 0; i < old->childs.size(); i++) {
     new_node->childs.push_back(old->childs[i]);
   }
@@ -65,8 +66,8 @@ void printTree(struct Node *node, int ident) {
         case NODE_STMT        : printf("%s|-STMT\n", blank); ident += 3; break;
         case NODE_TERM        : printf("%s|-TERM\n", blank); ident += 3; break;
         case NODE_PROGRAM     : printf("%s|-PROGRAM\n", blank); ident += 3; break;
-    		case NODE_ID          : printf("%s|-[ID] ", blank); cout << node->strValue << " is in line " << node->line_num << endl; ident += 3; break;
-        case ID_TOK           : break;
+    		case NODE_ID          : printf("%s|-[ID] ", blank); cout << node->strValue << " (line " << node->line_num << ")" << endl; ident += 3; break;
+        case ID_TOK           : printf("%s|-ID_TOK\n", blank); ident += 3; break;
     		case NODE_DECL        : printf("%s|-DECL\n", blank); ident += 3; break;
         case NODE_EXPR        : printf("%s|-EXPR\n", blank); ident += 3; break;
         case NODE_VAR         : printf("%s|-VAR(NODE)\n", blank); ident += 3; break;
@@ -83,7 +84,7 @@ void printTree(struct Node *node, int ident) {
         case RE_ARR           : printf("%s|-ARRAY\n", blank);ident += 3;break;
         case RE_OF            : printf("%s|-OF\n", blank);ident += 3;break;
         case NODE_NUM         : printf("%s|-[NUM] ", blank); cout << node->number << endl; ident += 3; break;
-        case NUM_TOK          : break;
+        case NUM_TOK          : printf("%s|-NUM_TOK\n", blank); ident += 3;break;
         case NODE_LAMDBA      : printf("%s|- (LAMDBA)\n", blank); ident += 3;break;
         case NODE_STRING      : printf("%s|-STRING\n", blank);ident += 3; break;
         case NODE_IF_STMT     : printf("%s|-IF_STMT\n", blank);ident += 3; break;
@@ -192,6 +193,8 @@ Node* convertTree(Node* node)
 
   Node* root = new Node;
   root->nodeType = node->nodeType;
+  root->line_num = node->line_num;
+  root->parent = node->parent;
   if(node->nodeType == NODE_ID) root->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) root->number = node->number;
 
@@ -219,6 +222,7 @@ Node* copyTree(Node* node)
   if(node->nodeType == NODE_ID) cp->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) cp->number = node->number;
   cp->line_num = node->line_num;
+  cp->parent = node->parent;
 
   if (!node->childs.empty())
 	{
@@ -371,6 +375,29 @@ void reduceList(Node* node)
   copyChildinverse(node, list);
 }
 
+void reduceSTMTList(Node* node)
+{
+  int node_type = node->nodeType;
+  if (node->nodeType == NODE_STMT_LI) {
+    std::vector<Node*> list;
+    Node* new_il = newNode(node_type);
+    Node* il; il = node;
+    while (il->childs[0]->nodeType == node_type) {
+      list.push_back(il->childs[2]);
+      il = il->childs[0];
+    }
+    list.push_back(il->childs[0]);
+    copyChildinverse(node, list);
+  }
+
+  if (!node->childs.empty()) {
+    for (size_t i = 0; i < node->childs.size(); i++){
+      reduceSTMTList(node->childs[i]);
+    }
+  }
+}
+
+
 void reduceOPTVAR(Node* node)
 {
   removeLAMDBA(node);
@@ -397,7 +424,35 @@ void reduceFACTOR(Node* node)
       node->parent->childs.push_back(node->childs[i]);
     }
   }
+}
 
+void reduceLAMDBA_TOK(Node* node)
+{
+  if (node->nodeType == ID_TOK || node->nodeType == NUM_TOK) {
+    // node->parent->childs[0] = node->childs[0];
+    copyNode(node, node->childs[0]);
+    node->childs.clear();
+    return;
+  }
+
+  if (node->nodeType == NODE_TAIL && node->childs.size()>3 && node->childs[3]->childs[0]->nodeType == NODE_LAMDBA) {
+    node->childs.pop_back();
+    return;
+  }
+
+
+  if ( !node->childs.empty() && node->childs[0]->nodeType == NODE_LAMDBA && node->nodeType == NODE_TAIL) {
+    node->childs.clear();
+    node->parent->childs.pop_back();
+    return;
+    // node->parent->childs.erase(node->parent->childs.end());
+  }
+
+  if (!node->childs.empty()) {
+    for (size_t i = 0; i < node->childs.size(); i++){
+      reduceLAMDBA_TOK(node->childs[i]);
+    }
+  }
 }
 
 void reduce(Node* node)
@@ -418,12 +473,8 @@ void reduce(Node* node)
     case NODE_FACTOR      : reduceFACTOR(node); break;
   }
 
-
-
-  if (!node->childs.empty())
-	{
-    for (size_t i = 0; i < node->childs.size(); i++)
-		{
+  if (!node->childs.empty()) {
+    for (size_t i = 0; i < node->childs.size(); i++){
       reduce(node->childs[i]);
 		}
 	}
@@ -437,7 +488,11 @@ Node* buildAstTree(Node* node)
   Node* cp;
   cp = copyTree(node);
   ast_root = cp;
+  reduceLAMDBA_TOK(ast_root);
   reduce(ast_root);
+  reduceSTMTList(ast_root);
+
+
   // ast_root = convertTree(cp);
   // convertTree(ast_root);
 

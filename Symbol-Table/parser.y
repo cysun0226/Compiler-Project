@@ -168,7 +168,6 @@ identifier_list :
       Node* id_node = newNode(NODE_ID);
       id_node->strValue = $1;
       id_node->line_num = line_no;
-      cout << "line_no =" << line_no << endl;
       addChild($$, id_node);
     }
   | identifier_list COMMA ID {
@@ -190,7 +189,6 @@ id_tok :
     Node* id_node = newNode(NODE_ID);
     id_node->strValue = $1;
     id_node->line_num = line_no;
-    cout << "line_no =" << line_no << endl;
     addChild($$, id_node);
   }
   ;
@@ -765,8 +763,8 @@ int main()
     spFile = fopen( "parse_records.txt", "a" );
 
     yyparse();
-    // printf( "------------------ parse tree --------------------\n");
-    // printTree(PARSE_ROOT, 0);
+    printf( "------------------ parse tree --------------------\n");
+    printTree(PARSE_ROOT, 0);
     printf( "------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
