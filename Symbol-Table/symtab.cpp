@@ -80,14 +80,35 @@ void divideScope(struct Node *node, int ident) {
     if (node->nodeType == RE_FUNC) {
       scope_id++;
       node->scope_id = scope_id;
-      node->parent->parent->childs[2]->childs[2]->scope_id = scope_id; // add scope_id to END
-      symtabStack.back()->symtab[node->parent->childs[1]->strValue] = "FUNCTION"; // insert function name into scope
+      node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
+      symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
 
-      Symtab* newtab = newSymtab(node->parent->childs[1]->strValue, scope_id);
-      // insert a same name variable into function scope
-      newtab->symtab[node->parent->childs[1]->strValue] = node->sibling[3]->childs[0]->strValue;
+      Symtab* newtab = newSymtab(node->sibling[1]->strValue, scope_id);
+      newtab->symtab[node->sibling[1]->strValue] = "FUNCTION";
+
+      for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
+        newtab->symtab[node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue] = node->sibling[2]->childs[0]->childs[1]->strValue;
+      }
+
       symtabStack.push_back(newtab);
 
+      cout << "\n----- scope " << scope_id << " -----\n" << endl;
+    }
+
+    if (node->nodeType == RE_PROC) {
+      scope_id++;
+      node->scope_id = scope_id;
+      node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
+      symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
+
+      Symtab* newtab = newSymtab(node->sibling[1]->strValue, scope_id);
+      newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
+
+      for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
+        newtab->symtab[node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue] = node->sibling[2]->childs[0]->childs[1]->strValue;
+      }
+
+      symtabStack.push_back(newtab);
 
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
@@ -204,11 +225,10 @@ void divideScope(struct Node *node, int ident) {
     }
 
 
-    if (node->nodeType == RE_END && node->parent->parent->nodeType != NODE_START) {
+    if (node->nodeType == RE_END && node->parent->parent->nodeType != NODE_START && symtabStack.size()>1 ) {
       cout << "\n----- scope " << node->scope_id << " end -----\n" << endl;
       printSymtab(symtabStack.back());
       symtabStack.pop_back();
-      scope_id--;
     }
 
 
