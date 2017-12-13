@@ -95,6 +95,7 @@ typedef struct Node {
     int nodeType;
     struct Node *parent;
 		vector<Node*> childs;
+		vector<Node*> sibling;
 
     /* Attribute for NODE_TOKEN */
     int tokenType;
@@ -113,6 +114,7 @@ typedef struct Node {
 		double number;
 		std::string strValue;
 		int line_num;
+		int scope_id;
 
     /* Indicates which OP */
     char op;

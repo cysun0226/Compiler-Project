@@ -280,7 +280,7 @@ void removeLAMDBA(Node* node)
 
 void reduceDECLlist(Node* node)
 {
-  removeLAMDBA(node);
+  // removeLAMDBA(node);
 
   int cur_type = node->nodeType;
 
