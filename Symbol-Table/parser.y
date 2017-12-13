@@ -766,13 +766,14 @@ int main()
     spFile = fopen( "parse_records.txt", "a" );
 
     yyparse();
-    // printf( "------------------ parse tree --------------------\n");
-    // printTree(PARSE_ROOT, 0);
+    printf( "------------------ parse tree --------------------\n");
+    printTree(PARSE_ROOT, 0);
     printf( "\n------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
     printTree(ast_root, 0);
-    divideScope(ast_root);
+    printf( "\n------------------- scope tree ---------------------\n");
+    divideScope(ast_root, 0);
 
     fclose(pFile);
 
