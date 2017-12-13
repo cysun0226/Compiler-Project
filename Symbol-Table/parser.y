@@ -309,17 +309,29 @@ standard_type :
     INTEGER {
       fprintf( spFile, "Reduction ( standard_type -> INTEGER )\n");
       $$ = newNode(NODE_STDTYPE);
-      addChild($$, newNode(TY_INT));
+      // addChild($$, newNode(TY_INT));
+
+      Node* ty_node = newNode(TY_INT);
+      ty_node->strValue = "INTEGER";
+      addChild($$, ty_node);
     }
   | REAL {
       fprintf( spFile, "Reduction ( standard_type -> REAL )\n");
       $$ = newNode(NODE_STDTYPE);
-      addChild($$, newNode(TY_REAL));
+      // addChild($$, newNode(TY_REAL));
+
+      Node* ty_node = newNode(TY_REAL);
+      ty_node->strValue = "REAL";
+      addChild($$, ty_node);
     }
   | CHARACTER_STRING {
       fprintf( spFile, "Reduction ( standard_type -> CHARACTER_STRING )\n");
       $$ = newNode(NODE_STDTYPE);
-      addChild($$, newNode(TY_STR));
+      // addChild($$, newNode(TY_STR));
+
+      Node* ty_node = newNode(TY_STR);
+      ty_node->strValue = "STRING";
+      addChild($$, ty_node);
     }
   /*
   | identifier_list {
@@ -766,8 +778,8 @@ int main()
     spFile = fopen( "parse_records.txt", "a" );
 
     yyparse();
-    printf( "------------------ parse tree --------------------\n");
-    printTree(PARSE_ROOT, 0);
+    // printf( "------------------ parse tree --------------------\n");
+    // printTree(PARSE_ROOT, 0);
     printf( "\n------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);

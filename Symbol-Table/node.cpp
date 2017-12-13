@@ -196,7 +196,7 @@ Node* convertTree(Node* node)
   root->nodeType = node->nodeType;
   root->line_num = node->line_num;
   root->parent = node->parent;
-  if(node->nodeType == NODE_ID) root->strValue = node->strValue;
+  if(node->nodeType == NODE_ID || node->nodeType == TY_INT || node->nodeType == TY_STR || node->nodeType == TY_REAL) root->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) root->number = node->number;
 
   if (!node->childs.empty())
@@ -220,7 +220,7 @@ Node* copyTree(Node* node)
 {
   Node* cp = new Node;
   cp->nodeType = node->nodeType;
-  if(node->nodeType == NODE_ID) cp->strValue = node->strValue;
+  if(node->nodeType == NODE_ID || node->nodeType == TY_INT || node->nodeType == TY_STR || node->nodeType == TY_REAL) cp->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) cp->number = node->number;
   cp->line_num = node->line_num;
   cp->parent = node->parent;

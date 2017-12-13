@@ -16,6 +16,9 @@ std::vector<Symtab*> symtabStack;
 std::string nf = "not func";
 std::string PROG = "PROGRAM";
 std::string PROG_PARA = "PROG_PARA";
+std::string INT = "INTEGER";
+
+
 
 struct Symtab* newSymtab(string func_name, int scope_id) {
   struct Symtab *sym = new Symtab;
@@ -33,24 +36,24 @@ void printSymtab(Symtab* s)
     cout << "----- scope " << s->scope << " symbol table -----" << endl;
 
   if (s->func_name != nf)
-    cout << "scope (function " << s->func_name << ")" << endl;
+    cout << "(function " << s->func_name << ")" << endl;
 
-  cout << "-----------------------------" << endl;
-  cout << "  " << std::left << setw(10) << "id" << "|  " <<  std::left << setw(10) << "type" << endl;
-  cout << "-----------------------------" << endl;
+  cout << "------------------------------------" << endl;
+  cout << "| " << std::left << setw(15) << "id" << "|  " <<  std::left << setw(15) << "type" << "|" << endl;
+  cout << "------------------------------------" << endl;
 
   // print content
   map<string, string>::iterator iter;
   for(iter = s->symtab.begin(); iter != s->symtab.end(); iter++) {
-    cout << "  " << std::left << setw(10) << iter->first << "|  " << std::left << setw(10) << iter->second << endl;
+    cout << "| " << std::left << setw(15) << iter->first << "|  " << std::left << setw(15) << iter->second << "|" << endl;
   }
 
-  cout << "-----------------------------" << endl;
+  cout << "------------------------------------" << endl << endl;
   // end
-  if (s->scope == 0)
-    cout << "----- global scope symbol table end -----" << endl;
-  else
-    cout << "----- scope " << s->scope << " symbol table end -----" << endl << endl;
+  // if (s->scope == 0)
+  //   cout << "----- global scope symbol table end -----" << endl;
+  // else
+  //   cout << "----- scope " << s->scope << " symbol table end -----" << endl << endl;
 }
 
 void divideScope(struct Node *node, int ident) {
@@ -77,15 +80,30 @@ void divideScope(struct Node *node, int ident) {
     if (node->nodeType == RE_FUNC) {
       scope_id++;
       node->scope_id = scope_id;
-      node->parent->parent->childs[2]->childs[2]->scope_id = scope_id;
+      node->parent->parent->childs[2]->childs[2]->scope_id = scope_id; // add scope_id to END
+      symtabStack.back()->symtab[node->parent->childs[1]->strValue] = "FUNCTION"; // insert function name into scope
 
       Symtab* newtab = newSymtab(node->parent->childs[1]->strValue, scope_id);
+      // insert a same name variable into function scope
+      newtab->symtab[node->parent->childs[1]->strValue] = node->sibling[3]->childs[0]->strValue;
       symtabStack.push_back(newtab);
+
 
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
 
-    // insert symbol
+    // insert decl symbol
+    if (node->nodeType == NODE_DECL && node->childs.size()>2) {
+      for (size_t i = 0; i < node->childs[1]->childs.size(); i++) { // decl id list
+        // symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = node->childs[2]->strValue;
+        if(node->childs[2]->nodeType == TY_INT)
+          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "INTEGER";
+        if(node->childs[2]->nodeType == TY_REAL)
+          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "REAL";
+        if(node->childs[2]->nodeType == TY_STR)
+          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "STRING";
+      }
+    }
 
 
 
@@ -190,6 +208,7 @@ void divideScope(struct Node *node, int ident) {
       cout << "\n----- scope " << node->scope_id << " end -----\n" << endl;
       printSymtab(symtabStack.back());
       symtabStack.pop_back();
+      scope_id--;
     }
 
 
