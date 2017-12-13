@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "node.h"
+#include "symtab.h"
 
 using namespace std;
 extern int line_no;

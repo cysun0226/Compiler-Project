@@ -4,6 +4,7 @@
     #include <string.h>
     #include <iostream>
     #include <fstream>
+    #include "symtab.h"
     #include "node.h"
 
 
@@ -771,6 +772,7 @@ int main()
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
     printTree(ast_root, 0);
+    divideScope(ast_root);
 
     fclose(pFile);
 
