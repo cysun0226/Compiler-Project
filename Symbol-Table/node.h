@@ -112,6 +112,7 @@ typedef struct Node {
     char* string;
 		double number;
 		std::string strValue;
+		int line_num;
 
     /* Indicates which OP */
     char op;

@@ -14,7 +14,7 @@
  extern FILE *spFile;
 #define COMMENT 100
 
-int line_no = 1;
+extern int line_no;
 
 
 %}
@@ -134,7 +134,7 @@ real    ({i}\.{i}|{i}?\.{i}){exp}?
 "**"               		 	     {fprintf( spFile, "Shift ** \n"); return(STARSTAR);}
 "!="                         {fprintf( spFile, "Shift != \n"); return(notEQUAL);}
 {real}	           					 {fprintf( spFile, "Shift [real] %s \n", yytext); yylval.number = atof(yytext); return(NUM);}
-"//"						             { comment(); }
+"//"						             { comment(); line_no++; }
 
 
 

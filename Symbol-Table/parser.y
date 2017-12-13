@@ -10,6 +10,7 @@
     using namespace std;
     FILE *pFile;
     FILE *spFile;
+    int line_no = 1;
 
     extern "C"
     {
@@ -165,9 +166,9 @@ identifier_list :
       fprintf( spFile, "Reduction ( identifier_list -> ID )\n");
       $$ = newNode(NODE_ID_LT);
       Node* id_node = newNode(NODE_ID);
-      // fprintf( spFile, "ID $1 = %s \n", $1);
-      // cout << "ID $1 = " << $1 << endl;
       id_node->strValue = $1;
+      id_node->line_num = line_no;
+      cout << "line_no =" << line_no << endl;
       addChild($$, id_node);
     }
   | identifier_list COMMA ID {
@@ -177,6 +178,7 @@ identifier_list :
       addChild($$, newNode(PUC_COMMA));
       Node* id_node = newNode(NODE_ID);
       id_node->strValue = $3;
+      id_node->line_num = line_no;
       addChild($$, id_node);
     }
   ;
@@ -187,6 +189,8 @@ id_tok :
     $$ = newNode(ID_TOK);
     Node* id_node = newNode(NODE_ID);
     id_node->strValue = $1;
+    id_node->line_num = line_no;
+    cout << "line_no =" << line_no << endl;
     addChild($$, id_node);
   }
   ;
@@ -761,7 +765,7 @@ int main()
     spFile = fopen( "parse_records.txt", "a" );
 
     yyparse();
-    // printf( spFile, "------------------ parse tree --------------------\n");
+    // printf( "------------------ parse tree --------------------\n");
     // printTree(PARSE_ROOT, 0);
     printf( "------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;

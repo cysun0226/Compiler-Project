@@ -6,6 +6,7 @@
 #include "node.h"
 
 using namespace std;
+extern int line_no;
 
 struct Node* newNode(int type) {
     struct Node *node = new Node;
@@ -22,6 +23,14 @@ void copyNode(Node* new_node, Node* old) {
   new_node->nodeType = old->nodeType;
   new_node->parent = old->parent;
   new_node->number = old->number;
+  for (int i = 0; i < old->childs.size(); i++) {
+    new_node->childs.push_back(old->childs[i]);
+  }
+}
+
+void moveChild(Node* new_node, Node* old)
+{
+  new_node->childs.clear();
   for (int i = 0; i < old->childs.size(); i++) {
     new_node->childs.push_back(old->childs[i]);
   }
@@ -56,11 +65,11 @@ void printTree(struct Node *node, int ident) {
         case NODE_STMT        : printf("%s|-STMT\n", blank); ident += 3; break;
         case NODE_TERM        : printf("%s|-TERM\n", blank); ident += 3; break;
         case NODE_PROGRAM     : printf("%s|-PROGRAM\n", blank); ident += 3; break;
-    		case NODE_ID          : printf("%s|-[ID] ", blank); cout << node->strValue << endl; ident += 3; break;
+    		case NODE_ID          : printf("%s|-[ID] ", blank); cout << node->strValue << " is in line " << node->line_num << endl; ident += 3; break;
         case ID_TOK           : break;
     		case NODE_DECL        : printf("%s|-DECL\n", blank); ident += 3; break;
         case NODE_EXPR        : printf("%s|-EXPR\n", blank); ident += 3; break;
-        case NODE_VAR         : printf("%s|-VAR\n", blank); ident += 3; break;
+        case NODE_VAR         : printf("%s|-VAR(NODE)\n", blank); ident += 3; break;
         case NODE_ID_LT       : printf("%s|-ID_LIST\n", blank); ident += 3; break;
         case PUC_COMMA        : printf("%s|- ,\n", blank); ident += 3; break;
         case PUC_LBRAC        : printf("%s|- [ \n", blank); ident += 3; break;
@@ -145,6 +154,8 @@ void printTree(struct Node *node, int ident) {
 	}
 }
 
+void reduce(Node* node);
+
 Node* convertTree(Node* node)
 {
   switch (node->nodeType)
@@ -207,6 +218,7 @@ Node* copyTree(Node* node)
   cp->nodeType = node->nodeType;
   if(node->nodeType == NODE_ID) cp->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) cp->number = node->number;
+  cp->line_num = node->line_num;
 
   if (!node->childs.empty())
 	{
@@ -230,6 +242,7 @@ void copyChildinverse(Node* node, std::vector<Node*> ori)
 {
   node->childs.clear();
   for (int i = ori.size()-1; i >= 0; i--) {
+    reduce(ori[i]);
     addChild(node, ori[i]);
   }
 }
@@ -282,11 +295,15 @@ void reduceDECLlist(Node* node)
   if(cur_type == NODE_SPROG_DECLS) node->nodeType = NODE_SPROG_DECLS_LI;
   copyChildinverse(node, list);
 
+  for (int i = 0; i < node->childs.size(); i++)
+  {
+    reduce(node->childs[i]);
+  }
+
   if(node->nodeType == NODE_SPROG_DECLS_LI)
   {
     for (int i = 0; i < node->childs.size(); i++)
     {
-
       if(node->childs[i]->nodeType == NODE_SPROG_DECLS) {
           if (node->childs[i]->childs[0]->nodeType == NODE_SPROG_DECL)
             node->childs[i] = node->childs[i]->childs[0];
@@ -299,10 +316,10 @@ void reduceDECL(Node* node)
 {
   reduceDECLlist(node);
   // declarations -> LAMDBA, remove node
+  std::vector<Node*> tmp(node->childs);
 
   // declarations -> VAR identifier_list COLON type SEMICOLON
   if (node->childs[0]->nodeType == NODE_VAR && node->childs[3]->nodeType == NODE_TYPE) {
-    std::vector<Node*> tmp(node->childs);
     node->childs.clear();
     addChild(node, tmp[0]);
     addChild(node, tmp[1]);
@@ -311,7 +328,6 @@ void reduceDECL(Node* node)
   }
   // declarations VAR identifier_list COLON identifier_list SEMICOLON
   if (node->childs[0]->nodeType == NODE_VAR && node->childs[3]->nodeType == NODE_TYPE) {
-    std::vector<Node*> tmp(node->childs);
     node->childs.clear();
     addChild(node, tmp[0]);
     addChild(node, tmp[1]);
@@ -321,17 +337,16 @@ void reduceDECL(Node* node)
 
   // declarations -> CONST identifier_list EQUAL num_tok SEMICOLON
   if (node->childs[0]->nodeType == RE_CONST) {
-    std::vector<Node*> tmp(node->childs);
     node->childs.clear();
     addChild(node, tmp[0]);
     addChild(node, tmp[1]);
+    reduce(tmp[3]);
     addChild(node, tmp[3]);
     return;
   }
 
   // declarations -> TYPE identifier_list EQUAL type SEMICOLON
   if (node->childs[0]->nodeType == RE_TYPE) {
-    std::vector<Node*> tmp(node->childs);
     node->childs.clear();
     addChild(node, tmp[0]);
     addChild(node, tmp[1]);
@@ -343,6 +358,8 @@ void reduceDECL(Node* node)
 void reduceList(Node* node)
 {
   int node_type = node->nodeType;
+  if (node->childs[0]->nodeType != node_type) return;
+
   std::vector<Node*> list;
   Node* new_il = newNode(node_type);
   Node* il; il = node;
@@ -356,10 +373,31 @@ void reduceList(Node* node)
 
 void reduceOPTVAR(Node* node)
 {
-  if (node->childs[0]->nodeType == NODE_LAMDBA) {
-    node->parent->childs.erase(node->parent->childs.begin());
-    return;
+  removeLAMDBA(node);
+
+  if(node->childs[0]->nodeType == RE_VAR){
+    reduce(node->childs[0]);
+    node->parent->childs[0] = node->childs[0];
   }
+}
+
+void reduceTAIL(Node* node)
+{
+  if(node->childs[0]->nodeType == NODE_LAMDBA) {
+    node->parent->childs.pop_back();
+  }
+}
+
+void reduceFACTOR(Node* node)
+{
+  if(node->parent->childs.size() == 1) {
+    node->parent->childs.clear();
+    for (int i = 0; i < node->childs.size(); i++) {
+      reduce(node->childs[i]);
+      node->parent->childs.push_back(node->childs[i]);
+    }
+  }
+
 }
 
 void reduce(Node* node)
@@ -374,7 +412,10 @@ void reduce(Node* node)
     case NODE_DECL        : reduceDECL(node); break;
     case NODE_TYPE        : reduceTYPE(node); break;
     case NODE_SPROG_DECLS : reduceDECLlist(node); break;
-    case NODE_OPTVAR      : removeLAMDBA(node); break;
+    case NODE_OPTVAR      : reduceOPTVAR(node); break;
+    case NODE_OPT_STMT    : reduce(node->childs[0]); node->parent->childs[1] = node->childs[0]; break;
+    case NODE_TAIL        : reduceTAIL(node); break;
+    case NODE_FACTOR      : reduceFACTOR(node); break;
   }
 
 
