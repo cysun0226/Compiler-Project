@@ -800,7 +800,7 @@ int main()
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
     printTree(ast_root, 0);
-    printf( "\n------------------- scope tree ---------------------\n");
+    printf( "\n\n------------------- scope tree ---------------------\n\n");
     divideScope(ast_root, 0);
 
     fclose(pFile);
