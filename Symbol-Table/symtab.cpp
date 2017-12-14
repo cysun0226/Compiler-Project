@@ -311,7 +311,7 @@ void divideScope(struct Node *node, int ident) {
       }
 
       if(node->sibling[2]->nodeType == NODE_ID) {
-        if(getIdType(leftNode->strValue) != getIdType(node->sibling[2]->strValue))
+        if(getIdType(node->sibling[2]->strValue)!="FUNCTION" && getIdType(leftNode->strValue) != getIdType(node->sibling[2]->strValue))
           errMsg.push_back(typeError(leftNode->line_num, leftNode->strValue));
       }
     }
