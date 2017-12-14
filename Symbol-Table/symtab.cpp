@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <math.h>
 #include "node.h"
 string RED_BOLD = "\x1b[;31;1m";
 string RED_END = "\033[0m";
@@ -15,6 +16,7 @@ string RESET = "\x1b[0;m";
 using namespace std;
 
 int scope_id = 0;
+int typeErr = 0;
 
 std::vector<Symtab*> symtabStack;
 std::vector<string> errMsg;
@@ -51,6 +53,17 @@ bool searchDupID(string id)
     return false;
 }
 
+string getIdType(string id)
+{
+  for (int i = symtabStack.size()-1; i >= 0; i--) {
+    iter = symtabStack[i]->symtab.find(id);
+    if (iter != symtabStack[i]->symtab.end()) // id exists
+      return iter->second;
+  }
+
+  return "not found";
+}
+
 void printErrMsg()
 {
   cout << "\n----- Error messages -----\n" << endl;
@@ -79,6 +92,42 @@ string undeclare(int line_no, string id)
   err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' was not declared in this scope";
   return err;
 }
+
+string intTypeError(int line_no, string id)
+{
+  string err;
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assing real to integer)";
+  return err;
+}
+
+void checkInt(Node* node)
+{
+  if (!node->childs.empty()) {
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      checkInt(node->childs[i]);
+		}
+	}
+
+  if(node->nodeType == NODE_NUM) {
+    double f = floor(node->number);
+    if(f != node->number)
+      typeErr = 1;
+  }
+}
+
+// double calculate(Node* node, double last_val)
+// {
+//   if (!node->childs.empty()) {
+// 		for (size_t i = 0; i < node->childs.size(); i++) {
+//       calculate(node->childs[i]);
+// 		}
+// 	}
+//
+//   if(node->nodeType == NODE_NUM) {
+//     double f = floor(node->)
+//   }
+//
+// }
 
 void printSymtab(Symtab* s)
 {
@@ -155,7 +204,9 @@ void divideScope(struct Node *node, int ident) {
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
 
+
       Symtab* newtab = newSymtab("function " + node->sibling[1]->strValue, scope_id);
+      symtabStack.push_back(newtab);
       newtab->symtab[node->sibling[1]->strValue] = node->sibling[3]->childs[0]->strValue;
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if function have parameters
@@ -172,7 +223,7 @@ void divideScope(struct Node *node, int ident) {
       }
 
 
-      symtabStack.push_back(newtab);
+
 
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
@@ -186,9 +237,13 @@ void divideScope(struct Node *node, int ident) {
       Symtab* newtab = newSymtab("procedure " + node->sibling[1]->strValue, scope_id);
       newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
 
-      for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
-        newtab->symtab[node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue] = node->sibling[2]->childs[0]->childs[1]->strValue;
+      if(!node->sibling[2]->childs[0]->childs.empty()) // if have parameters
+      {
+        for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
+          newtab->symtab[node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue] = node->sibling[2]->childs[0]->childs[1]->strValue;
+        }
       }
+
 
       symtabStack.push_back(newtab);
 
@@ -216,12 +271,14 @@ void divideScope(struct Node *node, int ident) {
     }
 
     // Semantic check
+    // undeclare
     if (node->nodeType == NODE_ID) {
       bool notDECL = false;
       // check not declare id
       if (node->parent->nodeType == NODE_VAR) notDECL = true;
       if (node->parent->nodeType == NODE_TERM) notDECL = true;
       if (node->parent->nodeType == NODE_SI_EXPR) notDECL = true;
+      if (node->parent->nodeType == NODE_PROC_STMT) notDECL = true;
 
       if(notDECL)
       {
@@ -233,6 +290,22 @@ void divideScope(struct Node *node, int ident) {
 
     }
 
+    // type check
+    if (node->nodeType == RE_ASGMNT)
+    {
+      typeErr = 0;
+      Node* leftNode = node->sibling[0]->childs[0];
+
+      if(getIdType(leftNode->strValue) == "INTEGER") {
+        checkInt(node->sibling[2]);
+        if(typeErr)
+          errMsg.push_back(intTypeError(leftNode->line_num, leftNode->strValue));
+      }
+    }
+
+
+
+    // print nodes
     switch(node->nodeType) {
         case OP_ADD           : printf("%s|-ADD\n", blank); break;
         case OP_SUB           : printf("%s|-SUB\n", blank); break;
