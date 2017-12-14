@@ -8,3 +8,4 @@ parser.tab.h
 *.txt
 *.p
 ./test/*.p
+tst.cpp
