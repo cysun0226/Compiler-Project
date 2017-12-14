@@ -220,7 +220,8 @@ Node* copyTree(Node* node)
 {
   Node* cp = new Node;
   cp->nodeType = node->nodeType;
-  if(node->nodeType == NODE_ID || node->nodeType == TY_INT || node->nodeType == TY_STR || node->nodeType == TY_REAL) cp->strValue = node->strValue;
+  if(node->nodeType == NODE_ID || node->nodeType == TY_INT || node->nodeType == TY_STR || node->nodeType == TY_REAL || node->nodeType == RE_ARR)
+    cp->strValue = node->strValue;
   if(node->nodeType == NODE_NUM) cp->number = node->number;
   cp->line_num = node->line_num;
   cp->parent = node->parent;
@@ -257,6 +258,7 @@ void reduceTYPE(Node* node)
   // standard_type
   if (node->childs[0]->nodeType == NODE_STDTYPE){
     node->nodeType = node->childs[0]->childs[0]->nodeType;
+    node->strValue = node->childs[0]->childs[0]->strValue;
     delete node->childs[0]->childs[0]; // STDTYPE
     delete node->childs[0];
     node->childs.clear();

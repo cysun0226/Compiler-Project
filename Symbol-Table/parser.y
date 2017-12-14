@@ -271,7 +271,11 @@ type :
       fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
-      addChild($$, newNode(RE_ARR));
+      // addChild($$, newNode(RE_ARR));
+      Node* arr_node = newNode(RE_ARR);
+      arr_node->strValue = "ARRAY";
+      arr_node->line_num = line_no;
+      addChild($$, arr_node);
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
@@ -280,7 +284,10 @@ type :
       fprintf( spFile, "Reduction ( type -> ARRAY [ID .. NUM] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
-      addChild($$, newNode(RE_ARR));
+      // addChild($$, newNode(RE_ARR));
+      Node* arr_node = newNode(RE_ARR);
+      arr_node->strValue = "ARRAY";
+      arr_node->line_num = line_no;
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
@@ -288,7 +295,10 @@ type :
   | ARRAY LBRAC num_tok DOTDOT id_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
       $$ = newNode(NODE_TYPE);
-      addChild($$, newNode(RE_ARR));
+      // addChild($$, newNode(RE_ARR));
+      Node* arr_node = newNode(RE_ARR);
+      arr_node->strValue = "ARRAY";
+      arr_node->line_num = line_no;
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
@@ -297,7 +307,10 @@ type :
       fprintf( spFile, "Reduction ( type -> ARRAY [id .. id] OF type )\n");
 
       $$ = newNode(NODE_TYPE);
-      addChild($$, newNode(RE_ARR));
+      // addChild($$, newNode(RE_ARR));
+      Node* arr_node = newNode(RE_ARR);
+      arr_node->strValue = "ARRAY";
+      arr_node->line_num = line_no;
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
