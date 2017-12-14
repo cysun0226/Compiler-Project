@@ -73,6 +73,13 @@ string redeclare(int line_no, string id)
   return err;
 }
 
+string undeclare(int line_no, string id)
+{
+  string err;
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' was not declared in this scope";
+  return err;
+}
+
 void printSymtab(Symtab* s)
 {
   // header
@@ -81,8 +88,15 @@ void printSymtab(Symtab* s)
   else
     cout << "----- scope " << s->scope << " symbol table -----" << endl;
 
-  if (s->func_name != nf)
-    cout << "(function " << s->func_name << ")" << endl;
+  if (s->func_name != nf) {
+    cout << s->func_name << ": current symtab stack = ";
+    for (size_t i = 0; i < symtabStack.size(); i++) {
+      cout << symtabStack[i]->scope;
+      if(i!=symtabStack.size()-1) cout << ",";
+    }
+    cout << endl;
+  }
+
 
   cout << "------------------------------------------------------" << endl;
   cout << "| " << std::left << setw(15) << "id" << "|  " <<  std::left << setw(15) << "type" << "|  " <<  std::left << setw(15) <<  "scope"  << "|" << endl;
@@ -141,8 +155,8 @@ void divideScope(struct Node *node, int ident) {
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
 
-      Symtab* newtab = newSymtab(node->sibling[1]->strValue, scope_id);
-      newtab->symtab[node->sibling[1]->strValue] = "FUNCTION";
+      Symtab* newtab = newSymtab("function " + node->sibling[1]->strValue, scope_id);
+      newtab->symtab[node->sibling[1]->strValue] = node->sibling[3]->childs[0]->strValue;
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if function have parameters
       {
@@ -169,7 +183,7 @@ void divideScope(struct Node *node, int ident) {
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
 
-      Symtab* newtab = newSymtab(node->sibling[1]->strValue, scope_id);
+      Symtab* newtab = newSymtab("procedure " + node->sibling[1]->strValue, scope_id);
       newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
 
       for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
@@ -201,10 +215,23 @@ void divideScope(struct Node *node, int ident) {
       }
     }
 
+    // Semantic check
+    if (node->nodeType == NODE_ID) {
+      bool notDECL = false;
+      // check not declare id
+      if (node->parent->nodeType == NODE_VAR) notDECL = true;
+      if (node->parent->nodeType == NODE_TERM) notDECL = true;
+      if (node->parent->nodeType == NODE_SI_EXPR) notDECL = true;
 
+      if(notDECL)
+      {
+        string id = node->strValue;
+        int line_no = node->line_num;
+        if(!searchID(id))
+          errMsg.push_back(undeclare(line_no, id));
+      }
 
-
-
+    }
 
     switch(node->nodeType) {
         case OP_ADD           : printf("%s|-ADD\n", blank); break;
