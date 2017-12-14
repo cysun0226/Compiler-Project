@@ -96,7 +96,14 @@ string undeclare(int line_no, string id)
 string intTypeError(int line_no, string id)
 {
   string err;
-  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assing real to integer)";
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign real to integer)";
+  return err;
+}
+
+string typeError(int line_no, string id)
+{
+  string err;
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign type conflict)";
   return err;
 }
 
@@ -296,10 +303,16 @@ void divideScope(struct Node *node, int ident) {
       typeErr = 0;
       Node* leftNode = node->sibling[0]->childs[0];
 
+
       if(getIdType(leftNode->strValue) == "INTEGER") {
         checkInt(node->sibling[2]);
         if(typeErr)
           errMsg.push_back(intTypeError(leftNode->line_num, leftNode->strValue));
+      }
+
+      if(node->sibling[2]->nodeType == NODE_ID) {
+        if(getIdType(leftNode->strValue) != getIdType(node->sibling[2]->strValue))
+          errMsg.push_back(typeError(leftNode->line_num, leftNode->strValue));
       }
     }
 
