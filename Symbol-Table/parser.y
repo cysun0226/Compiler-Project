@@ -288,6 +288,7 @@ type :
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
       arr_node->line_num = line_no;
+      addChild($$, arr_node);
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
@@ -299,6 +300,7 @@ type :
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
       arr_node->line_num = line_no;
+      addChild($$, arr_node);
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);
@@ -311,6 +313,7 @@ type :
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
       arr_node->line_num = line_no;
+      addChild($$, arr_node);
       addChild($$, $3);
       addChild($$, $5);
       addChild($$, $8);

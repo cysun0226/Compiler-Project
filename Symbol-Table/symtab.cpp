@@ -13,11 +13,12 @@ using namespace std;
 int scope_id = 0;
 
 std::vector<Symtab*> symtabStack;
+std::vector<string> errMsg;
 std::string nf = "not func";
 std::string PROG = "PROGRAM";
 std::string PROG_PARA = "PROG_PARA";
 std::string INT = "INTEGER";
-
+map<string, string>::iterator iter;
 
 
 struct Symtab* newSymtab(string func_name, int scope_id) {
@@ -25,6 +26,33 @@ struct Symtab* newSymtab(string func_name, int scope_id) {
   sym->func_name = func_name;
   sym->scope = scope_id;
   return sym;
+}
+
+bool searchID(string id)
+{
+  for (int i = symtabStack.size()-1; i >= 0; i--) {
+    iter = symtabStack[i]->symtab.find(id);
+    if (iter != symtabStack[i]->symtab.end()) // id exists
+      return true;
+  }
+  return false;
+}
+
+bool searchDupID(string id)
+{
+  iter = symtabStack.back()->symtab.find(id);
+  if (iter != symtabStack.back()->symtab.end()) // id exists
+    return true;
+  else
+    return false;
+}
+
+void printErrMsg()
+{
+  cout << "\n----- Error messages -----\n" << endl;
+  for (size_t i = 0; i < errMsg.size(); i++) {
+    cout << errMsg[i] << endl;
+  }
 }
 
 void printSymtab(Symtab* s)
@@ -68,12 +96,30 @@ void divideScope(struct Node *node, int ident) {
       cout << "\n----- global scope -----\n" << endl;
       Symtab* newtab = newSymtab(nf, scope_id);
       newtab->symtab[node->sibling[1]->strValue] = PROG;
+      symtabStack.push_back(newtab);
+      // scope_id++;
+
+      // Symtab* newtab = newSymtab(nf, scope_id);
+      // newtab->symtab[node->sibling[1]->strValue] = PROG;
 
       for (size_t i = 0; i < node->sibling[3]->childs.size(); i++) {
-        newtab->symtab[node->sibling[3]->childs[i]->strValue] = PROG_PARA;
+        string para_id = node->sibling[3]->childs[i]->strValue;
+        if(!searchDupID(para_id))
+          newtab->symtab[node->sibling[3]->childs[i]->strValue] = PROG_PARA;
+        else {
+          // char *intStr;
+          // itoa(line_num, intStr, 10);
+          // sprintf(intStr,"%d",node->line_num);
+          // string lineStr = string(intStr);
+          string err;
+          err = "[error] line " + to_string(node->line_num) + ": redeclaration of " + "\'" + para_id + "\'";
+          errMsg.push_back(err);
+          // tst.cpp:6:7: error: redeclaration of ‘int i’
+        }
+
       }
 
-      symtabStack.push_back(newtab);
+
 
     }
 
@@ -113,16 +159,16 @@ void divideScope(struct Node *node, int ident) {
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
 
+
     // insert decl symbol
     if (node->nodeType == NODE_DECL && node->childs.size()>2) {
       for (size_t i = 0; i < node->childs[1]->childs.size(); i++) { // decl id list
-        // symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = node->childs[2]->strValue;
-        if(node->childs[2]->nodeType == TY_INT)
-          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "INTEGER";
-        if(node->childs[2]->nodeType == TY_REAL)
-          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "REAL";
-        if(node->childs[2]->nodeType == TY_STR)
-          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "STRING";
+        symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = node->childs[2]->strValue;
+        if(node->childs[2]->nodeType == RE_ARR) {
+          std::string arrType = node->childs[2]->childs[2]->strValue;
+          if (node->childs[2]->childs[2]->nodeType == RE_ARR) arrType = "ARRAY";
+          symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "ARRAY(" + arrType + ")";
+        }
       }
     }
 
@@ -222,6 +268,7 @@ void divideScope(struct Node *node, int ident) {
       cout << "\n----- global scope end -----\n" << endl;
       printSymtab(symtabStack.back());
       symtabStack.pop_back();
+      printErrMsg();
     }
 
 
