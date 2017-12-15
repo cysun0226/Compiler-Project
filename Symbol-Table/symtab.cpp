@@ -25,6 +25,7 @@ std::string PROG = "PROGRAM";
 std::string PROG_PARA = "PROG_PARA";
 std::string INT = "INTEGER";
 map<string, string>::iterator iter;
+map<string, bool>::iterator initIter;
 
 
 struct Symtab* newSymtab(string func_name, int scope_id) {
@@ -39,6 +40,16 @@ bool searchID(string id)
   for (int i = symtabStack.size()-1; i >= 0; i--) {
     iter = symtabStack[i]->symtab.find(id);
     if (iter != symtabStack[i]->symtab.end()) // id exists
+      return true;
+  }
+  return false;
+}
+
+bool checkIdInit(string id)
+{
+  for (int i = symtabStack.size()-1; i >= 0; i--) {
+    initIter = symtabStack[i]->symInit.find(id);
+    if (initIter != symtabStack[i]->symInit.end()) // id exists
       return true;
   }
   return false;
@@ -100,12 +111,22 @@ string intTypeError(int line_no, string id)
   return err;
 }
 
-string typeError(int line_no, string id)
+string typeError(int line_no, string id, string id_type, string asg_type )
 {
   string err;
-  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign type conflict)";
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign " + asg_type + " to " + id_type + ")";
   return err;
 }
+
+string unInitialize(int line_no, string id)
+{
+  string err;
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": variable " + "\'" + id + "\' used without having been initialized";
+  // local variable 'tauxtrouve' used without having been initialized
+  return err;
+}
+
+
 
 void checkInt(Node* node)
 {
@@ -121,6 +142,9 @@ void checkInt(Node* node)
       typeErr = 1;
   }
 }
+
+
+
 
 // double calculate(Node* node, double last_val)
 // {
@@ -286,6 +310,11 @@ void divideScope(struct Node *node, int ident) {
       if (node->parent->nodeType == NODE_TERM) notDECL = true;
       if (node->parent->nodeType == NODE_SI_EXPR) notDECL = true;
       if (node->parent->nodeType == NODE_PROC_STMT) notDECL = true;
+      if (node->parent->nodeType == NODE_FACTOR) notDECL = true;
+
+      int line_no = node->line_num;
+      string id = node->strValue;
+      cout << id << " in line " << line_no << endl;
 
       if(notDECL)
       {
@@ -293,6 +322,16 @@ void divideScope(struct Node *node, int ident) {
         int line_no = node->line_num;
         if(!searchID(id))
           errMsg.push_back(undeclare(line_no, id));
+
+        cout << id << " in line " << line_no << endl;
+        // check is intitialize
+        if(searchID(id)) {
+          if(node->parent->nodeType != NODE_VAR) { // right value
+            cout << id << " in line " << line_no << endl;
+            if(!checkIdInit(id))
+              errMsg.push_back(unInitialize(line_no, id));
+          }
+        }
       }
 
     }
@@ -302,6 +341,7 @@ void divideScope(struct Node *node, int ident) {
     {
       typeErr = 0;
       Node* leftNode = node->sibling[0]->childs[0];
+      string var_id = leftNode->strValue;
 
 
       if(getIdType(leftNode->strValue) == "INTEGER") {
@@ -311,9 +351,18 @@ void divideScope(struct Node *node, int ident) {
       }
 
       if(node->sibling[2]->nodeType == NODE_ID) {
-        if(getIdType(node->sibling[2]->strValue)!="FUNCTION" && getIdType(leftNode->strValue) != getIdType(node->sibling[2]->strValue))
-          errMsg.push_back(typeError(leftNode->line_num, leftNode->strValue));
+        string id_type = getIdType(leftNode->strValue);
+        string asg_type = getIdType(node->sibling[2]->strValue);
+        if(asg_type!="FUNCTION" && id_type != "REAL" && id_type != asg_type) {
+          errMsg.push_back(typeError(leftNode->line_num, leftNode->strValue, id_type, asg_type));
+          typeErr = 1;
+        }
       }
+
+      if(!typeErr) {
+        symtabStack.back()->symInit[var_id] = true;
+      }
+
     }
 
 

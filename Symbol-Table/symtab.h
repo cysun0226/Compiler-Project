@@ -9,6 +9,7 @@ using namespace std;
 
 typedef struct Symtab {
 	map<string, string> symtab; // ID, type
+	map<string, bool> symInit;
 	string func_name;
 	int scope;
 } Symtab;
