@@ -22,7 +22,7 @@ std::vector<Symtab*> symtabStack;
 std::vector<string> errMsg;
 std::string nf = "not func";
 std::string PROG = "PROGRAM";
-std::string PROG_PARA = "PROG_PARA";
+std::string PROG_PARA = "PROG_PARAMETER";
 std::string INT = "INTEGER";
 map<string, string>::iterator iter;
 map<string, bool>::iterator initIter;
@@ -77,7 +77,7 @@ string getIdType(string id)
 
 void printErrMsg()
 {
-  cout << "\n----- Error messages -----\n" << endl;
+  cout << "\n----- Semantic check -----\n" << endl;
 
   if(errMsg.empty()) {
     cout << GRN + "[No Semantic Error]﻿" + RESET << endl << endl;
@@ -169,29 +169,31 @@ void printSymtab(Symtab* s)
     cout << "----- scope " << s->scope << " symbol table -----" << endl;
 
   if (s->func_name != nf) {
+    cout << endl;
     cout << s->func_name << ": current symtab stack = ";
     for (size_t i = 0; i < symtabStack.size(); i++) {
-      cout << symtabStack[i]->scope;
+      if(i == 0) cout << "global";
+      else cout << symtabStack[i]->scope;
       if(i!=symtabStack.size()-1) cout << ",";
     }
-    cout << endl;
+    cout << endl << endl;
   }
 
 
-  cout << "------------------------------------------------------" << endl;
-  cout << "| " << std::left << setw(15) << "id" << "|  " <<  std::left << setw(15) << "type" << "|  " <<  std::left << setw(15) <<  "scope"  << "|" << endl;
-  cout << "------------------------------------------------------" << endl;
+  cout << "----------------------------------------------------" << endl;
+  cout << "| " << std::left << setw(15) << "id" << "|  " <<  std::left << setw(18) << "type" << "|  " <<  std::left << setw(10) <<  "scope"  << "|" << endl;
+  cout << "----------------------------------------------------" << endl;
 
   // print content
   map<string, string>::iterator iter;
   for(iter = s->symtab.begin(); iter != s->symtab.end(); iter++) {
     if (s->scope != 0)
-      cout << "| " << std::left << setw(15) << iter->first << "|  " << std::left << setw(15) << iter->second << "|  " << std::left << setw(15) << s->scope << "|" << endl;
+      cout << "| " << std::left << setw(15) << iter->first << "|  " << std::left << setw(18) << iter->second << "|  " << std::left << setw(10) << s->scope << "|" << endl;
     else
-      cout << "| " << std::left << setw(15) << iter->first << "|  " << std::left << setw(15) << iter->second << "|  " << std::left << setw(15) << "global" << "|" << endl;
+      cout << "| " << std::left << setw(15) << iter->first << "|  " << std::left << setw(18) << iter->second << "|  " << std::left << setw(10) << "global" << "|" << endl;
   }
 
-  cout << "------------------------------------------------------" << endl << endl;
+  cout << "----------------------------------------------------" << endl << endl;
   // end
   // if (s->scope == 0)
   //   cout << "----- global scope symbol table end -----" << endl;
@@ -219,8 +221,11 @@ void divideScope(struct Node *node, int ident) {
 
       for (size_t i = 0; i < node->sibling[3]->childs.size(); i++) {
         string para_id = node->sibling[3]->childs[i]->strValue;
-        if(!searchDupID(para_id))
+        if(!searchDupID(para_id)) {
           newtab->symtab[node->sibling[3]->childs[i]->strValue] = PROG_PARA;
+          newtab->symInit[node->sibling[3]->childs[i]->strValue] = true;
+        }
+
         else
           errMsg.push_back(redeclare(node->sibling[3]->childs[i]->line_num,para_id));
       }
@@ -236,7 +241,7 @@ void divideScope(struct Node *node, int ident) {
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
 
 
-      Symtab* newtab = newSymtab("function " + node->sibling[1]->strValue, scope_id);
+      Symtab* newtab = newSymtab("function \'" + node->sibling[1]->strValue + "\'", scope_id);
       symtabStack.push_back(newtab);
       newtab->symtab[node->sibling[1]->strValue] = node->sibling[3]->childs[0]->strValue;
 
@@ -245,16 +250,19 @@ void divideScope(struct Node *node, int ident) {
         for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
           string para_id = node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue;
           string para_type = node->sibling[2]->childs[0]->childs[1]->strValue;
+          if(node->sibling[2]->childs[0]->childs[1]->nodeType == RE_ARR) {
+              para_type = "ARRAY(" + node->sibling[2]->childs[0]->childs[1]->childs[2]->strValue + ")" ;
+          }
+
           int line_no = node->sibling[2]->childs[0]->childs[0]->childs[i]->line_num;
-          if(!searchDupID(para_id))
+          if(!searchDupID(para_id)) {
             newtab->symtab[para_id] = para_type;
+            newtab->symInit[para_id] = true;
+          }
           else
             errMsg.push_back(redeclare(line_no,para_id));
         }
       }
-
-
-
 
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
@@ -265,18 +273,25 @@ void divideScope(struct Node *node, int ident) {
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
 
-      Symtab* newtab = newSymtab("procedure " + node->sibling[1]->strValue, scope_id);
+      Symtab* newtab = newSymtab("procedure \'" + node->sibling[1]->strValue + "\'", scope_id);
       newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
+      symtabStack.push_back(newtab);
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if have parameters
       {
         for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
-          newtab->symtab[node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue] = node->sibling[2]->childs[0]->childs[1]->strValue;
+          string para_id = node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue;
+          if(!searchDupID(para_id)) {
+            newtab->symtab[para_id] = node->sibling[2]->childs[0]->childs[1]->strValue;
+            if(node->sibling[2]->childs[0]->childs[1]->nodeType == RE_ARR) {
+              newtab->symtab[para_id] = "ARRAY(" + node->sibling[2]->childs[0]->childs[1]->childs[2]->strValue + ")";
+            }
+            newtab->symInit[para_id] = true;
+          }
         }
       }
 
 
-      symtabStack.push_back(newtab);
 
       cout << "\n----- scope " << scope_id << " -----\n" << endl;
     }
@@ -312,23 +327,19 @@ void divideScope(struct Node *node, int ident) {
       if (node->parent->nodeType == NODE_PROC_STMT) notDECL = true;
       if (node->parent->nodeType == NODE_FACTOR) notDECL = true;
 
-      int line_no = node->line_num;
-      string id = node->strValue;
-      cout << id << " in line " << line_no << endl;
-
       if(notDECL)
       {
         string id = node->strValue;
         int line_no = node->line_num;
+
+        // check is declared
         if(!searchID(id))
           errMsg.push_back(undeclare(line_no, id));
 
-        cout << id << " in line " << line_no << endl;
         // check is intitialize
         if(searchID(id)) {
           if(node->parent->nodeType != NODE_VAR) { // right value
-            cout << id << " in line " << line_no << endl;
-            if(!checkIdInit(id))
+            if(!checkIdInit(id) && getIdType(id)!="PROCEDURE" && getIdType(id)!="FUNCTION")
               errMsg.push_back(unInitialize(line_no, id));
           }
         }
@@ -353,7 +364,7 @@ void divideScope(struct Node *node, int ident) {
       if(node->sibling[2]->nodeType == NODE_ID) {
         string id_type = getIdType(leftNode->strValue);
         string asg_type = getIdType(node->sibling[2]->strValue);
-        if(asg_type!="FUNCTION" && id_type != "REAL" && id_type != asg_type) {
+        if(asg_type!="FUNCTION" && id_type != "REAL" && asg_type!="PROCEDURE" && id_type != asg_type) {
           errMsg.push_back(typeError(leftNode->line_num, leftNode->strValue, id_type, asg_type));
           typeErr = 1;
         }
