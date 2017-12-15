@@ -106,7 +106,7 @@ real    ({i}\.{i}|{i}?\.{i}){exp}?
 
 {R}{E}{A}{L}	               {fprintf( spFile, "Shift REAL\n"); return(REAL);}
 
-{id_e}                       {fprintf( spFile, "Shift [ID] %s\n", yytext); yylval.string = yytext; return(ID);}
+{id_e}                       {fprintf( spFile, "Shift [ID] %s (line %d)\n", yytext, line_no); yylval.string = yytext; return(ID);}
 ":="                         {fprintf( spFile, "Shift := \n"); return(ASSIGNMENT);}
 
 \"(\\.|[^\^\n\"])*\"			   {fprintf( spFile, "Shift CHARACTER_STRING\n"); return(CHARACTER_STRING);}
