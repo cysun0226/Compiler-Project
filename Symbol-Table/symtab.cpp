@@ -107,7 +107,7 @@ string undeclare(int line_no, string id)
 string intTypeError(int line_no, string id)
 {
   string err;
-  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign real to integer)";
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": " + "\'" + id + "\' type error (assign floating number to integer)";
   return err;
 }
 
@@ -174,7 +174,7 @@ void printSymtab(Symtab* s)
     for (size_t i = 0; i < symtabStack.size(); i++) {
       if(i == 0) cout << "global";
       else cout << symtabStack[i]->scope;
-      if(i!=symtabStack.size()-1) cout << ",";
+      if(i!=symtabStack.size()-1) cout << ", ";
     }
     cout << endl << endl;
   }
@@ -274,7 +274,7 @@ void divideScope(struct Node *node, int ident) {
       symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
 
       Symtab* newtab = newSymtab("procedure \'" + node->sibling[1]->strValue + "\'", scope_id);
-      newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
+      // newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
       symtabStack.push_back(newtab);
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if have parameters
