@@ -1,0 +1,11 @@
+lex.yy.c
+lexout
+out
+parser.cc
+parser.hh
+parser.tab.c
+parser.tab.h
+*.txt
+*.p
+./test/*.p
+tst.cpp
