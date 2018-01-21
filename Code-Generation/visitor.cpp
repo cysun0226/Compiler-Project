@@ -1,37 +1,23 @@
-#ifndef __VISITOR_H__
-#define __VISITOR_H__
+#include "visitor.h"
 
-#include <vector>
-#include <string>
-#include <map>
-#include "node.h"
-#include "symtab.h"
 using namespace std;
 
-typedef struct Instruction {
-	int line;
-	string instr;
-} Instruction;
+MethodBodyVisitor::MethodBodyVisitor(Node* r)
+{
+	root = r;
+}
 
-//
-
-/* MethodBodyVisitor */
-// Constants
-// local storage
-// Static references
-// Expressions
-// Assignment
-// Field references? (struct?)
-// Array references
-// Conditional execution (if/else)
-// Loops
+void MethodBodyVisitor::visit(Node* node)
+{
+	
+}
 
 class MethodBodyVisitor {
 public:
-	MethodBodyVisitor(Node* r);
+	MethodBodyVisitor(Node* r) {root = r};
 	virtual ~MethodBodyVisitor();
 
-	void visit(Node* node);
+	void visit();
 	// traverse AST tree
 	// 用 case 來呼叫 class 中的各個 function 產生 Instruction
 
