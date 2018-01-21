@@ -140,6 +140,7 @@ void printTree(struct Node *node, int ident) {
         case TY_STR           : printf("%s|-STRING\n", blank);ident += 3; break;
         case NODE_DECLS       : printf("%s|-DECLS\n", blank);ident += 3; break;
         case NODE_SPROG_DECLS_LI : printf("%s|-SPROG_DECLS_LI\n", blank);ident += 3; break;
+        case NODE_PARAM_LIS : printf("%s|-PARAM_LIS\n", blank);ident += 3; break;
 
 
         default:
@@ -157,64 +158,6 @@ void printTree(struct Node *node, int ident) {
 }
 
 void reduce(Node* node);
-
-Node* convertTree(Node* node)
-{
-  switch (node->nodeType)
-  {
-    case NODE_ID_LT: {
-      std::vector<Node> id_list;
-      Node* new_il = newNode(NODE_ID_LT);
-      Node* il; il = node;
-      while (il->childs[0]->nodeType == NODE_ID_LT) {
-        Node* new_id = new Node;
-        copyNode(new_id, il->childs[2]);
-        addChild(new_il, new_id);
-        // id_list.push_back(new_id);
-        il = il->childs[0];
-      }
-      Node* new_id = new Node;
-      copyNode(new_id, il->childs[0]);
-      // id_list.push_back(new_id);
-      addChild(new_il, new_id);
-      //
-      // for (int i = 0; i < id_list.size(); i++) {
-      //   addChild(new_il, id_list[i]);
-      // }
-      return new_il;
-      break;
-    }
-
-
-    default:
-      // printf("default:%d\n", node->nodeType);
-    break;
-
-  }
-
-  Node* root = new Node;
-  root->nodeType = node->nodeType;
-  root->line_num = node->line_num;
-  root->parent = node->parent;
-  if(node->nodeType == NODE_ID || node->nodeType == TY_INT || node->nodeType == TY_STR || node->nodeType == TY_REAL) root->strValue = node->strValue;
-  if(node->nodeType == NODE_NUM) root->number = node->number;
-
-  if (!node->childs.empty())
-	{
-		for (size_t i = 0; i < node->childs.size(); i++)
-		{
-      Node* new_child = convertTree(node->childs[i]);
-      if(new_child->nodeType == NODE_ID_LT){
-        for (int i = 0; i < new_child->childs.size(); i++) {
-          addChild(root, new_child->childs[i]);
-        }
-      }
-      else
-        addChild(root, new_child);
-		}
-	}
-  return root;
-}
 
 Node* copyTree(Node* node)
 {
@@ -401,6 +344,35 @@ void reduceSTMTList(Node* node)
   }
 }
 
+void reduceParaList(Node* node) {
+  if(node->nodeType == NODE_ARG) {
+    if(node->childs[0]->childs.size()>2) {
+      std::vector<Node*> list;
+      Node* new_li = newNode(NODE_PARAM_LIS);
+      Node* li = node->childs[0];
+      Node* tmp;
+      while (li->childs.size()>2 && li->childs[2]->nodeType == NODE_PARAM_LI) {
+        list.push_back(li);
+        tmp = newNode(NODE_PARAM_LI);
+        copyNode(tmp, li->childs[2]);
+        li->childs.pop_back();
+        li = tmp;
+      }
+      list.push_back(li->childs[2]);
+      copyChild(new_li, list);
+      new_li->parent = node->parent;
+      node->childs[0] = new_li;
+    }
+  }
+
+  if (!node->childs.empty()) {
+    for (size_t i = 0; i < node->childs.size(); i++){
+      node->childs[i]->parent = node;
+      reduceParaList(node->childs[i]);
+    }
+  }
+}
+
 
 void reduceOPTVAR(Node* node)
 {
@@ -548,6 +520,7 @@ Node* buildAstTree(Node* node)
   reduce(ast_root);
   reduceLAMDBA_TOK(ast_root);
   reduceEXPR(ast_root);
+  // reduceParaList(ast_root);
 
 
   // ast_root = convertTree(cp);

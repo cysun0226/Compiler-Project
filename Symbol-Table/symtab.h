@@ -10,6 +10,7 @@ using namespace std;
 typedef struct Symtab {
 	map<string, string> symtab; // ID, type
 	map<string, bool> symInit;
+	map<string, int> func_data;
 	string func_name;
 	int scope;
 } Symtab;

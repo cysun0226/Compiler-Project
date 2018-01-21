@@ -26,6 +26,7 @@ std::string PROG_PARA = "PROG_PARAMETER";
 std::string INT = "INTEGER";
 map<string, string>::iterator iter;
 map<string, bool>::iterator initIter;
+map<string, int>::iterator funcIter;
 
 
 struct Symtab* newSymtab(string func_name, int scope_id) {
@@ -73,6 +74,17 @@ string getIdType(string id)
   }
 
   return "not found";
+}
+
+int getFuncData(string id)
+{
+  for (int i = symtabStack.size()-1; i >= 0; i--) {
+    funcIter = symtabStack[i]->func_data.find(id);
+    if (funcIter != symtabStack[i]->func_data.end()) // id exists
+      return funcIter->second;
+  }
+
+  return 0;
 }
 
 void printErrMsg()
@@ -126,7 +138,12 @@ string unInitialize(int line_no, string id)
   return err;
 }
 
-
+string wrongPara(int line_no, string id)
+{
+  string err;
+  err = RED_BOLD + "[error]" + RED_END + " line " + to_string(line_no) + ": wrong parameters of function " + "\'" + id + "\'";
+  return err;
+}
 
 void checkInt(Node* node)
 {
@@ -208,6 +225,24 @@ void divideScope(struct Node *node, int ident) {
         blank[i] = ' ';
     blank[ident] = 0;
 
+
+    // check parameters num
+    if(node->nodeType == NODE_ID && getIdType(node->strValue) == "PROCEDURE" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_PROC) {
+      cout << "use para = " << node->sibling[2]->childs.size() << endl;
+      cout << "get proc para = " << getFuncData(node->strValue) << endl;
+      if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
+        errMsg.push_back(wrongPara(node->line_num, node->strValue));
+      }
+    }
+
+    if(node->nodeType == NODE_ID && getIdType(node->strValue) == "FUNCTION" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_FUNC) {
+      cout << "use para = " << node->sibling[2]->childs.size() << endl;
+      cout << "get func para = " << getFuncData(node->strValue) << endl;
+      if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
+        errMsg.push_back(wrongPara(node->line_num, node->strValue));
+      }
+    }
+
     // open scope
     if (node->nodeType == RE_PROG) {
       cout << "\n----- global scope -----\n" << endl;
@@ -238,7 +273,14 @@ void divideScope(struct Node *node, int ident) {
       scope_id++;
       node->scope_id = scope_id;
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
-      symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
+
+      if(!searchDupID(node->sibling[1]->strValue)) {
+        symtabStack.back()->symtab[node->sibling[1]->strValue] = "FUNCTION"; // insert function name into scope
+      }
+      else {
+        errMsg.push_back(redeclare(node->sibling[1]->line_num,node->sibling[1]->strValue));
+      }
+
 
 
       Symtab* newtab = newSymtab("function \'" + node->sibling[1]->strValue + "\'", scope_id);
@@ -247,6 +289,7 @@ void divideScope(struct Node *node, int ident) {
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if function have parameters
       {
+        newtab->func_data[node->sibling[1]->strValue] = node->sibling[2]->childs[0]->childs.size();
         for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
           string para_id = node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue;
           string para_type = node->sibling[2]->childs[0]->childs[1]->strValue;
@@ -271,7 +314,10 @@ void divideScope(struct Node *node, int ident) {
       scope_id++;
       node->scope_id = scope_id;
       node->parent->parent->childs.back()->childs[2]->scope_id = scope_id; // add scope_id to END
-      symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
+      if(!searchDupID(node->sibling[1]->strValue))
+        symtabStack.back()->symtab[node->sibling[1]->strValue] = "PROCEDURE"; // insert function name into scope
+      else
+        errMsg.push_back(redeclare(node->sibling[1]->line_num, node->sibling[1]->strValue));
 
       Symtab* newtab = newSymtab("procedure \'" + node->sibling[1]->strValue + "\'", scope_id);
       // newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
@@ -279,6 +325,7 @@ void divideScope(struct Node *node, int ident) {
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if have parameters
       {
+        symtabStack[0]->func_data[node->sibling[1]->strValue] = node->sibling[2]->childs[0]->childs[0]->childs.size() + node->sibling[2]->childs[0]->childs[2]->childs[0]->childs.size();
         for (size_t i = 0; i < node->sibling[2]->childs[0]->childs[0]->childs.size(); i++) {
           string para_id = node->sibling[2]->childs[0]->childs[0]->childs[i]->strValue;
           if(!searchDupID(para_id)) {
@@ -375,6 +422,8 @@ void divideScope(struct Node *node, int ident) {
       }
 
     }
+
+
 
 
 

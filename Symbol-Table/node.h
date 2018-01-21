@@ -87,7 +87,8 @@ enum ntype {
 		NUM_TOK,
 		NULL_NODE,
 		NODE_DECLS,
-		NODE_SPROG_DECLS_LI
+		NODE_SPROG_DECLS_LI,
+		NODE_PARAM_LIS
 };
 
 // #include "symtab.h"
