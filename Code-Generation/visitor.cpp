@@ -210,12 +210,26 @@ void LHSVisitor::visitDeclaring(Node* node)
 	}
 }
 
-void LHSVisitor::visitField(Node* node)
-{
-
+void LHSVisitor::visitField(Node* node){
 }
 
-void LHSVisitor::visitArrayRef(Node* node)
-{
-
+void LHSVisitor::visitArrayRef(Node* node){
+	for (int i = 0; i < symtabs.size(); i++) {
+		// int top = addrtabs[i].top_addr;
+		map<string, Array>::iterator iter;
+		for(iter = symtabs[i]->arrTab.begin(); iter != symtabs[i]->arrTab.end(); iter++) {
+			int size;
+			addrtabs[i].addrtab[iter->first] = addrtabs[i].top_addr;
+			if(iter->second.d_num == 0) {
+				size = iter->second.end_idx - iter->second.start_idx + 1;
+			}
+			else {
+				for (int d = 0; d < iter->second.d_num; i++) {
+					int nxt_size = iter->second.dimension[d].end_idx - iter->second.dimension[d].start_idx + 1;
+					size = size*nxt_size;
+				}
+			}
+			addrtabs[i].top_addr += size*2;
+	  }
+	}
 }

@@ -95,6 +95,8 @@ public:
 
 	void visitField(Node* node);
 	// 把 function, procedure 等標上 label
+	// MethodBodyVisitor 的 Loop/Cond 再做
+	// 把每個 node 標上 scope symtab 已經做了
 
 	void visitArrayRef(Node* node);
 	// 把 array 的表示換成實際的 address
