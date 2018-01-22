@@ -228,21 +228,21 @@ void divideScope(struct Node *node, int ident) {
 
 
     // check parameters num
-    if(node->nodeType == NODE_ID && getIdType(node->strValue) == "PROCEDURE" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_PROC) {
-      cout << "use para = " << node->sibling[2]->childs.size() << endl;
-      cout << "get proc para = " << getFuncData(node->strValue) << endl;
-      if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
-        errMsg.push_back(wrongPara(node->line_num, node->strValue));
-      }
-    }
-
-    if(node->nodeType == NODE_ID && getIdType(node->strValue) == "FUNCTION" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_FUNC) {
-      cout << "use para = " << node->sibling[2]->childs.size() << endl;
-      cout << "get func para = " << getFuncData(node->strValue) << endl;
-      if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
-        errMsg.push_back(wrongPara(node->line_num, node->strValue));
-      }
-    }
+    // if(node->nodeType == NODE_ID && getIdType(node->strValue) == "PROCEDURE" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_PROC) {
+    //   cout << "use para = " << node->sibling[2]->childs.size() << endl;
+    //   cout << "get proc para = " << getFuncData(node->strValue) << endl;
+    //   if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
+    //     errMsg.push_back(wrongPara(node->line_num, node->strValue));
+    //   }
+    // }
+    //
+    // if(node->nodeType == NODE_ID && getIdType(node->strValue) == "FUNCTION" && node->sibling.size()>2 && node->sibling[0]->nodeType != RE_FUNC) {
+    //   cout << "use para = " << node->sibling[2]->childs.size() << endl;
+    //   cout << "get func para = " << getFuncData(node->strValue) << endl;
+    //   if(node->sibling[2]->childs.size() != getFuncData(node->strValue)) {
+    //     errMsg.push_back(wrongPara(node->line_num, node->strValue));
+    //   }
+    // }
 
     // open scope
     if (node->nodeType == RE_PROG) {
