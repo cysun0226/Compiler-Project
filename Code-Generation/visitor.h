@@ -29,14 +29,14 @@ typedef struct Instruction {
 class MethodBodyVisitor {
 public:
 	MethodBodyVisitor(Node* r);
-	virtual ~MethodBodyVisitor();
+	// virtual ~MethodBodyVisitor();
 
-	void visit(Node* node);
+	void visit(Node* node, int ident);
 	// traverse AST tree
 	// 用 case 來呼叫 class 中的各個 function 產生 Instruction
 
-	void visitLocalVar();
-	void visitStatic();
+	void visitLocalVar(Node* node);
+	void visitStatic(Node* node);
 	// 依 LHSVisitor 標好的 addr 產生 load 指令
 
 	void visitConstant(Node* node);
@@ -78,7 +78,7 @@ public:
 	LHSVisitor (Node* root);
 	virtual ~LHSVisitor ();
 
-	void visit(Node* node);
+	void visit(Node* node, int ident);
 	// traverse AST tree
 	// 用 case 來呼叫 class 中的各個 function
 

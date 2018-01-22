@@ -5,6 +5,7 @@
     #include <iostream>
     #include <fstream>
     #include "symtab.h"
+    #include "visitor.h"
     #include "node.h"
 
 
@@ -796,12 +797,17 @@ int main()
     yyparse();
     // printf( "------------------ parse tree --------------------\n");
     // printTree(PARSE_ROOT, 0);
-    printf( "\n------------------- ast tree ---------------------\n");
+    // printf( "\n------------------- ast tree ---------------------\n");
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
-    printTree(ast_root, 0);
-    printf( "\n\n------------------- scope tree ---------------------\n\n");
-    divideScope(ast_root, 0);
+    // printTree(ast_root, 0);
+    // printf( "\n\n------------------- scope tree ---------------------\n\n");
+    // divideScope(ast_root, 0);
+    printf( "\n\n------------------- code generate ---------------------\n\n");
+    MethodBodyVisitor mv(ast_root);
+    mv.visit(ast_root, 0);
+
+
 
     fclose(pFile);
 
