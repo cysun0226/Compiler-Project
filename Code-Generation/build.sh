@@ -3,7 +3,7 @@ bison -d parser.y
 bison -d parser.y -o parser.cc
 lex scanner.l
 gcc -c lex.yy.c -o lexout
-g++ -std=c++11 lexout parser.cc node.cpp symtab.cpp -o out
+g++ -std=c++11 lexout parser.cc node.cpp symtab.cpp visitor.cpp -o out
 
 echo " "
 echo "-------------------------------"
