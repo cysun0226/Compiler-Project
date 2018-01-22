@@ -98,18 +98,9 @@ typedef struct Node {
 		vector<Node*> childs;
 		vector<Node*> sibling;
 
-    /* Attribute for NODE_TOKEN */
-    int tokenType;
-
-    /* items for Array */
-    int idxstart;
-    int idxend;
-    int arraydepth;
-    struct Node *ref;
 
     /* Values for general use */
     int iValue;
-    double rValue;
     char valueValid;
     char* string;
 		double number;

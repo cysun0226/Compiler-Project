@@ -533,6 +533,8 @@ void divideScope(struct Node *node, int ident) {
       symtabStack.pop_back();
     }
 
+    node->scope_id = scope_id;
+
 
 	if (!node->childs.empty())
 	{
