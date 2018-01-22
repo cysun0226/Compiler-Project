@@ -114,10 +114,10 @@ MethodBodyVisitor::MethodBodyVisitor(Node* r)
 void MethodBodyVisitor::visit(Node* node, int ident)
 {
 	print_node(node, ident);
+
 	if (!node->childs.empty())
 	{
-		for (size_t i = 0; i < node->childs.size(); i++)
-		{
+		for (size_t i = 0; i < node->childs.size(); i++) {
       node->childs[i]->parent = node;
       for (int j = 0; j < node->childs.size(); j++) {
         node->childs[i]->sibling.push_back(node->childs[j]);
@@ -164,14 +164,29 @@ void MethodBodyVisitor::visitLoop(Node* node)
 
 
 /* LHSVisitor */
-LHSVisitor::LHSVisitor(Node* r)
+LHSVisitor::LHSVisitor(Node* r, std::vector<Symtab*> st)
 {
 	root = r;
+	symtabs = st;
 }
 
 void LHSVisitor::visit(Node* node, int ident)
 {
+	// print_node(node, ident);
+	for (int i = 0; i < symtabs.size(); i++) {
+		printSymtab(symtabs[i]);
+	}
 
+	// if (!node->childs.empty())
+	// {
+	// 	for (size_t i = 0; i < node->childs.size(); i++) {
+  //     node->childs[i]->parent = node;
+  //     for (int j = 0; j < node->childs.size(); j++) {
+  //       node->childs[i]->sibling.push_back(node->childs[j]);
+  //     }
+  //     visit(node->childs[i], ident+3);
+	// 	}
+	// }
 }
 
 void LHSVisitor::visitDeclaring(Node* node)

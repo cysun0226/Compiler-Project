@@ -19,6 +19,7 @@ typedef struct Symtab {
 
 struct Symtab* newSymtab(string func_name, int scope_id);
 void divideScope(Node* node, int);
+std::vector<Symtab*> getSymtab();
 // void addChild(struct Node *node, struct Node *child);
 // void printTree(struct Node *node, int ident);
 // Node* buildAstTree(struct Node *node);

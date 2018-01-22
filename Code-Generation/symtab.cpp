@@ -19,6 +19,7 @@ int scope_id = 0;
 int typeErr = 0;
 
 std::vector<Symtab*> symtabStack;
+std::vector<Symtab*> symtabList;
 std::vector<string> errMsg;
 std::string nf = "not func";
 std::string PROG = "PROGRAM";
@@ -249,6 +250,7 @@ void divideScope(struct Node *node, int ident) {
       Symtab* newtab = newSymtab(nf, scope_id);
       newtab->symtab[node->sibling[1]->strValue + "(PROG)"] = PROG;
       symtabStack.push_back(newtab);
+      symtabList.push_back(newtab);
       // scope_id++;
 
       // Symtab* newtab = newSymtab(nf, scope_id);
@@ -285,6 +287,7 @@ void divideScope(struct Node *node, int ident) {
 
       Symtab* newtab = newSymtab("function \'" + node->sibling[1]->strValue + "\'", scope_id);
       symtabStack.push_back(newtab);
+      symtabList.push_back(newtab);
       newtab->symtab[node->sibling[1]->strValue] = node->sibling[3]->childs[0]->strValue;
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if function have parameters
@@ -322,6 +325,7 @@ void divideScope(struct Node *node, int ident) {
       Symtab* newtab = newSymtab("procedure \'" + node->sibling[1]->strValue + "\'", scope_id);
       // newtab->symtab[node->sibling[1]->strValue] = "PROCEDURE";
       symtabStack.push_back(newtab);
+      symtabList.push_back(newtab);
 
       if(!node->sibling[2]->childs[0]->childs.empty()) // if have parameters
       {
@@ -541,4 +545,8 @@ void divideScope(struct Node *node, int ident) {
       divideScope(node->childs[i], ident);
 		}
 	}
+}
+
+std::vector<Symtab*> getSymtab(){
+  return symtabList;
 }

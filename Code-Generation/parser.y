@@ -801,11 +801,17 @@ int main()
     Node* ast_root = new Node;
     ast_root = buildAstTree(PARSE_ROOT);
     // printTree(ast_root, 0);
-    // printf( "\n\n------------------- scope tree ---------------------\n\n");
-    // divideScope(ast_root, 0);
+    printf( "\n\n------------------- scope tree ---------------------\n\n");
+    divideScope(ast_root, 0);
     printf( "\n\n------------------- code generate ---------------------\n\n");
-    MethodBodyVisitor mv(ast_root);
-    mv.visit(ast_root, 0);
+    std::vector<Symtab*> symtabs = getSymtab();
+    LHSVisitor lhs_visitor(ast_root, symtabs);
+    lhs_visitor.visit(ast_root, 0);
+
+    // lv.visit(ast_root, 0);
+
+    // MethodBodyVisitor mv(ast_root);
+    // mv.visit(ast_root, 0);
 
 
 

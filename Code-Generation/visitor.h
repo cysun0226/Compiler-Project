@@ -73,9 +73,10 @@ private:
 class LHSVisitor {
 private:
 	Node* root;
+	std::vector<Symtab*> symtabs;
 
 public:
-	LHSVisitor (Node* root);
+	LHSVisitor (Node* root, std::vector<Symtab*> st);
 	// virtual ~LHSVisitor ();
 
 	void visit(Node* node, int ident);
