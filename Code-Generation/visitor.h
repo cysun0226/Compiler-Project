@@ -13,6 +13,12 @@ typedef struct Instruction {
 	string instr;
 } Instruction;
 
+typedef struct AddrTab {
+	int top_addr;
+	int scope;
+	map<string, int> addrtab;
+} AddrTab;
+
 //
 
 /* MethodBodyVisitor */
@@ -74,6 +80,7 @@ class LHSVisitor {
 private:
 	Node* root;
 	std::vector<Symtab*> symtabs;
+	std::vector<AddrTab> addrtabs;
 
 public:
 	LHSVisitor (Node* root, std::vector<Symtab*> st);

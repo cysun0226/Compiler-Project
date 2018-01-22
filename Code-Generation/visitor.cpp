@@ -173,9 +173,6 @@ LHSVisitor::LHSVisitor(Node* r, std::vector<Symtab*> st)
 void LHSVisitor::visit(Node* node, int ident)
 {
 	// print_node(node, ident);
-	for (int i = 0; i < symtabs.size(); i++) {
-		printSymtab(symtabs[i]);
-	}
 
 	// if (!node->childs.empty())
 	// {
@@ -191,7 +188,26 @@ void LHSVisitor::visit(Node* node, int ident)
 
 void LHSVisitor::visitDeclaring(Node* node)
 {
+	for (int i = 0; i < symtabs.size(); i++) {
+		AddrTab new_addrtab;
+		new_addrtab.scope = symtabs[i]->scope;
+		new_addrtab.top_addr = 0;
 
+		map<string, string>::iterator iter;
+		for(iter = symtabs[i]->symtab.begin(); iter != symtabs[i]->symtab.end(); iter++) {
+			if(iter->second == "INTEGER") {
+				new_addrtab.addrtab[iter->first] = new_addrtab.top_addr;
+			}
+			else {
+				new_addrtab.addrtab[iter->first] = new_addrtab.top_addr;
+			}
+
+			new_addrtab.top_addr += 2;
+	  }
+
+		addrtabs.push_back(new_addrtab);
+		printSymtab(symtabs[i]);
+	}
 }
 
 void LHSVisitor::visitField(Node* node)
