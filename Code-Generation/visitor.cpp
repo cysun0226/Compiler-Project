@@ -1,4 +1,6 @@
+#include <iostream>
 #include "visitor.h"
+#include "node.h"
 
 using namespace std;
 
@@ -167,22 +169,22 @@ LHSVisitor::LHSVisitor(Node* r)
 	root = r;
 }
 
-LHSVisitor::visit(Node* node)
+void LHSVisitor::visit(Node* node, int ident)
 {
 
 }
 
-LHSVisitor::visitDeclaring(Node* node)
+void LHSVisitor::visitDeclaring(Node* node)
 {
 
 }
 
-LHSVisitor::visitField(Node* node)
+void LHSVisitor::visitField(Node* node)
 {
 
 }
 
-LHSVisitor::visitArrayRef(Node* node)
+void LHSVisitor::visitArrayRef(Node* node)
 {
 
 }

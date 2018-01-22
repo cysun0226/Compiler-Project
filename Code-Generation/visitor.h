@@ -76,7 +76,7 @@ private:
 
 public:
 	LHSVisitor (Node* root);
-	virtual ~LHSVisitor ();
+	// virtual ~LHSVisitor ();
 
 	void visit(Node* node, int ident);
 	// traverse AST tree
