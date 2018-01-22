@@ -357,9 +357,30 @@ void divideScope(struct Node *node, int ident) {
         if(!searchDupID(var_id)) {
           symtabStack.back()->symtab[var_id] = var_type;
           if(node->childs[2]->nodeType == RE_ARR) {
-            std::string arrType = node->childs[2]->childs[2]->strValue;
-            if (node->childs[2]->childs[2]->nodeType == RE_ARR) arrType = "ARRAY";
-            symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "ARRAY(" + arrType + ")";
+            Array new_arr;
+            new_arr.d_num = 0;
+            new_arr.start_idx = node->childs[0]->number;
+            new_arr.end_idx = node->childs[1]->number;
+
+            // multi-dimension array
+            Node* arrNode = node->childs[2];
+            while (arrNode->childs[2]->nodeType == RE_ARR) {
+              new_arr.d_num++;
+              arrNode = arrNode->childs[2];
+              Array new_d;
+              new_d.start_idx = arrNode->childs[0]->number;
+              new_d.end_idx = arrNode->childs[1]->number;
+              new_arr.dimension.push_back(new_d);
+            }
+
+            std::string arrType = arrNode->childs[2]->strValue;
+            new_arr.type = arrType;
+            symtabStack.back()->arrTab[node->childs[1]->childs[i]->strValue] = new_arr;
+
+            if (node->childs[2]->childs[2]->nodeType == RE_ARR)
+              symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = to_string(new_arr.d_num+1) + "d-ARRAY(" + arrType + ")";
+            else
+              symtabStack.back()->symtab[node->childs[1]->childs[i]->strValue] = "ARRAY(" + arrType + ")";
           }
         }
         else

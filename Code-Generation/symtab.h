@@ -7,11 +7,20 @@
 #include "node.h"
 using namespace std;
 
+typedef struct Array {
+	int start_idx;
+	int end_idx;
+	std::vector<Array> dimension;
+	int d_num;
+	string type;
+} Array;
+
 typedef struct Symtab {
 	map<string, string> symtab; // ID, type
 	map<string, bool> symInit;
 	map<string, int> func_data;
-	map<string, int> jvm_location;
+	// map<string, int> jvm_location;
+	map<string, Array> arrTab;
 	// label
 	string func_name;
 	int scope;
