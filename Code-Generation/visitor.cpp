@@ -7,6 +7,11 @@ using namespace std;
 std::vector<Instruction> instructions;
 int cur_scope = 0;
 int node_id = 0;
+string program_name;
+
+bool cmpByLine(const Instruction &a, const Instruction &b){
+    return a.line < b.line;
+}
 
 bool is_integer(double x) {
 	return x == (int)x;
@@ -109,6 +114,30 @@ void print_node(Node* node, int ident)
 	}
 }
 
+void codeGenerate(string file_name, std::vector<Instruction> instrs, Node* root){
+	// string file_name = "compiler";
+	fstream fp;
+  fp.open(file_name, ios::out);
+	program_name = root->childs[1]->strValue;
+	fp << ".class public " << program_name << endl;
+	fp << ".super java/lang/Object" << endl << endl;
+
+	// main
+	fp << ".method public static main([Ljava/lang/String;)V" << endl;
+	fp << "\t.limit stack 100" << endl;
+	fp << "\t.limit locals 100" << endl << endl;
+
+	std::sort(instrs.begin(), instrs.end(), cmpByLine);
+	for (int i = 0; i < instrs.size(); i++) {
+		fp << "\t" + instrs[i].instr << endl;
+	}
+
+	fp << "\treturn" << endl << endl;
+	fp << ".end method" << endl;
+
+	fp.close();
+}
+
 /* MethodBodyVisitor */
 
 MethodBodyVisitor::MethodBodyVisitor(Node* r, std::vector<Symtab*> st, std::vector<AddrTab> at)
@@ -167,6 +196,7 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 	if(node->nodeType == RE_ASGMNT){
 		Instruction new_instr;
 		new_instr.line = node->line_num;
+		new_instr.scope = node->scope_id;
 		int x = 0;
 
 		if(node->sibling[2]->nodeType == NODE_NUM){
@@ -190,16 +220,17 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 			// LHS
 			new_instr.line = node->line_num + x;
 			if(node->sibling[0]->childs[0]->nodeType == NODE_ID) {
+				string id = node->sibling[0]->childs[0]->strValue;
 				map<string, int>::iterator iter;
-				iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
+				iter = addrtabs[node->scope_id].addrtab.find(id);
 				if(iter != addrtabs[node->scope_id].addrtab.end()) {
-					new_instr.instr = addrtabs[node->scope_id].store_tab[node->strValue];
+					new_instr.instr = addrtabs[node->scope_id].store_tab[id];
 				}
 				else {
 					for (int i = node->scope_id; i >= 0; i--) {
-						iter = addrtabs[i].addrtab.find(node->strValue);
+						iter = addrtabs[i].addrtab.find(id);
 						if(iter != addrtabs[i].addrtab.end()) {
-							new_instr.instr = addrtabs[i].store_tab[node->strValue];
+							new_instr.instr = addrtabs[i].store_tab[id];
 							break;
 						}
 					}
@@ -262,16 +293,17 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 		}
 
 		if(node->sibling[0]->nodeType == NODE_ID) {
+			string id = node->sibling[0]->strValue;
 			map<string, int>::iterator iter;
 			iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
 			if(iter != addrtabs[node->scope_id].addrtab.end()) {
-				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[node->strValue]);
+				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[id]);
 			}
 			else {
 				for (int i = node->scope_id; i >= 0; i--) {
-					iter = addrtabs[i].addrtab.find(node->strValue);
+					iter = addrtabs[i].addrtab.find(id);
 					if(iter != addrtabs[i].addrtab.end()) {
-						exprNode->instr.push_back(addrtabs[i].load_tab[node->strValue]);
+						exprNode->instr.push_back(addrtabs[i].load_tab[id]);
 						break;
 					}
 				}
@@ -296,19 +328,20 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 		}
 
 		if(node->sibling[2]->childs[0]->nodeType == NODE_ID) {
+			string id = node->sibling[2]->childs[0]->strValue;
 			map<string, int>::iterator iter;
-			iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
+			iter = addrtabs[node->scope_id].addrtab.find(id);
 			if(iter != addrtabs[node->scope_id].addrtab.end()) {
-				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[node->strValue]);
-				if(symtabs[node->scope_id]->symtab[node->strValue] == "REAL")
+				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[id]);
+				if(symtabs[node->scope_id]->symtab[id] == "REAL")
 					is_int = false;
 			}
 			else {
 				for (int i = node->scope_id; i >= 0; i--) {
-					iter = addrtabs[i].addrtab.find(node->strValue);
+					iter = addrtabs[i].addrtab.find(id);
 					if(iter != addrtabs[i].addrtab.end()) {
-						exprNode->instr.push_back(addrtabs[i].load_tab[node->strValue]);
-						if(symtabs[i]->symtab[node->strValue] == "REAL")
+						exprNode->instr.push_back(addrtabs[i].load_tab[id]);
+						if(symtabs[i]->symtab[id] == "REAL")
 							is_int = false;
 						break;
 					}
@@ -353,7 +386,6 @@ void MethodBodyVisitor::visitExpression(Node* node)
 {
 	if(node->nodeType == NODE_EXPR) {
 		generateExprInstr(node, node);
-		return;
 	}
 
 	if (!node->childs.empty()){
@@ -389,6 +421,10 @@ void MethodBodyVisitor::printAddrTab()
 			cout << addrtabs[i].store_tab[iter->first] << endl;
 		}
 	}
+}
+
+std::vector<Instruction> MethodBodyVisitor::getInstructions(){
+	return instructions;
 }
 
 

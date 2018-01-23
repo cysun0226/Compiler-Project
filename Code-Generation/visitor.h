@@ -1,6 +1,9 @@
 #ifndef __VISITOR_H__
 #define __VISITOR_H__
 
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <map>
@@ -11,6 +14,7 @@ using namespace std;
 typedef struct Instruction {
 	float line;
 	string instr;
+	int scope;
 } Instruction;
 
 typedef struct AddrTab {
@@ -21,9 +25,7 @@ typedef struct AddrTab {
 	map<string, string> store_tab;
 } AddrTab;
 
-//
-
-
+void codeGenerate(string file_name, std::vector<Instruction> instrs, Node* root);
 
 /* MethodBodyVisitor */
 // Constants
@@ -69,6 +71,8 @@ public:
 	// 同上，while 和 for 版
 
 	void printAddrTab();
+
+	std::vector<Instruction> getInstructions();
 
 private:
 	void generateExprInstr(Node* node, Node* exprNode);
