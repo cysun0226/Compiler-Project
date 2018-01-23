@@ -8,6 +8,10 @@ std::vector<Instruction> instructions;
 int cur_scope = 0;
 int node_id = 0;
 
+bool is_integer(double x) {
+	return x == (int)x;
+}
+
 void print_node(Node* node, int ident)
 {
 	// int ident = id;
@@ -156,7 +160,6 @@ void MethodBodyVisitor::visitLocalVar()
 			}
 	  }
 	}
-
 }
 
 void MethodBodyVisitor::visitConstant(Node* node)
@@ -170,9 +173,151 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 	// new_instr.instr
 }
 
+// void calTermValue(Node* node) {
+// 	if(node->nodeType == NODE_TREM && node->childs[0]->nodeType != NODE_TREM && node->sibling.size()>1) {
+// 		switch (node->sibling[1]->nodeType) {
+// 			case OP_ADD:
+// 				node->number = node->childs[0]->number + node->sibling[2]->childs[0]->number;
+// 				node->parent->number = node->childs[0]->number + node->sibling[2]->childs[0]->number;
+// 				break;
+// 			case OP_SUB:
+// 				node->number = node->childs[0]->number - node->sibling[2]->childs[0]->number;
+// 				node->parent->number = node->childs[0]->number - node->sibling[2]->childs[0]->number;
+// 				break;
+// 			case OP_MUL:
+// 				node->number = node->childs[0]->number * node->sibling[2]->childs[0]->number;
+// 				node->parent->number = node->childs[0]->number * node->sibling[2]->childs[0]->number;
+// 				break;
+// 			case OP_DIV:
+// 				node->number = node->childs[0]->number / node->sibling[2]->childs[0]->number;
+// 				node->parent->number = node->childs[0]->number / node->sibling[2]->childs[0]->number;
+// 				break;
+// 		}
+// 	}
+//
+// 	if(node->nodeType == NODE_TREM && )
+//
+//
+//
+// 	if (!node->childs.empty()){
+// 		for (size_t i = 0; i < node->childs.size(); i++) {
+//       calTermValue(node->childs[i]);
+// 		}
+// 	}
+// }
+
+void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
+	int is_int = true;
+	if(node->nodeType == OP_ADD || node->nodeType == OP_SUB || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+		if(node->sibling[0]->nodeType == NODE_NUM) {
+			if(is_integer(node->sibling[0]->number))
+				exprNode->instr.push_back("ldc " + to_string(node->sibling[0]->number));
+			else{
+				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[0]->number));
+				is_int = false;
+			}
+		}
+
+		if(node->sibling[0]->nodeType == NODE_ID) {
+			map<string, int>::iterator iter;
+			iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
+			if(iter != addrtabs[node->scope_id].addrtab.end()) {
+				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[node->strValue]);
+			}
+			else {
+				for (int i = node->scope_id; i >= 0; i--) {
+					iter = addrtabs[i].addrtab.find(node->strValue);
+					if(iter != addrtabs[i].addrtab.end()) {
+						exprNode->instr.push_back(addrtabs[i].load_tab[node->strValue]);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      generateExprInstr(node->childs[i], exprNode);
+		}
+	}
+
+	if(node->nodeType == OP_ADD || node->nodeType == OP_SUB || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+		if(node->sibling[2]->childs[0]->nodeType == NODE_NUM) {
+			if(is_integer(node->sibling[0]->number))
+				exprNode->instr.push_back("ldc " + to_string(node->sibling[0]->number));
+			else{
+				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[0]->number));
+				is_int = false;
+			}
+		}
+
+		if(node->sibling[2]->childs[0]->nodeType == NODE_ID) {
+			map<string, int>::iterator iter;
+			iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
+			if(iter != addrtabs[node->scope_id].addrtab.end()) {
+				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[node->strValue]);
+				if(symtabs[node->scope_id]->symtab[node->strValue] == "REAL")
+					is_int = false;
+			}
+			else {
+				for (int i = node->scope_id; i >= 0; i--) {
+					iter = addrtabs[i].addrtab.find(node->strValue);
+					if(iter != addrtabs[i].addrtab.end()) {
+						exprNode->instr.push_back(addrtabs[i].load_tab[node->strValue]);
+						if(symtabs[i]->symtab[node->strValue] == "REAL")
+							is_int = false;
+						break;
+					}
+				}
+			}
+		}
+
+		switch (node->nodeType) {
+			case OP_ADD: {
+				if(is_int)
+					exprNode->instr.push_back("iadd");
+				else
+					exprNode->instr.push_back("dadd");
+				break;
+			}
+			case OP_SUB: {
+				if(is_int)
+					exprNode->instr.push_back("isub");
+				else
+					exprNode->instr.push_back("dsub");
+				break;
+			}
+			case OP_MUL: {
+				if(is_int)
+					exprNode->instr.push_back("imul");
+				else
+					exprNode->instr.push_back("dmul");
+				break;
+			}
+			case OP_DIV: {
+				if(is_int)
+					exprNode->instr.push_back("idiv");
+				else
+					exprNode->instr.push_back("ddiv");
+				break;
+			}
+		}
+	}
+}
+
 void MethodBodyVisitor::visitExpression(Node* node)
 {
+	if(node->nodeType == NODE_EXPR) {
+		generateExprInstr(node, node);
+		return;
+	}
 
+	if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      visitExpression(node->childs[i]);
+		}
+	}
 }
 
 void MethodBodyVisitor::visitArrayRef(Node* node)
@@ -251,7 +396,6 @@ void LHSVisitor::visitDeclaring(Node* node)
 	  }
 
 		addrtabs.push_back(new_addrtab);
-		printSymtab(symtabs[i]);
 	}
 }
 

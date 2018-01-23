@@ -109,7 +109,7 @@ typedef struct Node {
 		int line_num;
 		int scope_id;
 		int LRvalue;
-		std::string instr;
+		std::vector<std::string> instr;
 
     /* Indicates which OP */
     char op;

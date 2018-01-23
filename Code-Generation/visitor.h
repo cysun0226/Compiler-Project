@@ -69,6 +69,9 @@ public:
 	void printAddrTab();
 
 private:
+	void generateExprInstr(Node* node, Node* exprNode);
+	// void calTermConstValue(Node* node);
+	// void calTermValue(Node* node);
 	Node* root;
 	std::vector<Instruction> instructions;
 	std::vector<Symtab*> symtabs;
