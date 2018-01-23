@@ -17,6 +17,8 @@ typedef struct AddrTab {
 	int top_addr;
 	int scope;
 	map<string, int> addrtab;
+	map<string, string> load_tab;
+	map<string, string> store_tab;
 } AddrTab;
 
 //
@@ -34,14 +36,14 @@ typedef struct AddrTab {
 
 class MethodBodyVisitor {
 public:
-	MethodBodyVisitor(Node* r);
+	MethodBodyVisitor(Node* r, std::vector<Symtab*> st, std::vector<AddrTab> at);
 	// virtual ~MethodBodyVisitor();
 
 	void visit(Node* node, int ident);
 	// traverse AST tree
 	// 用 case 來呼叫 class 中的各個 function 產生 Instruction
 
-	void visitLocalVar(Node* node);
+	void visitLocalVar();
 	void visitStatic(Node* node);
 	// 依 LHSVisitor 標好的 addr 產生 load 指令
 
@@ -64,9 +66,13 @@ public:
 	void visitLoop(Node* node);
 	// 同上，while 和 for 版
 
+	void printAddrTab();
+
 private:
 	Node* root;
 	std::vector<Instruction> instructions;
+	std::vector<Symtab*> symtabs;
+	std::vector<AddrTab> addrtabs;
 };
 
 
@@ -100,6 +106,8 @@ public:
 
 	void visitArrayRef(Node* node);
 	// 把 array 的表示換成實際的 address
+
+	std::vector<AddrTab> get_addrtab();
 
 };
 

@@ -5,7 +5,8 @@
 using namespace std;
 
 std::vector<Instruction> instructions;
-
+int cur_scope = 0;
+int node_id = 0;
 
 void print_node(Node* node, int ident)
 {
@@ -106,14 +107,20 @@ void print_node(Node* node, int ident)
 
 /* MethodBodyVisitor */
 
-MethodBodyVisitor::MethodBodyVisitor(Node* r)
+MethodBodyVisitor::MethodBodyVisitor(Node* r, std::vector<Symtab*> st, std::vector<AddrTab> at)
 {
 	root = r;
+	addrtabs = at;
+	symtabs = st;
 }
 
 void MethodBodyVisitor::visit(Node* node, int ident)
 {
 	print_node(node, ident);
+	switch (node->nodeType) {
+		// case NODE_VAR: visitLocalVar(node); break;
+
+	}
 
 	if (!node->childs.empty())
 	{
@@ -127,8 +134,28 @@ void MethodBodyVisitor::visit(Node* node, int ident)
 	}
 }
 
-void MethodBodyVisitor::visitLocalVar(Node* node)
+void MethodBodyVisitor::visitLocalVar()
 {
+	for (int i = 0; i < addrtabs.size(); i++) {
+		map<string, int>::iterator iter;
+		for(iter = addrtabs[i].addrtab.begin(); iter != addrtabs[i].addrtab.end(); iter++) {
+			/* load */
+			if(symtabs[i]->symtab[iter->first] == "INTEGER" || symtabs[i]->symtab[iter->first] == "REAL") {
+				string l_instr, s_instr;
+				if(symtabs[i]->symtab[iter->first] == "INTEGER") {
+					l_instr = "iload " + to_string(iter->second);
+					s_instr = "istore " + to_string(iter->second);
+				}
+				else {
+					l_instr = "dload " + to_string(iter->second);
+					s_instr = "dstore " + to_string(iter->second);
+				}
+
+				addrtabs[i].load_tab[iter->first] = l_instr;
+				addrtabs[i].store_tab[iter->first] = s_instr;
+			}
+	  }
+	}
 
 }
 
@@ -139,7 +166,8 @@ void MethodBodyVisitor::visitConstant(Node* node)
 
 void MethodBodyVisitor::visitAssignment(Node* node)
 {
-
+	Instruction new_instr;
+	// new_instr.instr
 }
 
 void MethodBodyVisitor::visitExpression(Node* node)
@@ -162,6 +190,19 @@ void MethodBodyVisitor::visitLoop(Node* node)
 
 }
 
+void MethodBodyVisitor::printAddrTab()
+{
+	for (int i = 0; i < addrtabs.size(); i++) {
+		map<string, int>::iterator iter;
+		cout << "--- scope " << i << " ---" << endl;
+		for(iter = addrtabs[i].addrtab.begin(); iter != addrtabs[i].addrtab.end(); iter++) {
+			cout << iter->first << " addr = " << iter->second << endl;
+			cout << addrtabs[i].load_tab[iter->first] << endl;
+			cout << addrtabs[i].store_tab[iter->first] << endl;
+		}
+	}
+}
+
 
 /* LHSVisitor */
 LHSVisitor::LHSVisitor(Node* r, std::vector<Symtab*> st)
@@ -173,17 +214,21 @@ LHSVisitor::LHSVisitor(Node* r, std::vector<Symtab*> st)
 void LHSVisitor::visit(Node* node, int ident)
 {
 	// print_node(node, ident);
+	node->LRvalue = RIGHT;
 
-	// if (!node->childs.empty())
-	// {
-	// 	for (size_t i = 0; i < node->childs.size(); i++) {
-  //     node->childs[i]->parent = node;
-  //     for (int j = 0; j < node->childs.size(); j++) {
-  //       node->childs[i]->sibling.push_back(node->childs[j]);
-  //     }
-  //     visit(node->childs[i], ident+3);
-	// 	}
-	// }
+	if(node->nodeType == RE_ASGMNT) {
+		node->sibling[0]->childs[0]->LRvalue = LEFT;
+	}
+
+	if (!node->childs.empty()) {
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      node->childs[i]->parent = node;
+      for (int j = 0; j < node->childs.size(); j++) {
+        node->childs[i]->sibling.push_back(node->childs[j]);
+      }
+      visit(node->childs[i], ident+3);
+		}
+	}
 }
 
 void LHSVisitor::visitDeclaring(Node* node)
@@ -224,7 +269,7 @@ void LHSVisitor::visitArrayRef(Node* node){
 				size = iter->second.end_idx - iter->second.start_idx + 1;
 			}
 			else {
-				for (int d = 0; d < iter->second.d_num; i++) {
+				for (int d = 0; d < iter->second.d_num; d++) {
 					int nxt_size = iter->second.dimension[d].end_idx - iter->second.dimension[d].start_idx + 1;
 					size = size*nxt_size;
 				}
@@ -232,4 +277,8 @@ void LHSVisitor::visitArrayRef(Node* node){
 			addrtabs[i].top_addr += size*2;
 	  }
 	}
+}
+
+std::vector<AddrTab> LHSVisitor::get_addrtab() {
+	return addrtabs;
 }
