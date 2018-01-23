@@ -6,6 +6,7 @@
 using namespace std;
 
 struct Node;
+enum LR { LEFT = 0, RIGHT = 1 };
 enum ntype {
 	VALUE_INVALID,
     NODE_INT,
@@ -107,6 +108,7 @@ typedef struct Node {
 		std::string strValue;
 		int line_num;
 		int scope_id;
+		int LRvalue;
 
     /* Indicates which OP */
     char op;
