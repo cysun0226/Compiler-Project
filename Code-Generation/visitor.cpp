@@ -126,13 +126,8 @@ void MethodBodyVisitor::visit(Node* node, int ident)
 
 	}
 
-	if (!node->childs.empty())
-	{
+	if (!node->childs.empty()){
 		for (size_t i = 0; i < node->childs.size(); i++) {
-      node->childs[i]->parent = node;
-      for (int j = 0; j < node->childs.size(); j++) {
-        node->childs[i]->sibling.push_back(node->childs[j]);
-      }
       visit(node->childs[i], ident+3);
 		}
 	}
@@ -169,8 +164,56 @@ void MethodBodyVisitor::visitConstant(Node* node)
 
 void MethodBodyVisitor::visitAssignment(Node* node)
 {
-	Instruction new_instr;
-	// new_instr.instr
+	if(node->nodeType == RE_ASGMNT){
+		Instruction new_instr;
+		new_instr.line = node->line_num;
+		int x = 0;
+
+		if(node->sibling[2]->nodeType == NODE_NUM){
+			int num = node->sibling[2]->number;
+			if(is_integer(num))
+				new_instr.instr = "ldc " + to_string(num);
+			else
+				new_instr.instr = "ldc2_w " + to_string(num);
+			instructions.push_back(new_instr);
+		}
+
+		if(node->sibling[2]->nodeType == NODE_EXPR) {
+			for (int i = 0; i < node->sibling[2]->instr.size(); i++) {
+				new_instr.line = node->line_num + x;
+				x += 0.01;
+				new_instr.instr = node->sibling[2]->instr[i];
+				instructions.push_back(new_instr);
+			}
+		}
+
+			// LHS
+			new_instr.line = node->line_num + x;
+			if(node->sibling[0]->childs[0]->nodeType == NODE_ID) {
+				map<string, int>::iterator iter;
+				iter = addrtabs[node->scope_id].addrtab.find(node->strValue);
+				if(iter != addrtabs[node->scope_id].addrtab.end()) {
+					new_instr.instr = addrtabs[node->scope_id].store_tab[node->strValue];
+				}
+				else {
+					for (int i = node->scope_id; i >= 0; i--) {
+						iter = addrtabs[i].addrtab.find(node->strValue);
+						if(iter != addrtabs[i].addrtab.end()) {
+							new_instr.instr = addrtabs[i].store_tab[node->strValue];
+							break;
+						}
+					}
+				}
+				instructions.push_back(new_instr);
+		}
+
+	}
+
+	if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      visitAssignment(node->childs[i]);
+		}
+	}
 }
 
 // void calTermValue(Node* node) {

@@ -9,7 +9,7 @@
 using namespace std;
 
 typedef struct Instruction {
-	int line;
+	float line;
 	string instr;
 } Instruction;
 
@@ -22,6 +22,8 @@ typedef struct AddrTab {
 } AddrTab;
 
 //
+
+
 
 /* MethodBodyVisitor */
 // Constants
