@@ -266,13 +266,13 @@ type :
     standard_type {
       fprintf( spFile, "Reduction ( type -> standard_type )\n");
 
-      $$ = newNode(NODE_TYPE);
+      $$ = newNode(NODE_TYPE); $$->line_num = line_no;
       addChild($$, $1);
     }
   | ARRAY LBRAC num_tok DOTDOT num_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. NUM] OF type )\n");
 
-      $$ = newNode(NODE_TYPE);
+      $$ = newNode(NODE_TYPE); $$->line_num = line_no;
       // addChild($$, newNode(RE_ARR));
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
@@ -285,7 +285,7 @@ type :
   | ARRAY LBRAC id_tok DOTDOT num_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [ID .. NUM] OF type )\n");
 
-      $$ = newNode(NODE_TYPE);
+      $$ = newNode(NODE_TYPE); $$->line_num = line_no;
       // addChild($$, newNode(RE_ARR));
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
@@ -297,7 +297,7 @@ type :
     }
   | ARRAY LBRAC num_tok DOTDOT id_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [NUM .. ID] OF type )\n");
-      $$ = newNode(NODE_TYPE);
+      $$ = newNode(NODE_TYPE); $$->line_num = line_no;
       // addChild($$, newNode(RE_ARR));
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
@@ -310,7 +310,7 @@ type :
   | ARRAY LBRAC id_tok DOTDOT id_tok RBRAC OF type {
       fprintf( spFile, "Reduction ( type -> ARRAY [id .. id] OF type )\n");
 
-      $$ = newNode(NODE_TYPE);
+      $$ = newNode(NODE_TYPE); $$->line_num = line_no;
       // addChild($$, newNode(RE_ARR));
       Node* arr_node = newNode(RE_ARR);
       arr_node->strValue = "ARRAY";
@@ -326,35 +326,38 @@ type :
 standard_type :
     INTEGER {
       fprintf( spFile, "Reduction ( standard_type -> INTEGER )\n");
-      $$ = newNode(NODE_STDTYPE);
+      $$ = newNode(NODE_STDTYPE); $$->line_num = line_no;
       // addChild($$, newNode(TY_INT));
 
       Node* ty_node = newNode(TY_INT);
       ty_node->strValue = "INTEGER";
+      ty_node->line_num = line_no;
       addChild($$, ty_node);
     }
   | REAL {
       fprintf( spFile, "Reduction ( standard_type -> REAL )\n");
-      $$ = newNode(NODE_STDTYPE);
+      $$ = newNode(NODE_STDTYPE); $$->line_num = line_no;
       // addChild($$, newNode(TY_REAL));
 
       Node* ty_node = newNode(TY_REAL);
       ty_node->strValue = "REAL";
+      ty_node->line_num = line_no;
       addChild($$, ty_node);
     }
   | CHARACTER_STRING {
       fprintf( spFile, "Reduction ( standard_type -> CHARACTER_STRING )\n");
-      $$ = newNode(NODE_STDTYPE);
+      $$ = newNode(NODE_STDTYPE); $$->line_num = line_no;
       // addChild($$, newNode(TY_STR));
 
       Node* ty_node = newNode(TY_STR);
       ty_node->strValue = "STRING";
+      ty_node->line_num = line_no;
       addChild($$, ty_node);
     }
   /*
   | identifier_list {
       fprintf( spFile, "Reduction ( standard_type -> identifier_list )\n");
-      $$ = newNode(NODE_STDTYPE);
+      $$ = newNode(NODE_STDTYPE); $$->line_num = line_no;
       addChild($$, $1);
     }
   */
@@ -365,14 +368,14 @@ standard_type :
 subprogram_declarations :
   subprogram_declarations subprogram_declaration SEMICOLON {
       fprintf( spFile, "Reduction ( subprogram_declarations -> subprogram_declarations subprogram_declaration ; )\n");
-      $$ = newNode(NODE_SPROG_DECLS);
+      $$ = newNode(NODE_SPROG_DECLS); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
    }
  | {
       fprintf( spFile, "Reduction ( subprogram_declarations -> LAMDBA )\n");
-      $$ = newNode(NODE_SPROG_DECLS);
-      addChild($$, newNode(NODE_LAMDBA));
+      $$ = newNode(NODE_SPROG_DECLS); $$->line_num = line_no;
+      addChild($$, newNode(NODE_LAMDBA)); $$->childs[0]->line_num = line_no;
    }
  ;
 
@@ -380,7 +383,7 @@ subprogram_declarations :
 subprogram_declaration :
   subprogram_head	declarations compound_statement {
       fprintf( spFile, "Reduction ( subprogram_declaration -> subprogram_head declarations compound_statement )\n");
-      $$ = newNode(NODE_SPROG_DECL);
+      $$ = newNode(NODE_SPROG_DECL); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $3);
@@ -391,16 +394,16 @@ subprogram_declaration :
 subprogram_head :
     FUNCTION id_tok arguments COLON standard_type SEMICOLON {
       fprintf( spFile, "Reduction ( subprogram_head -> FUNCTION id arguments : standard_type ; )\n");
-      $$ = newNode(NODE_SPROG_H);
-      addChild($$, newNode(RE_FUNC));
+      $$ = newNode(NODE_SPROG_H); $$->line_num = line_no;
+      addChild($$, newNode(RE_FUNC)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
       addChild($$, $3);
       addChild($$, $5);
     }
   | PROCEDURE id_tok arguments SEMICOLON {
       fprintf( spFile, "Reduction ( subprogram_head -> PROCEDURE id arguments ; )\n");
-      $$ = newNode(NODE_SPROG_H);
-      addChild($$, newNode(RE_PROC));
+      $$ = newNode(NODE_SPROG_H); $$->line_num = line_no;
+      addChild($$, newNode(RE_PROC)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
       addChild($$, $3);
     }
@@ -410,13 +413,13 @@ subprogram_head :
 arguments :
     LPAREN parameter_list RPAREN {
       fprintf( spFile, "Reduction ( arguments -> (parameter_list) )\n");
-      $$ = newNode(NODE_ARG);
+      $$ = newNode(NODE_ARG); $$->line_num = line_no;
       addChild($$, $2);
     }
   | {
       fprintf( spFile, "Reduction ( arguments -> LAMDBA )\n");
-      $$ = newNode(NODE_ARG);
-      addChild($$, newNode(NODE_LAMDBA));
+      $$ = newNode(NODE_ARG); $$->line_num = line_no;
+      addChild($$, newNode(NODE_LAMDBA)); $$->childs[0]->line_num = line_no;
     }
   ;
 
@@ -424,21 +427,21 @@ arguments :
 parameter_list :
     optional_var identifier_list COLON type {
       fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : type )\n");
-      $$ = newNode(NODE_PARAM_LI);
+      $$ = newNode(NODE_PARAM_LI); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $4);
     }
   | optional_var identifier_list COLON identifier_list {
     fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : identifier_list )\n");
-    $$ = newNode(NODE_PARAM_LI);
+    $$ = newNode(NODE_PARAM_LI); $$->line_num = line_no;
     addChild($$, $1);
     addChild($$, $2);
     addChild($$, $4);
     }
   | optional_var identifier_list COLON type SEMICOLON parameter_list {
       fprintf( spFile, "Reduction ( parameter_list -> optional_var identifier_list : type ; parameter_list )\n");
-      $$ = newNode(NODE_PARAM_LI);
+      $$ = newNode(NODE_PARAM_LI); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $4);
@@ -450,13 +453,13 @@ parameter_list :
 optional_var :
   VAR {
       fprintf( spFile, "Reduction ( optional_var -> VAR )\n");
-      $$ = newNode(NODE_OPTVAR);
-      addChild($$, newNode(RE_VAR));
+      $$ = newNode(NODE_OPTVAR); $$->line_num = line_no;
+      addChild($$, newNode(RE_VAR)); $$->childs[0]->line_num = line_no;
     }
   | {
       fprintf( spFile, "Reduction ( optional_var -> LAMDBA )\n");
-      $$ = newNode(NODE_OPTVAR);
-      addChild($$, newNode(NODE_LAMDBA));
+      $$ = newNode(NODE_OPTVAR); $$->line_num = line_no;
+      addChild($$, newNode(NODE_LAMDBA)); $$->childs[0]->line_num = line_no;
     }
   ;
 
@@ -464,10 +467,10 @@ optional_var :
 compound_statement :
     PBEGIN optional_statements END {
       fprintf( spFile, "Reduction ( compound_statement -> begin optional_statements end )\n");
-      $$ = newNode(NODE_COMP_STMT);
-      addChild($$, newNode(RE_BEGIN));
+      $$ = newNode(NODE_COMP_STMT); $$->line_num = line_no;
+      addChild($$, newNode(RE_BEGIN)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
-      addChild($$, newNode(RE_END));
+      addChild($$, newNode(RE_END)); $$->childs[2]->line_num = line_no;
     }
   ;
 
@@ -475,7 +478,7 @@ compound_statement :
 optional_statements :
     statement_list {
       fprintf( spFile, "Reduction ( optional_statements -> statement_list )\n");
-      $$ = newNode(NODE_OPT_STMT);
+      $$ = newNode(NODE_OPT_STMT); $$->line_num = line_no;
       addChild($$, $1);
     }
   ;
@@ -484,14 +487,14 @@ optional_statements :
 statement_list :
     statement {
       fprintf( spFile, "Reduction ( statement_list -> statement )\n");
-      $$ = newNode(NODE_STMT_LI);
+      $$ = newNode(NODE_STMT_LI); $$->line_num = line_no;
       addChild($$, $1);
     }
   | statement_list SEMICOLON statement {
       fprintf( spFile, "Reduction ( statement_list -> statement_list ; statement )\n");
-      $$ = newNode(NODE_STMT_LI);
+      $$ = newNode(NODE_STMT_LI); $$->line_num = line_no;
       addChild($$, $1);
-      addChild($$, newNode(PUC_SEMI));
+      addChild($$, newNode(PUC_SEMI)); $$->childs[1]->line_num = line_no;
       addChild($$, $3);
     }
   ;
@@ -500,41 +503,41 @@ statement_list :
 statement :
     variable ASSIGNMENT expression {
       fprintf( spFile, "Reduction ( statement -> variable := expression )\n");
-      $$ = newNode(NODE_STMT);
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
       addChild($$, $1);
-      addChild($$, newNode(RE_ASGMNT));
+      addChild($$, newNode(RE_ASGMNT)); $$->childs[1]->line_num = line_no;
       addChild($$, $3);
     }
   | procedure_statement {
       fprintf( spFile, "Reduction ( statement -> procedure_statement )\n");
-      $$ = newNode(NODE_STMT);
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
       addChild($$, $1);
     }
   | compound_statement {
       fprintf( spFile, "Reduction ( statement -> compound_statement )\n");
-      $$ = newNode(NODE_STMT);
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
       addChild($$, $1);
     }
   | IF expression THEN if_stmt {
       fprintf( spFile, "Reduction ( statement -> IF expression THEN if_stmt )\n");
-      $$ = newNode(NODE_STMT);
-      addChild($$, newNode(RE_IF));
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
+      addChild($$, newNode(RE_IF)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
-      addChild($$, newNode(RE_THEN));
+      addChild($$, newNode(RE_THEN)); $$->childs[2]->line_num = line_no;
       addChild($$, $4);
     }
   | WHILE expression DO statement {
       fprintf( spFile, "Reduction ( statement -> WHILE expression DO statement )\n");
-      $$ = newNode(NODE_STMT);
-      addChild($$, newNode(RE_WHILE));
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
+      addChild($$, newNode(RE_WHILE)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
-      addChild($$, newNode(RE_DO));
+      addChild($$, newNode(RE_DO)); $$->childs[2]->line_num = line_no;
       addChild($$, $4);
     }
   | {
       fprintf( spFile, "Reduction ( statement -> lambda )\n");
-      $$ = newNode(NODE_STMT);
-      addChild($$, newNode(NODE_LAMDBA));
+      $$ = newNode(NODE_STMT); $$->line_num = line_no;
+      addChild($$, newNode(NODE_LAMDBA)); $$->childs[0]->line_num = line_no;
   }
   ;
 
@@ -542,14 +545,14 @@ statement :
 if_stmt :
     statement ELSE statement {
         fprintf( spFile, "Reduction ( if_stmt -> statement ELSE statement )\n");
-        $$ = newNode(NODE_IF_STMT);
+        $$ = newNode(NODE_IF_STMT); $$->line_num = line_no;
         addChild($$, $1);
-        addChild($$, newNode(RE_ELSE));
+        addChild($$, newNode(RE_ELSE)); $$->childs[1]->line_num = line_no;
         addChild($$, $3);
     }
   | statement {
         fprintf( spFile, "Reduction ( if_stmt -> statement )\n");
-        $$ = newNode(NODE_IF_STMT);
+        $$ = newNode(NODE_IF_STMT); $$->line_num = line_no;
         addChild($$, $1);
     }
 
@@ -557,7 +560,7 @@ if_stmt :
 variable :
   id_tok tail {
       fprintf( spFile, "Reduction ( variable -> id tail )\n");
-      $$ = newNode(NODE_VAR);
+      $$ = newNode(NODE_VAR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
     }
@@ -567,7 +570,7 @@ variable :
 tail :
   LBRAC expression RBRAC tail {
       fprintf( spFile, "Reduction ( tail -> [expression] tail )\n");
-      $$ = newNode(NODE_TAIL);
+      $$ = newNode(NODE_TAIL); $$->line_num = line_no;
       addChild($$, newNode(PUC_LBRAC));
       addChild($$, $2);
       addChild($$, newNode(PUC_RBRAC));
@@ -575,7 +578,7 @@ tail :
     }
   | {
       fprintf( spFile, "Reduction ( tail -> lambda )\n");
-      $$ = newNode(NODE_TAIL);
+      $$ = newNode(NODE_TAIL); $$->line_num = line_no;
       addChild($$, newNode(NODE_LAMDBA));
   }
   ;
@@ -584,12 +587,12 @@ tail :
 procedure_statement :
   id_tok {
       fprintf( spFile, "Reduction ( procedure_statement -> ID )\n");
-      $$ = newNode(NODE_PROC_STMT);
+      $$ = newNode(NODE_PROC_STMT); $$->line_num = line_no;
       addChild($$, $1);
     }
   | id_tok LPAREN expression_list RPAREN {
       fprintf( spFile, "Reduction ( procedure_statement -> ID (expression_list) )\n");
-      $$ = newNode(NODE_PROC_STMT);
+      $$ = newNode(NODE_PROC_STMT); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, newNode(PUC_LPAREN));
       addChild($$, $3);
@@ -602,13 +605,13 @@ expression_list :
    expression {
       fprintf( spFile, "Reduction ( expression_list -> expression )\n");
 
-      $$ = newNode(NODE_EXPR_LI);
+      $$ = newNode(NODE_EXPR_LI); $$->line_num = line_no;
       addChild($$, $1);
     }
   | expression_list COMMA expression {
       fprintf( spFile, "Reduction ( expression_list -> expression_list, expression )\n");
 
-      $$ = newNode(NODE_EXPR_LI);
+      $$ = newNode(NODE_EXPR_LI); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, newNode(PUC_COMMA));
       addChild($$, $3);
@@ -619,12 +622,12 @@ expression_list :
 expression :
     simple_expression {
       fprintf( spFile, "Reduction ( expression -> simple_expression )\n");
-      $$ = newNode(NODE_EXPR);
+      $$ = newNode(NODE_EXPR); $$->line_num = line_no;
       addChild($$, $1);
     }
   | simple_expression relop simple_expression {
       fprintf( spFile, "Reduction ( expression -> simple_expression relop simple_expression )\n");
-      $$ = newNode(NODE_EXPR);
+      $$ = newNode(NODE_EXPR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $3);
@@ -635,12 +638,12 @@ expression :
 simple_expression :
   term {
       fprintf( spFile, "Reduction ( simple_expression -> term )\n");
-      $$ = newNode(NODE_SI_EXPR);
+      $$ = newNode(NODE_SI_EXPR); $$->line_num = line_no;
       addChild($$, $1);
     }
   | simple_expression addop term {
       fprintf( spFile, "Reduction ( simple_expression -> simple_expression addop term )\n");
-      $$ = newNode(NODE_SI_EXPR);
+      $$ = newNode(NODE_SI_EXPR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $3);
@@ -651,12 +654,12 @@ simple_expression :
 term :
   factor {
       fprintf( spFile, "Reduction ( term -> factor )\n");
-      $$ = newNode(NODE_TERM);
+      $$ = newNode(NODE_TERM); $$->line_num = line_no;
       addChild($$, $1);
     }
   | term mulop factor {
       fprintf( spFile, "Reduction ( term -> term mulop factor )\n");
-      $$ = newNode(NODE_TERM);
+      $$ = newNode(NODE_TERM); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
       addChild($$, $3);
@@ -668,14 +671,14 @@ factor :
     id_tok tail {
       fprintf( spFile, "Reduction ( factor -> id tail )\n");
 
-      $$ = newNode(NODE_FACTOR);
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
     }
   | id_tok LPAREN expression_list RPAREN {
       fprintf( spFile, "Reduction ( factor -> id ( expression_list ) )\n");
 
-      $$ = newNode(NODE_FACTOR);
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, newNode(PUC_LPAREN));
       addChild($$, $3);
@@ -683,24 +686,24 @@ factor :
     }
   | num_tok {
       fprintf( spFile, "Reduction ( factor -> NUM )\n");
-      $$ = newNode(NODE_FACTOR);
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
       addChild($$, $1);
     }
   | CHARACTER_STRING {
       fprintf( spFile, "Reduction ( factor -> CHARACTER_STRING )\n");
-      $$ = newNode(NODE_FACTOR);
-      addChild($$, newNode(NODE_STRING));
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
+      addChild($$, newNode(NODE_STRING)); $$->childs[0]->line_num = line_no;
     }
   | addop num_tok {
       fprintf( spFile, "Reduction ( factor -> addop NUM )\n");
-      $$ = newNode(NODE_FACTOR);
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
       addChild($$, $1);
       addChild($$, $2);
     }
   | LPAREN expression RPAREN {
       fprintf( spFile, "Reduction ( factor -> ( expression ) )\n");
 
-      $$ = newNode(NODE_FACTOR);
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
       addChild($$, newNode(PUC_LPAREN));
       addChild($$, $2);
       addChild($$, newNode(PUC_RPAREN));
@@ -708,8 +711,8 @@ factor :
   | NOT factor {
       fprintf( spFile, "Reduction ( factor -> NOT factor )\n");
 
-      $$ = newNode(NODE_FACTOR);
-      addChild($$, newNode(RE_NOT));
+      $$ = newNode(NODE_FACTOR); $$->line_num = line_no;
+      addChild($$, newNode(RE_NOT)); $$->childs[0]->line_num = line_no;
       addChild($$, $2);
     }
    ;
@@ -719,14 +722,14 @@ addop :
       PLUS {
           fprintf( spFile, "Reduction ( addop -> + )\n");
 
-          $$ = newNode(NODE_ADDOP);
-          addChild($$, newNode(OP_PLUS));
+          $$ = newNode(NODE_ADDOP); $$->line_num = line_no;
+          addChild($$, newNode(OP_PLUS)); $$->childs[0]->line_num = line_no;
       }
    |  MINUS {
            fprintf( spFile, "Reduction ( addop -> - )\n");
 
-           $$ = newNode(NODE_ADDOP);
-           addChild($$, newNode(OP_MINUS));
+           $$ = newNode(NODE_ADDOP); $$->line_num = line_no;
+           addChild($$, newNode(OP_MINUS)); $$->childs[0]->line_num = line_no;
       }
    ;
 
@@ -735,14 +738,14 @@ mulop :
       STAR {
           fprintf( spFile, "Reduction ( mulop -> * )\n");
 
-          $$ = newNode(NODE_MULOP);
-          addChild($$, newNode(OP_MUL));
+          $$ = newNode(NODE_MULOP); $$->line_num = line_no;
+          addChild($$, newNode(OP_MUL)); $$->childs[0]->line_num = line_no;
       }
   |   SLASH{
           fprintf( spFile, "Reduction ( mulop -> / )\n");
 
-          $$ = newNode(NODE_MULOP);
-          addChild($$, newNode(OP_DIV));
+          $$ = newNode(NODE_MULOP); $$->line_num = line_no;
+          addChild($$, newNode(OP_DIV)); $$->childs[0]->line_num = line_no;
       }
   ;
 
@@ -750,38 +753,38 @@ relop :
     LT {
        fprintf( spFile, "Reduction ( relop -> < )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_LT));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_LT)); $$->childs[0]->line_num = line_no;
     }
   | GT {
        fprintf( spFile, "Reduction ( relop -> > )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_GT));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_GT)); $$->childs[0]->line_num = line_no;
     }
   | EQUAL {
        fprintf( spFile, "Reduction ( relop -> = )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_EQUAL));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_EQUAL)); $$->childs[0]->line_num = line_no;
     }
   | LE {
        fprintf( spFile, "Reduction ( relop -> <= )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_LE));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_LE)); $$->childs[0]->line_num = line_no;
     }
   | GE {
        fprintf( spFile, "Reduction ( relop -> >= )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_GE));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_GE)); $$->childs[0]->line_num = line_no;
     }
   | notEQUAL {
        fprintf( spFile, "Reduction ( relop -> != )\n");
 
-       $$ = newNode(NODE_RELOP);
-       addChild($$, newNode(OP_notEQUAL));
+       $$ = newNode(NODE_RELOP); $$->line_num = line_no;
+       addChild($$, newNode(OP_notEQUAL)); $$->childs[0]->line_num = line_no;
     }
   ;
 
