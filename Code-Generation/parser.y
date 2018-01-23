@@ -148,16 +148,16 @@ prog :
 
      fprintf( pFile, "Parse finish. \n");
 
-     $$ = newNode(NODE_START);
-     addChild($$, newNode(RE_PROG));
+     $$ = newNode(NODE_START); $$->line_num = line_no;
+     addChild($$, newNode(RE_PROG)); $$->childs[0]->line_num = line_no;
      addChild($$, $2);
-     addChild($$, newNode(PUC_LPAREN));
+     addChild($$, newNode(PUC_LPAREN)); $$->childs[2]->line_num = line_no;
      addChild($$, $4);
-     addChild($$, newNode(PUC_RPAREN));
+     addChild($$, newNode(PUC_RPAREN)); $$->childs[4]->line_num = line_no;
      addChild($$, $7);
      addChild($$, $8);
      addChild($$, $9);
-     addChild($$, newNode(PUC_DOT));
+     addChild($$, newNode(PUC_DOT)); // $$->childs[8]->line_num = line_no;
      PARSE_ROOT = $$;
   }
 ;
@@ -166,7 +166,7 @@ prog :
 identifier_list :
     ID {
       fprintf( spFile, "Reduction ( identifier_list -> ID )\n");
-      $$ = newNode(NODE_ID_LT);
+      $$ = newNode(NODE_ID_LT); $$->line_num = line_no;
       Node* id_node = newNode(NODE_ID);
       id_node->strValue = $1;
       id_node->line_num = line_no;
@@ -174,9 +174,9 @@ identifier_list :
     }
   | identifier_list COMMA ID {
       fprintf( spFile, "Reduction ( identifier_list -> identifier_list , ID )\n");
-      $$ = newNode(NODE_ID_LT);
+      $$ = newNode(NODE_ID_LT); $$->line_num = line_no;
       addChild($$, $1);
-      addChild($$, newNode(PUC_COMMA));
+      addChild($$, newNode(PUC_COMMA)); $$->childs[1]->line_num = line_no;
       Node* id_node = newNode(NODE_ID);
       id_node->strValue = $3;
       id_node->line_num = line_no;
@@ -187,7 +187,7 @@ identifier_list :
 id_tok :
   ID {
     // fprintf( spFile, "Reduction ( id_tok -> ID )\n");
-    $$ = newNode(ID_TOK);
+    $$ = newNode(ID_TOK); $$->line_num = line_no;
     Node* id_node = newNode(NODE_ID);
     id_node->strValue = $1;
     id_node->line_num = line_no;
@@ -197,9 +197,10 @@ id_tok :
 
 num_tok :
   NUM {
-    $$ = newNode(NUM_TOK);
+    $$ = newNode(NUM_TOK); $$->line_num = line_no;
     Node* id_node = newNode(NODE_NUM);
     id_node->number = $1;
+    id_node->line_num = line_no;
     addChild($$, id_node);
   }
   ;
@@ -207,43 +208,43 @@ num_tok :
 declarations :
     declarations VAR identifier_list COLON type SEMICOLON {
       fprintf( spFile, "Reduction ( declarations -> declarations VAR identifier_list : type ; )\n");
-      $$ = newNode(NODE_DECL);
+      $$ = newNode(NODE_DECL); $$->line_num = line_no;
       addChild($$, $1);
-      addChild($$, newNode(NODE_VAR));
+      addChild($$, newNode(NODE_VAR)); $$->childs[1]->line_num = line_no;
       addChild($$, $3);
-      addChild($$, newNode(PUC_COLON));
+      addChild($$, newNode(PUC_COLON)); $$->childs[3]->line_num = line_no;
       addChild($$, $5);
-      addChild($$, newNode(PUC_SEMI));
+      addChild($$, newNode(PUC_SEMI)); $$->childs[5]->line_num = line_no;
     }
   | declarations VAR identifier_list COLON identifier_list SEMICOLON {
       fprintf( spFile, "Reduction ( declarations -> declarations VAR identifier_list : id ; )\n");
-      $$ = newNode(NODE_DECL);
+      $$ = newNode(NODE_DECL); $$->line_num = line_no;
       addChild($$, $1);
-      addChild($$, newNode(NODE_VAR));
+      addChild($$, newNode(NODE_VAR)); $$->childs[1]->line_num = line_no;
       addChild($$, $3);
-      addChild($$, newNode(PUC_COLON));
+      addChild($$, newNode(PUC_COLON)); $$->childs[3]->line_num = line_no;
       addChild($$, $5);
-      addChild($$, newNode(PUC_SEMI));
+      addChild($$, newNode(PUC_SEMI)); $$->childs[5]->line_num = line_no;
     }
   | declarations CONST identifier_list EQUAL num_tok SEMICOLON {
     fprintf( spFile, "Reduction ( declarations -> declarations CONST identifier_list = NUM ; )\n");
-    $$ = newNode(NODE_DECL); // $$ = declarations
+    $$ = newNode(NODE_DECL); $$->line_num = line_no; // $$ = declarations
     addChild($$, $1);
-    addChild($$, newNode(RE_CONST));
+    addChild($$, newNode(RE_CONST)); $$->childs[1]->line_num = line_no;
     addChild($$, $3);
-    addChild($$, newNode(OP_EQUAL));
+    addChild($$, newNode(OP_EQUAL)); $$->childs[3]->line_num = line_no;
     addChild($$, $5);
-    addChild($$, newNode(PUC_SEMI));
+    addChild($$, newNode(PUC_SEMI)); $$->childs[5]->line_num = line_no;
     }
   | declarations TYPE identifier_list EQUAL type SEMICOLON  {
     fprintf( spFile, "Reduction ( declarations -> declarations TYPE identifier_list = type ; )\n");
-    $$ = newNode(NODE_DECL); // $$ = declarations
+    $$ = newNode(NODE_DECL); $$->line_num = line_no; // $$ = declarations
     addChild($$, $1);
-    addChild($$, newNode(RE_TYPE));
+    addChild($$, newNode(RE_TYPE)); $$->childs[1]->line_num = line_no;
     addChild($$, $3);
-    addChild($$, newNode(OP_EQUAL));
+    addChild($$, newNode(OP_EQUAL)); $$->childs[3]->line_num = line_no;
     addChild($$, $5);
-    addChild($$, newNode(PUC_SEMI));
+    addChild($$, newNode(PUC_SEMI)); $$->childs[5]->line_num = line_no;
     }
   /*| PROCEDURE id arguments SEMICOLON {
       fprintf( spFile, "Reduction ( declarations -> PROCEDURE id arguments SEMICOLON )\n");
@@ -255,8 +256,8 @@ declarations :
     }*/
   | {
       fprintf( spFile, "Reduction ( declarations -> LAMDBA )\n");
-      $$ = newNode(NODE_DECL);
-      addChild($$, newNode(NODE_LAMDBA));
+      $$ = newNode(NODE_DECL); $$->line_num = line_no;
+      addChild($$, newNode(NODE_LAMDBA)); $$->childs[0]->line_num = line_no;
     }
   ;
 
