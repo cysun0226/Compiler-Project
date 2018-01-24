@@ -202,8 +202,8 @@ void MethodBodyVisitor::visitAssignment(Node* node)
     instructions.push_back(new_instr);
     new_instr.line = node->line_num+0.1;
     cout << "print " << node->sibling[2]->childs[0]->strValue << endl;
-    cout << "scope_id = " << node->scope_id << endl;
-    cout << "load = " << addrtabs[0].store_tab["a"] << endl;
+    // cout << "scope_id = " << node->scope_id << endl;
+    // cout << "load = " << addrtabs[0].store_tab["a"] << endl;
     new_instr.instr = addrtabs[0].load_tab[node->sibling[2]->childs[0]->strValue];
     instructions.push_back(new_instr);
     new_instr.line = node->line_num+0.2;
@@ -238,6 +238,7 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 				instructions.push_back(new_instr);
 			}
 		}
+
 
 			// LHS
 			new_instr.line = node->line_num + x; x += 0.01;
@@ -307,7 +308,16 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 	// print_node(node, 0);
 	int is_int = true;
+  string last_instr;
 	if(node->nodeType == OP_PLUS || node->nodeType == OP_MINUS || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+    if(node->sibling[0]->parent->nodeType == NODE_TERM && (
+       node->sibling[0]->parent->sibling[1]->nodeType == OP_MINUS ||
+       node->sibling[0]->parent->sibling[1]->nodeType == OP_PLUS)) {
+      // cout << "exprNode->instr.size() = " << exprNode->instr.size() << endl;
+      last_instr = exprNode->instr.back();
+      // cout << "pop " << exprNode->instr.back();
+      exprNode->instr.pop_back();
+    }
 
 		if(node->sibling[0]->nodeType == NODE_NUM) {
 			if(is_integer(node->sibling[0]->number))
@@ -419,6 +429,12 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 				break;
 			}
 		}
+
+    if(node->sibling[0]->parent->nodeType == NODE_TERM && (
+       node->sibling[0]->parent->sibling[1]->nodeType == OP_MINUS ||
+       node->sibling[0]->parent->sibling[1]->nodeType == OP_PLUS)) {
+       exprNode->instr.push_back(last_instr);
+    }
 
 		// for (int i = 0; i < exprNode->instr.size(); i++) {
 		// 	cout << exprNode->instr[i] << endl;
