@@ -7,6 +7,7 @@ using namespace std;
 std::vector<Instruction> instructions;
 int cur_scope = 0;
 int node_id = 0;
+int cond_id = 0;
 string program_name;
 
 bool cmpByLine(const Instruction &a, const Instruction &b){
@@ -214,11 +215,41 @@ void MethodBodyVisitor::visitAssignment(Node* node)
     instructions.push_back(new_instr);
   }
 
+  if(node->nodeType == RE_IF) {
+    cond_id++;
+    visitCondExec(node->sibling[1]);
+
+    // goto end
+    node->sibling[3]->instr.push_back("goto cond_end_" + to_string(cond_id));
+    // cond label
+    node->sibling[3]->childs[1]->instr.push_back("cond_" + to_string(cond_id) + ":");
+    // end label
+
+
+    Instruction new_instr;
+    new_instr.instr = "";
+    instructions.push_back(new_instr);
+  }
+
+  // else label
+  if(node->nodeType == RE_ELSE) {
+    Instruction new_instr;
+    new_instr.instr = node->instr[0];
+    instructions.push_back(new_instr);
+  }
+
   if(node->nodeType == RE_ASGMNT){
 		Instruction new_instr;
 		new_instr.line = node->line_num;
 		new_instr.scope = node->scope_id;
 		int x = 0;
+
+    // // else label
+    // if(cond_id != 0 && node->sibling[0]->parent->parent->sibling[0]->parent->parent->nodeType == RE_ELSE){
+    //   cout << "into else" << endl;
+    //   new_instr.instr = node->sibling[0]->parent->parent->sibling[0]->parent->parent->instr[0];
+    //   instructions.push_back(new_instr);
+    // }
 
 		if(node->sibling[2]->nodeType == NODE_NUM){
 			if(is_integer(node->sibling[2]->number)){
@@ -238,6 +269,13 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 				instructions.push_back(new_instr);
 			}
 		}
+
+    if(node->sibling[2]->nodeType == NODE_ID){
+      new_instr.line = node->line_num + x;
+      x += 0.01;
+      new_instr.instr = addrtabs[0].load_tab[node->sibling[2]->strValue];
+      instructions.push_back(new_instr);
+    }
 
 
 			// LHS
@@ -259,10 +297,18 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 					}
 				}
 				instructions.push_back(new_instr);
-				new_instr.line = node->line_num + x; new_instr.instr = "";
-				instructions.push_back(new_instr);
 		}
 
+    /* cond label */
+    // if
+    if(node->sibling[0]->parent->parent->nodeType == NODE_IF_STMT){
+      new_instr.instr = node->sibling[0]->parent->parent->instr[0];
+      instructions.push_back(new_instr);
+    }
+
+    // \n
+    new_instr.line = node->line_num + x; new_instr.instr = "";
+    instructions.push_back(new_instr);
 	}
 
 	if (!node->childs.empty()){
@@ -463,7 +509,39 @@ void MethodBodyVisitor::visitArrayRef(Node* node)
 
 void MethodBodyVisitor::visitCondExec(Node* node)
 {
+  if(node->nodeType == NODE_RELOP) {
+    Instruction new_instr;
+    new_instr.line = node->line_num;
+    // opd 1
+    new_instr.instr = addrtabs[0].load_tab[node->sibling[0]->strValue];
+    // cout << "cond load : " << addrtabs[0].load_tab[node->sibling[0]->strValue] << endl;
+    instructions.push_back(new_instr);
 
+    // opd2
+    if(node->sibling[2]->nodeType == NODE_NUM){
+      new_instr.instr = "ldc " + to_string((int)node->sibling[2]->number);
+      instructions.push_back(new_instr);
+    }
+
+
+
+
+
+    switch (node->childs[0]->nodeType) {
+      case OP_GT: {
+        new_instr.instr = "if_icmple cond_" + to_string(cond_id);
+        instructions.push_back(new_instr);
+        break;
+      }
+
+    }
+  }
+
+  if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      visitCondExec(node->childs[i]);
+		}
+	}
 }
 
 void MethodBodyVisitor::visitLoop(Node* node)
