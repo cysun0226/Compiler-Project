@@ -540,8 +540,11 @@ void MethodBodyVisitor::visitCondExec(Node* node)
 
     switch (node->childs[0]->nodeType) {
       case OP_GT: new_instr.instr = "if_icmple cond_" + to_string(cond_id); break;
-
-
+      case OP_LT: new_instr.instr = "if_icmpge cond_" + to_string(cond_id); break;
+      case OP_GE: new_instr.instr = "if_icmplt cond_" + to_string(cond_id); break;
+      case OP_LE: new_instr.instr = "if_icmpgt cond_" + to_string(cond_id); break;
+      case OP_EQUAL: new_instr.instr = "if_icmpne cond_" + to_string(cond_id); break;
+      case OP_notEQUAL: new_instr.instr = "if_icmpeq cond_" + to_string(cond_id); break;
     }
     instructions.push_back(new_instr);
   }
