@@ -219,7 +219,7 @@ void printSymtab(Symtab* s)
   //   cout << "----- scope " << s->scope << " symbol table end -----" << endl << endl;
 }
 
-void divideScope(struct Node *node, int ident) {
+bool divideScope(struct Node *node, int ident) {
 
     static char blank[1024];
     for(int i=0; i<ident; i++)
@@ -568,6 +568,8 @@ void divideScope(struct Node *node, int ident) {
       divideScope(node->childs[i], ident);
 		}
 	}
+
+  return errMsg.empty();
 }
 
 std::vector<Symtab*> getSymtab(){

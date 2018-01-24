@@ -193,7 +193,28 @@ void MethodBodyVisitor::visitConstant(Node* node)
 
 void MethodBodyVisitor::visitAssignment(Node* node)
 {
-	if(node->nodeType == RE_ASGMNT){
+  if(node->nodeType == NODE_ID && node->strValue == "print" && node->sibling[0]->nodeType != RE_FUNC)
+  {
+    Instruction new_instr;
+    new_instr.line = node->line_num;
+    new_instr.scope = node->scope_id;
+    new_instr.instr = "getstatic java/lang/System/out Ljava/io/PrintStream;";
+    instructions.push_back(new_instr);
+    new_instr.line = node->line_num+0.1;
+    cout << "print " << node->sibling[2]->childs[0]->strValue << endl;
+    cout << "scope_id = " << node->scope_id << endl;
+    cout << "load = " << addrtabs[0].store_tab["a"] << endl;
+    new_instr.instr = addrtabs[0].load_tab[node->sibling[2]->childs[0]->strValue];
+    instructions.push_back(new_instr);
+    new_instr.line = node->line_num+0.2;
+    new_instr.instr = "invokevirtual java/io/PrintStream/println(I)V";
+    instructions.push_back(new_instr);
+    new_instr.line = node->line_num+0.3;
+    new_instr.instr = "";
+    instructions.push_back(new_instr);
+  }
+
+  if(node->nodeType == RE_ASGMNT){
 		Instruction new_instr;
 		new_instr.line = node->line_num;
 		new_instr.scope = node->scope_id;
