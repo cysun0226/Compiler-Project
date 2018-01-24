@@ -127,7 +127,7 @@ void codeGenerate(string file_name, std::vector<Instruction> instrs, Node* root)
 	fp << "\t.limit stack 100" << endl;
 	fp << "\t.limit locals 100" << endl << endl;
 
-	std::sort(instrs.begin(), instrs.end(), cmpByLine);
+	// std::sort(instrs.begin(), instrs.end(), cmpByLine);
 	for (int i = 0; i < instrs.size(); i++) {
 		fp << "\t" + instrs[i].instr << endl;
 	}
@@ -200,11 +200,12 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 		int x = 0;
 
 		if(node->sibling[2]->nodeType == NODE_NUM){
-			int num = node->sibling[2]->number;
-			if(is_integer(num))
+			if(is_integer(node->sibling[2]->number)){
+				int num = node->sibling[2]->number;
 				new_instr.instr = "ldc " + to_string(num);
+			}
 			else
-				new_instr.instr = "ldc2_w " + to_string(num);
+				new_instr.instr = "ldc2_w " + to_string(node->sibling[2]->number);
 			instructions.push_back(new_instr);
 		}
 
@@ -218,7 +219,7 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 		}
 
 			// LHS
-			new_instr.line = node->line_num + x;
+			new_instr.line = node->line_num + x; x += 0.01;
 			if(node->sibling[0]->childs[0]->nodeType == NODE_ID) {
 				string id = node->sibling[0]->childs[0]->strValue;
 				map<string, int>::iterator iter;
@@ -235,6 +236,8 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 						}
 					}
 				}
+				instructions.push_back(new_instr);
+				new_instr.line = node->line_num + x; new_instr.instr = "";
 				instructions.push_back(new_instr);
 		}
 
@@ -281,13 +284,24 @@ void MethodBodyVisitor::visitAssignment(Node* node)
 // }
 
 void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
+	// print_node(node, 0);
 	int is_int = true;
-	if(node->nodeType == OP_ADD || node->nodeType == OP_SUB || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+	if(node->nodeType == OP_PLUS || node->nodeType == OP_MINUS || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+
 		if(node->sibling[0]->nodeType == NODE_NUM) {
 			if(is_integer(node->sibling[0]->number))
-				exprNode->instr.push_back("ldc " + to_string(node->sibling[0]->number));
+				exprNode->instr.push_back("ldc " + to_string((int)node->sibling[0]->number));
 			else{
 				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[0]->number));
+				is_int = false;
+			}
+		}
+
+		if(node->sibling[0]->nodeType == NODE_TERM && node->sibling[0]->childs[0]->nodeType == NODE_NUM) {
+			if(is_integer(node->sibling[0]->childs[0]->number))
+				exprNode->instr.push_back("ldc " + to_string((int)node->sibling[0]->childs[0]->number));
+			else{
+				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[0]->childs[0]->number));
 				is_int = false;
 			}
 		}
@@ -317,12 +331,15 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 		}
 	}
 
-	if(node->nodeType == OP_ADD || node->nodeType == OP_SUB || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
+	if(node->nodeType == OP_PLUS || node->nodeType == OP_MINUS || node->nodeType == OP_MUL || node->nodeType == OP_DIV) {
 		if(node->sibling[2]->childs[0]->nodeType == NODE_NUM) {
-			if(is_integer(node->sibling[0]->number))
-				exprNode->instr.push_back("ldc " + to_string(node->sibling[0]->number));
+			if(is_integer(node->sibling[2]->childs[0]->number)){
+				int tmp = node->sibling[2]->childs[0]->number;
+				exprNode->instr.push_back("ldc " + to_string(tmp));
+			}
+
 			else{
-				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[0]->number));
+				exprNode->instr.push_back("ldc2_w " + to_string(node->sibling[2]->childs[0]->number));
 				is_int = false;
 			}
 		}
@@ -332,6 +349,8 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 			map<string, int>::iterator iter;
 			iter = addrtabs[node->scope_id].addrtab.find(id);
 			if(iter != addrtabs[node->scope_id].addrtab.end()) {
+				print_node(node->sibling[2]->childs[0], 0);
+				cout << "push \"" << addrtabs[node->scope_id].load_tab[id] << "\"" << endl;
 				exprNode->instr.push_back(addrtabs[node->scope_id].load_tab[id]);
 				if(symtabs[node->scope_id]->symtab[id] == "REAL")
 					is_int = false;
@@ -350,14 +369,14 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 		}
 
 		switch (node->nodeType) {
-			case OP_ADD: {
+			case OP_PLUS: {
 				if(is_int)
 					exprNode->instr.push_back("iadd");
 				else
 					exprNode->instr.push_back("dadd");
 				break;
 			}
-			case OP_SUB: {
+			case OP_MINUS: {
 				if(is_int)
 					exprNode->instr.push_back("isub");
 				else
@@ -379,6 +398,11 @@ void MethodBodyVisitor::generateExprInstr(Node* node, Node* exprNode) {
 				break;
 			}
 		}
+
+		// for (int i = 0; i < exprNode->instr.size(); i++) {
+		// 	cout << exprNode->instr[i] << endl;
+		// }
+		// cout << endl;
 	}
 }
 
