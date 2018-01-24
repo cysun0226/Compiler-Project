@@ -812,10 +812,18 @@ int main()
     LHSVisitor lhs_visitor(ast_root, symtabs);
     lhs_visitor.visit(ast_root, 0);
 
-    // lv.visit(ast_root, 0);
 
-    // MethodBodyVisitor mv(ast_root);
-    // mv.visit(ast_root, 0);
+    lhs_visitor.visitDeclaring(ast_root);
+    lhs_visitor.visitArrayRef(ast_root);
+    std::vector<AddrTab> addrtabs = lhs_visitor.get_addrtab();
+
+    MethodBodyVisitor mv(ast_root, symtabs, addrtabs);
+    mv.visitLocalVar();
+    mv.printAddrTab();
+    mv.visitExpression(ast_root);
+    mv.visitAssignment(ast_root);
+
+    codeGenerate("bytecode.j", mv.getInstructions(), ast_root);
 
 
 
