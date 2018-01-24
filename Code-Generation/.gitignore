@@ -9,3 +9,7 @@ parser.tab.h
 *.p
 ./test/*.p
 tst.cpp
+*.class
+*.j
+*.jar
+
