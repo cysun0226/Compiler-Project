@@ -224,6 +224,7 @@ void MethodBodyVisitor::visitAssignment(Node* node)
     // cond label
     node->sibling[3]->childs[1]->instr.push_back("cond_" + to_string(cond_id) + ":");
     // end label
+    node->sibling[3]->childs[2]->childs[0]->childs[2]->instr.push_back("cond_end_" + to_string(cond_id) + ":");
 
 
     Instruction new_instr;
@@ -236,6 +237,16 @@ void MethodBodyVisitor::visitAssignment(Node* node)
     Instruction new_instr;
     new_instr.instr = node->instr[0];
     instructions.push_back(new_instr);
+  }
+
+  // else end label
+  if(cond_id != 0 && node->nodeType == RE_END) {
+    // if(node->sibling[0]->parent->parent->sibling[1]->nodeType == RE_ELSE) {
+    if(node->instr.size() != 0) {
+      Instruction new_instr;
+      new_instr.instr = node->instr[0];
+      instructions.push_back(new_instr);
+    }
   }
 
   if(node->nodeType == RE_ASGMNT){
@@ -528,13 +539,11 @@ void MethodBodyVisitor::visitCondExec(Node* node)
 
 
     switch (node->childs[0]->nodeType) {
-      case OP_GT: {
-        new_instr.instr = "if_icmple cond_" + to_string(cond_id);
-        instructions.push_back(new_instr);
-        break;
-      }
+      case OP_GT: new_instr.instr = "if_icmple cond_" + to_string(cond_id); break;
+
 
     }
+    instructions.push_back(new_instr);
   }
 
   if (!node->childs.empty()){
