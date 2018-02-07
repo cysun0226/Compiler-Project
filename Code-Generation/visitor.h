@@ -76,6 +76,7 @@ public:
 
 private:
 	void generateExprInstr(Node* node, Node* exprNode);
+	void generateArrRef(Node* node, int r, int start_idx);
 	// void calTermConstValue(Node* node);
 	// void calTermValue(Node* node);
 	Node* root;

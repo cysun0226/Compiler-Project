@@ -806,7 +806,8 @@ int main()
     ast_root = buildAstTree(PARSE_ROOT);
     // printTree(ast_root, 0);
     printf( "\n\n------------------- scope tree ---------------------\n\n");
-    divideScope(ast_root, 0);
+    bool pass = divideScope(ast_root, 0);
+    if(!pass) return 0;
     printf( "\n\n------------------- code generate ---------------------\n\n");
     std::vector<Symtab*> symtabs = getSymtab();
     LHSVisitor lhs_visitor(ast_root, symtabs);
@@ -819,7 +820,8 @@ int main()
 
     MethodBodyVisitor mv(ast_root, symtabs, addrtabs);
     mv.visitLocalVar();
-    mv.printAddrTab();
+    // mv.visitArrayRef(ast_root);
+    // mv.printAddrTab();
     mv.visitExpression(ast_root);
     mv.visitAssignment(ast_root);
 

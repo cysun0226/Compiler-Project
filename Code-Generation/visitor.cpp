@@ -8,6 +8,7 @@ std::vector<Instruction> instructions;
 int cur_scope = 0;
 int node_id = 0;
 int cond_id = 0;
+int arr_idx = 0;
 string program_name;
 
 bool cmpByLine(const Instruction &a, const Instruction &b){
@@ -194,7 +195,7 @@ void MethodBodyVisitor::visitConstant(Node* node)
 
 void MethodBodyVisitor::visitAssignment(Node* node)
 {
-  if(node->nodeType == NODE_ID && node->strValue == "print" && node->sibling[0]->nodeType != RE_FUNC)
+  if(node->nodeType == NODE_ID && node->strValue == "printInt" && node->sibling[0]->nodeType != RE_FUNC)
   {
     Instruction new_instr;
     new_instr.line = node->line_num;
@@ -513,9 +514,42 @@ void MethodBodyVisitor::visitExpression(Node* node)
 	}
 }
 
+void MethodBodyVisitor::generateArrRef(Node* node, int r, int start_idx) {
+  if(node->nodeType == NODE_NUM) {
+    // cout << "node->number = " << node->number << endl;
+    // cout << "start_idx = " << start_idx << endl;
+    // cout << "r = " << r << endl;
+    if(node->number-start_idx >= r)
+      cout << "runtime error: array out of index (line" << node->line_num << ")" << endl << endl;
+
+  }
+
+  if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      generateArrRef(node->childs[i], r, start_idx);
+		}
+	}
+}
+
 void MethodBodyVisitor::visitArrayRef(Node* node)
 {
+  if(node->nodeType == NODE_ID && (
+    symtabs[0]->symtab[node->strValue] == "ARRAY(INTEGER)" ||
+    symtabs[0]->symtab[node->strValue] == "2d-ARRAY(INTEGER)" )) {
+    // cout << node->strValue << " | start_idx = " << symtabs[0]->arrTab[node->strValue].end_idx << endl;
+    cout << "symtabs[0]->arrTab.size() = " << symtabs[0]->arrTab.size() << endl;
+    cout << "symtabs[0]->arrTab[\"a\"].type = " << symtabs[0]->arrTab["a"].type << endl;
+    cout << "symtabs[0]->arrTab[\"a\"].start_idx = " << symtabs[0]->arrTab["a"].start_idx << endl;
+    int r = symtabs[0]->arrTab[node->strValue].end_idx - symtabs[0]->arrTab[node->strValue].start_idx + 1;
+    //if(symtabs[0]->symtab[node->strValue].d_num == 0)
+    generateArrRef(node->sibling[1], r, symtabs[0]->arrTab[node->strValue].start_idx);
+	}
 
+	if (!node->childs.empty()){
+		for (size_t i = 0; i < node->childs.size(); i++) {
+      visitArrayRef(node->childs[i]);
+		}
+	}
 }
 
 void MethodBodyVisitor::visitCondExec(Node* node)
@@ -533,10 +567,6 @@ void MethodBodyVisitor::visitCondExec(Node* node)
       new_instr.instr = "ldc " + to_string((int)node->sibling[2]->number);
       instructions.push_back(new_instr);
     }
-
-
-
-
 
     switch (node->childs[0]->nodeType) {
       case OP_GT: new_instr.instr = "if_icmple cond_" + to_string(cond_id); break;
