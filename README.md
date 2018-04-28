@@ -1,5 +1,6 @@
 # Compiler Project
-Lex scanner, Yacc parser, symbol table and compiler for mini pascal
+Lex scanner, Yacc parser, symbol table and compiler for mini pascal.
+
 For execution, run build.sh in each folder and it will show the instructions.
 
 ## Scanner
