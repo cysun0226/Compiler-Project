@@ -14,3 +14,5 @@ Lex scanner, Yacc parser, symbol table and compiler for mini pascal
   * test.sh
 * Symbol Table
 * Compiler
+  * generate JVM machine code
+
