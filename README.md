@@ -1,17 +1,11 @@
 # Compiler Project
 Lex scanner, Yacc parser, symbol table and compiler for mini pascal
+For execution, run build.sh in each folder and it will show the instructions.
 
 * Scanner
-  * scanner.l
-  * build.sh
-  * test.sh
+  ![](https://imgur.com/Gx5Ridv.png)
 * Parser
-  * parser.y
-  * scanner.l
-  * node.h
-  * node.cpp
-  * build.sh
-  * test.sh
+  
 * Symbol Table
 * Compiler
   * generate JVM machine code
